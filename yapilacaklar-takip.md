@@ -1,6 +1,6 @@
 # Su Damlası — Yapılacaklar Takibi
 
-**Son kontrol:** 31 Ekim 2026, 17:20 (diskteki dosyalara ve koda göre)
+**Son kontrol:** 31 Ekim 2026, 19:00 (diskteki dosyalara ve koda göre; `Level_2` sahne dosyası okunarak incelendi, oynanmadı)
 **Ana belge:** [genel-yapilacaklar.md](genel-yapilacaklar.md). T numaraları oradaki görevlerle aynıdır.
 **Kural:** Kurulum maddeleri diskteki dosyalarla doğrulanınca işaretlenir. Oynanış maddeleri (T/QA) ancak asıl sahnede (`Level1`) oynanarak denendikten sonra işaretlenir. Kodu yazılmış ama oyunda denenmemiş maddeler **Uygulandı; test bekliyor** olarak not edilir. Kaydedilmemiş değişiklikler sayılmaz.
 
@@ -57,9 +57,17 @@
 
 **Level2** (31 Ekim 2026'da kullanıcı ikinci bölümü yapmaya karar verdi, bkz. [kararlar](docs/kararlar.md))
 
-- [ ] `Level2` sahnesi `Level1` kopyalanarak oluşturuldu, tile'lar temizlendi. **Başlanmadı.**
-- [ ] `Level2` build listesinde `Level1`'in hemen altında (sıra: 0 `Level1`, 1 `Level2`)
-- [ ] `Level2`'de Player başlangıç konumu, su kaynakları ve `CameraBounds` noktaları yeni bölüme göre ayarlandı (sonra **Invalidate Bounding Shape Cache**)
+- [x] `Level2` sahnesi oluşturuldu: diskte `Scenes/Level_2.unity` (sahne `Level1` de `Level_1` olarak yeniden adlandırıldı). 31 Ekim 2026, 18:49 kaydında bölüm x≈53'e kadar çizili: başlangıç ve üç kum bulutu (iki `HapsirikKoz`), üç taş bulut (`Ground-Extra-Dry`, üç `Saw_Patrol`), kum blok + `HapsirikKoz`, `KozOcagi_Stationary`, alt mağarada birikinti ve sağda 5 birimlik duvar. Dekor `Decor-Desert` ile yapıldı. Oynanarak denenmedi.
+- [ ] `Level2` build listesinde `Level1`'in hemen altında (sıra: 0 `Level1`, 1 `Level2`). **Şu an listede yalnızca `Level_1` var.**
+- [ ] `Level2`'de Player başlangıç konumu, su kaynakları ve `CameraBounds` noktaları yeni bölüme göre ayarlandı (sonra **Invalidate Bounding Shape Cache**). Player ayarlı (−10.8, −0.3). Tek `WaterSource` (50, −3) mağarada; başlangıçtan oraya kadar ≈60 birim boyunca checkpoint yok. `CameraBounds` hâlâ `Level1` değerlerinde (x −13…55); sol duvar (x −14) görüş dışında.
+- [ ] **Mağara çıkışı yok:** Level_2'de Player `jumpForce` sahne override'ı 7 (prefab ve Level_1: 10), tepe ≈ 2,5 birim. Mağara girişindeki çukurdan (yüzey −3) çıkıntılara (yüzey 0) 3 birim var; birikinti checkpoint olduğu için ölünce de mağarada doğuluyor. Çukur tabanını doldur + duvar dibine 1 basamak koy ya da zıplamayı 10'a döndür.
+- [ ] `jumpForce` kararı: 7 bilerek ise prefab'a uygulanmalı ve Level_1 bu değerle yeniden denenmeli; iki bölüm farklı zıplamamalı.
+- [ ] Bulut düşmanları: 4 karelik bulutlarda 3 birim devriye + 1,75 duman; iniş yeri neredeyse hep dolu, itilince çukura düşülüyor. Taş bulutlarda da aynı durum: x 22'deki testere 3 karelik bulutun dışına taşıyor, x 28–34'teki iki testere iç içe geçiyor. Devriye mesafesini kısalt, düşmanı sabitle ya da bulutu genişlet.
+- [ ] Final: x≈53'te 5 birimlik duvar var, fidan/bitiş nesnesi yok. Bölüm bitecekse fidanı koy; devam edecekse 2 birimlik basamaklar ekle ve `CameraBounds` sağ ucunu uzat.
+- [ ] Küçük: x 34–35 arasında 1 karelik delik (küçük damla düşebilir). Birikintinin altında (49–50, −4) hem kum hem çimen tile'ı üst üste duruyor; kum olanları sil.
+- [ ] Zorluk geçişi: `Level_1`'de hiç düşman yok, `Level_2`'de 9 düşman var (4 `HapsirikKoz`, 3 `Saw_Patrol`, 1 `KozOcagi`). Oyuncu her düşmanı ilk kez zor bir yerde görüyor; 1–2 düşmanı tek başına ve geniş zeminde `Level_1`'e koymak ya da `Level_2`'de sayıyı azaltmak önerildi.
+- [ ] Nemli zemin `Level_2`'de yalnızca 2 tile (mağaradaki birikintinin altında); bölümün geri kalanı kuru ve çok kuru. Uzun yürüme yerlerine (başlangıç zemini, x 35–41 blok) birkaç nemli parça dinlenme alanı olabilir.
+- [ ] Küçük: (53, −1)'deki `ground_dry_floor_up_short_base` eğim tile'ı duvarın içinde kalmış; köşesinde ufak bir çentik görünür. Normal `block_center` ile değiştir.
 - [ ] `Level1` sonunda `Level2`'ye geçiş noktası. **Script yazılmadı.**
 - [ ] Karar: `Level2`'ye su dolu mu başlıyor, yoksa `Level1`'den kalan su mu taşınıyor? (öneri: dolu başlasın)
 
