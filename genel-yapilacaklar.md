@@ -1,5 +1,7 @@
 # Su Damlası Oyunu — Genel Yapılacaklar
 
+1 Kasım 2026 düşen taş tuzağı ek kapsamı (T30/T42, QA06–QA09): açık kullanıcı talebiyle `Trap_stoneSpike.prefab`, oyuncu altındaki alana yaklaşınca tek kez düşer; zeminin arkasından geçip 3 saniyede silinir. Kullanıcının ek onayıyla mevcut su kaybı/knockback/flash sistemi kullanılır. Özgün prefab kimlikleri ve Level_2 instance bağlantısı korunur. [Ayarlar ve doğrulama](docs/stone-spike-trap.md).
+
 31 Ekim 2026 Köz Ocağı HeatAura (T42/T43): kullanıcı talebiyle SlimeFire'daki mevcut ısı animasyonu sürekli oynayacak şekilde eklendi; etki alanına uyar ve rüzgârın arkasında görünür. Mevcut su/çekim davranışı korunur. [Ayarlar ve doğrulama](docs/koz-ocagi.md#sürekli-heataura--31-ekim-2026).
 
 31 Ekim 2026 Köz Ocağı görsel güncellemesi (T42/T43): kullanıcının hazır SuctionWind setiyle hafif sürekli Idle, menzilde içeri akan normal/güçlü döngü ve çıkışta alfa sönmesi eklendi. Mevcut çekim sistemi ve ayarlı menzil/su/çekim değerleri korundu. [Ayarlar ve bu oturumun doğrulaması](docs/koz-ocagi.md#suctionwind--31-ekim-2026).
