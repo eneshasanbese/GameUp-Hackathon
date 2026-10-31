@@ -28,6 +28,8 @@ Isı/duman, artık seçilen bekleme veya yürüme tabanını malzeme çarpanınd
 
 ## Hareketli düşmanlar — algılama alanında oyuncuyu takip
 
+**Görünmez sınır (31 Ekim 2026):** Kullanıcı yerçekimli takip eden düşmanların uçurumdan düşmesini önlemek için kameraya benzer, Edge ile çizilen gizli duvar istedi. `GroundEnemyBoundary` prefabında düzenlenebilir, trigger olmayan `EdgeCollider2D` kullanılır. Yalnızca yerdeki SlimeFire/HapsirikKoz fizik gövdeleriyle çarpışır; oyuncu ve uçan Saw geçebilir. Katmanlar `EnemyBoundary` ve `GroundEnemy`; kamera sınırı ayrı kalır. Düşman sınırın ötesindeki hedefi takip etmeyi denerken duvarda durur; çizgi kapalıysa düşüş normal sürer. [Yerleştirme ve ayarlar](enemies.md#yerdeki-düşmanlar-için-görünmez-sınır).
+
 **Sonraki fizik düzeltmesi (31 Ekim 2026):** Kullanıcı takipte duvar/yer içinden geçmeyi bildirdi; uçan `Saw_Patrol` ile diğer gövde düşmanlarını ayrı değerlendirmeyi ve yerdekilerin düşmesini istedi. Saw yerçekimsiz uçar, zemin/duvara çarpar. SlimeFire ve HapsirikKoz'un duran/devriye türleri yerçekimiyle düşer; devriye/takip/dönüş motoru yalnızca X hızını belirler. Hasar trigger'ı korunur, ayrı `TerrainBody` yalnızca mevcut üç zemin katmanıyla çarpışır. Önceki yerdeki çapraz rota/yüksekliğe doğrudan dönüş davranışı bu düzeltmeyle geçersizdir. Köz Ocağı ve dumanın sabit çevresel rolleri korunur. [Fizik ve Inspector ayarları](enemies.md#yerçekimi-ve-zeminduvar-çarpışması).
 
 **Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı `Assets/Prefabs/Enemies/` altındaki hareket edebilen düşmanlar için dış bölge istedi: karakter bölgeye girince normal hareket şemasını bırakıp, bölgeden çıkana kadar karakteri takip edecekler.

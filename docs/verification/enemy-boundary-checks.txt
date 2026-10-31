@@ -1,0 +1,94 @@
+Saw_Stationary saves its flying/ground body settings
+Saw_Stationary blocks all three ground layers with a separate frictionless shape
+Saw_Stationary saves the appropriate terrain collision layer
+Saw_Stationary preserves the original body damage trigger
+Saw_Patrol saves its flying/ground body settings
+Saw_Patrol blocks all three ground layers with a separate frictionless shape
+Saw_Patrol saves the appropriate terrain collision layer
+Saw_Patrol preserves the original body damage trigger
+SlimeFire_Stationary saves its flying/ground body settings
+SlimeFire_Stationary blocks all three ground layers with a separate frictionless shape
+SlimeFire_Stationary saves the appropriate terrain collision layer
+SlimeFire_Stationary preserves the original body damage trigger
+SlimeFire_Patrol saves its flying/ground body settings
+SlimeFire_Patrol blocks all three ground layers with a separate frictionless shape
+SlimeFire_Patrol saves the appropriate terrain collision layer
+SlimeFire_Patrol preserves the original body damage trigger
+HapsirikKoz_Stationary saves its flying/ground body settings
+HapsirikKoz_Stationary blocks all three ground layers with a separate frictionless shape
+HapsirikKoz_Stationary saves the appropriate terrain collision layer
+HapsirikKoz_Stationary preserves the original body damage trigger
+HapsirikKoz_Patrol saves its flying/ground body settings
+HapsirikKoz_Patrol blocks all three ground layers with a separate frictionless shape
+HapsirikKoz_Patrol saves the appropriate terrain collision layer
+HapsirikKoz_Patrol preserves the original body damage trigger
+Smoke and anchored Koz Ocagi keep their environmental behaviour
+Invisible boundary prefab has an editable solid edge and no renderer
+Boundary collides only with ground enemy physics bodies
+SlimeFire_Stationary falls with motor stopped above Ground-Dry
+SlimeFire_Stationary lands on Ground-Dry without entering it
+SlimeFire_Patrol falls with motor stopped above Ground-Dry
+SlimeFire_Patrol lands on Ground-Dry without entering it
+HapsirikKoz_Stationary falls with motor stopped above Ground-Dry
+HapsirikKoz_Stationary lands on Ground-Dry without entering it
+HapsirikKoz_Patrol falls with motor stopped above Ground-Dry
+HapsirikKoz_Patrol lands on Ground-Dry without entering it
+SlimeFire_Stationary falls with motor stopped above Ground-Wet
+SlimeFire_Stationary lands on Ground-Wet without entering it
+SlimeFire_Patrol falls with motor stopped above Ground-Wet
+SlimeFire_Patrol lands on Ground-Wet without entering it
+HapsirikKoz_Stationary falls with motor stopped above Ground-Wet
+HapsirikKoz_Stationary lands on Ground-Wet without entering it
+HapsirikKoz_Patrol falls with motor stopped above Ground-Wet
+HapsirikKoz_Patrol lands on Ground-Wet without entering it
+SlimeFire_Stationary falls with motor stopped above Ground-Extra-Dry
+SlimeFire_Stationary lands on Ground-Extra-Dry without entering it
+SlimeFire_Patrol falls with motor stopped above Ground-Extra-Dry
+SlimeFire_Patrol lands on Ground-Extra-Dry without entering it
+HapsirikKoz_Stationary falls with motor stopped above Ground-Extra-Dry
+HapsirikKoz_Stationary lands on Ground-Extra-Dry without entering it
+HapsirikKoz_Patrol falls with motor stopped above Ground-Extra-Dry
+HapsirikKoz_Patrol lands on Ground-Extra-Dry without entering it
+Saw_Patrol chases a player across a wall
+Saw_Patrol cannot pass through the wall while chasing
+Saw_Patrol remains blocked under sustained chase
+Saw_Patrol can leave a wall when the player changes sides
+SlimeFire_Patrol chases a player across a wall
+SlimeFire_Patrol cannot pass through the wall while chasing
+SlimeFire_Patrol remains blocked under sustained chase
+SlimeFire_Patrol can leave a wall when the player changes sides
+HapsirikKoz_Patrol chases a player across a wall
+HapsirikKoz_Patrol cannot pass through the wall while chasing
+HapsirikKoz_Patrol remains blocked under sustained chase
+HapsirikKoz_Patrol can leave a wall when the player changes sides
+Flying Saw does not fall with its motor stopped
+Saw flies downward to its target but cannot enter the floor
+Saw can fly upward but cannot cross a ceiling
+SlimeFire_Patrol follows the player off a ledge and falls
+SlimeFire_Patrol keeps falling during route recovery instead of returning upward through terrain
+SlimeFire_Patrol stops steering when disabled while gravity continues
+SlimeFire_Patrol also falls off ledges during normal patrol
+SlimeFire_Patrol ignores vertical patrol offsets and does not suspend gravity
+HapsirikKoz_Patrol follows the player off a ledge and falls
+HapsirikKoz_Patrol keeps falling during route recovery instead of returning upward through terrain
+HapsirikKoz_Patrol stops steering when disabled while gravity continues
+HapsirikKoz_Patrol also falls off ledges during normal patrol
+HapsirikKoz_Patrol ignores vertical patrol offsets and does not suspend gravity
+SlimeFire_Patrol stops before the left cliff while chasing
+SlimeFire_Patrol can walk away from the enemy-only boundary
+SlimeFire_Patrol can cross and fall after its boundary is disabled
+SlimeFire_Patrol stops before the right cliff while chasing
+SlimeFire_Patrol can walk away from the enemy-only boundary
+SlimeFire_Patrol can cross and fall after its boundary is disabled
+HapsirikKoz_Patrol stops before the left cliff while chasing
+HapsirikKoz_Patrol can walk away from the enemy-only boundary
+HapsirikKoz_Patrol can cross and fall after its boundary is disabled
+HapsirikKoz_Patrol stops before the right cliff while chasing
+HapsirikKoz_Patrol can walk away from the enemy-only boundary
+HapsirikKoz_Patrol can cross and fall after its boundary is disabled
+Flying Saw passes through ground enemy boundaries while continuing its chase
+Real player body crosses the invisible boundary without blocking or damage
+Separate terrain body preserves Slime heat without a body hit
+Original trigger still applies one water hit and knockback flash
+Player can overlap the damage trigger without terrain body pushing either character
+Leaving the heat trigger clears the multiplier after physics changes

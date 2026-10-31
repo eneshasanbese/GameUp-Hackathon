@@ -41,11 +41,28 @@ Algılama, her fizik adımında gerçek oyuncu collider'larının çemberle ört
 
 31 Ekim 2026 kullanıcı bildirimi: takipte duvar/zemin içinden geçme ve yerdeki düşmanların havada kalması. Üç devriye türünde `MovePosition` yerine `linearVelocity` kullanılır. Yerdeki türlerin Y hızı her fizik adımında korunur; takip bitince eski yüksekliğe uçmak yerine yalnızca rota X konumuna dönerler. Motor kapanınca yatay hız kesilir, düşüş sürer. [Unity MovePosition belgesi](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Rigidbody2D.MovePosition.html), bu metodun taşıma adımında yerçekimini uygulamadığını açıklar.
 
-Altı gövde prefabında `TerrainBody` çocuğu vardır. **Is Trigger kapalıdır**; yalnızca `Ground-Dry`, `Ground-Wet`, `Ground-Extra-Dry` katmanlarıyla çarpışır. `Include Layers` bu üç katmanı, `Exclude Layers` diğerlerini seçer; `Layer Override Priority = 1`. Oyuncu, diğer düşmanlar, ısı/duman alanları bu fizik kutusuyla engellenmez. Mevcut kök hasar trigger'ı ve bütün ısı/duman bağlantıları korunur. Yerdeki kutu ayak hizasına kadar uzanır; hasar kutusunun kısaltılması görseli zemine gömmez. Mevcut sürtünmesiz `Slip` materyali duvarda asılı kalmayı önler; hareketli gövdelerde Continuous çarpışma kullanılır.
+Altı gövde prefabında `TerrainBody` çocuğu vardır. **Is Trigger kapalıdır**; `Ground-Dry`, `Ground-Wet`, `Ground-Extra-Dry` katmanlarıyla çarpışır. Slime/HapsirikKoz'un fizik çocuğu `GroundEnemy` katmanındadır ve ayrıca `EnemyBoundary` ile çarpışır; Saw bu görünmez sınırdan geçer. `Include Layers` izin verilen katmanları, `Exclude Layers` diğerlerini seçer; `Layer Override Priority = 1`. Oyuncu, diğer düşmanlar, ısı/duman alanları bu fizik kutusuyla engellenmez. Mevcut kök hasar trigger'ı ve bütün ısı/duman bağlantıları korunur. Yerdeki kutu ayak hizasına kadar uzanır; hasar kutusunun kısaltılması görseli zemine gömmez. Mevcut sürtünmesiz `Slip` materyali duvarda asılı kalmayı önler; hareketli gövdelerde Continuous çarpışma kullanılır.
 
 Slime/HapsirikKoz'un duran türlerinde yalnızca yatay konum ve dönüş kilitlidir; düşebilirler. Köz Ocağı sabit çevresel kaynak, duman ise çıktığı yerde kalan geçici alan olarak korunur. Uçurumdan düşen yürüyen düşman eski platforma tırmanmaz; güvenli devriye uçlarını sahnede ayarla. Ayrı düşman ölüm/respawn veya yol bulma sistemi eklenmedi.
 
 Mevcut prefab ayarlarını, animasyonları ve GUID'leri koruyarak yeniden uygulamak için **GameUp → Enemies → Configure Terrain Physics** kullanılır. Normal prefab üreticileri de aynı fizik ayarlarını uygular. Sahnedeki zemin/duvar collider'ları trigger olmamalı ve üç zemin katmanından birinde bulunmalıdır. Prefab instance'larında eski Rigidbody/collider override'ı varsa Inspector'dan kontrol et; sahneler bu düzeltmede yeniden yazılmadı.
+
+## Yerdeki düşmanlar için görünmez sınır
+
+31 Ekim 2026 kullanıcı talebiyle, takip sırasında uçurumdan düşebilen SlimeFire/HapsirikKoz için `Assets/Prefabs/Enemies/GroundEnemyBoundary.prefab` eklendi. Görseli ve runtime script'i yoktur; düzenlenebilir `EdgeCollider2D` fiziksel bir duvardır. Kamera sınırı mevcut sahnelerde PolygonCollider2D/Cinemachine ile çalışır; bu yeni nesne ayrı bir fizik sınırıdır.
+
+Sahnede kullanım:
+
+1. **GameUp → Enemies → Create Ground Enemy Boundary** seç veya prefab'ı Hierarchy'ye sürükle.
+2. Nesneyi uçurumun güvenli tarafına, düşmanın duracağı kenara yerleştir. Sınırı bölüm hiyerarşisinde sabit bir nesne olarak tut.
+3. **Edge Collider 2D → Edit Collider** ile çizgiyi kenarda dikey çiz. Alt ucu zeminin altında, üst ucu düşmanın başından yukarıda kalsın. Varsayılan yerel noktalar `(0, -1)` ve `(0, 2)`; kalınlık yarıçapı `0.02` dünya birimidir. Birden fazla noktayla çizgi şekillendirilebilir.
+4. Platformun diğer ucunu da kapatmak için nesneyi çoğaltıp taşı. **Is Trigger kapalı** kalmalıdır. Nesne Game görünümünde görünmez; çizgiyi Scene görünümünde düzenlersin.
+
+Prefab `EnemyBoundary` layer'ını kullanır. Collider yalnızca `GroundEnemy` katmanını dahil eder, diğer tüm katmanları dışlar ve önceliği `2`'dir. Bu nedenle oyuncu ve Saw içinden geçer; SlimeFire/HapsirikKoz'un `TerrainBody` collider'ı durur. Hasar/ısı alanları sınırdan etkilenmez. Yeni iki layer boş kullanıcı slotlarına eklenir; mevcut layer numaraları ve global collision matrix korunur. [Unity layer override önceliği](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Collider2D-layerOverridePriority.html).
+
+Takip hedefi sınırın ötesindeyken düşman çizgide kalır; oyuncu geri gelince ondan uzaklaşabilir, algılama alanından çıkınca mevcut rotaya dönüşü sürdürür. Normal devriye uçlarını sınırların içinde tut. Sınır kapatılırsa veya yerleştirilmezse yerçekimi ve uçurumdan düşüş devam eder. Yeni sınırları sahnede hangi uçuruma koyacağın bölüm tasarımına bağlıdır; bu değişiklik ana sahnelere otomatik yerleşim yapmaz.
+
+**Configure Ground Enemy Boundary** menüsü prefab ve dört yerdeki gövde türünün çarpışma ayarlarını yeniler; var olan sınır prefabının çizgi noktalarını korur. **Rebuild Enemy Prefabs** de yeni layer/mask ayarlarını korur. Kamera sınırının layer'ını bu amaçla değiştirmek gerekmez.
 
 ## Slime Fire ısı alanı
 
@@ -55,7 +72,7 @@ Slime'ın `HeatArea` çocuğunda:
 - **CircleCollider2D → Radius:** Varsayılan `1.75`; offset `(0, 0.4)`.
 - **Is Trigger:** Açık tutulmalı. Kök gövde collider'ı, yakınlık alanından ayrıdır.
 
-Yeni fizik layer'ı veya Player prefab bağlantısı gerekmez. Oyuncunun gerçek Rigidbody2D'si üzerindeki mevcut `Player` ve `WaterMeter` bulunur; düşman alanı Water layer'ına taşınmamalıdır. Özel collision matrix değişikliği yapılırsa Default ve Player arasındaki trigger etkileşimi korunmalıdır.
+Isı alanı ve Player prefab bağlantısı korunur. Oyuncunun gerçek Rigidbody2D'si üzerindeki mevcut `Player` ve `WaterMeter` bulunur; düşman alanı Water layer'ına taşınmamalıdır. Özel collision matrix değişikliği yapılırsa Default ve Player arasındaki trigger etkileşimi korunmalıdır.
 
 ## HapsirikKoz hapşırma döngüsü
 
@@ -123,6 +140,10 @@ Yalnızca HapsirikKoz'u üretmek için **GameUp → Enemies → Rebuild Hapsirik
 - [ ] Asıl bölümde yerleşim, rota güvenliği, ısı yarıçapı ve çarpan dengesini elle oynayarak doğrula; dış build'i test et.
 
 ## Doğrulama
+
+31 Ekim 2026 görünmez Edge sınırı, Unity `6000.5.0f1`, ayrı `C:/Users/yhcan/AppData/Local/Temp/gameup-enemies-324e5073` projesi: güncel kod/prefab/katman ayarlarıyla **94 kontrol geçti (27 asset, 67 Play Mode)**. Önceki düşme, gerçek zemin/duvar çarpışması ve hasar kontrolleri tekrar geçti. Yeni senaryolarda SlimeFire/HapsirikKoz iki yöndeki uçurumdan önce Edge çizgisinde durdu, hedef taraf değiştirince çizgiden ayrılabildi, Edge kapatılınca normal düşüş sürdü. Uçan Saw takip sırasında çizgiden geçti; gerçek Player gövdesi fiziksel olarak çizgiyi engellenmeden ve hasarsız geçti. [Sonuç](verification/enemy-boundary-result.txt), [kontroller](verification/enemy-boundary-checks.txt).
+
+Doğrulanan dört yerdeki prefab mevcut GUID'leri korunarak, yeni sınır prefabı/meta'sı ve iki katmanın TagManager ayarlarıyla ana projeye aktarıldı. Aynı `EnemyTerrainVerification.Run` düzeneği kullanılır; test projesindeki çıktı adları `enemy-terrain-result.txt` / `enemy-terrain-checks.txt`, bu oturumun depodaki kopyaları yukarıdaki `enemy-boundary-*` dosyalarıdır. Ayrıntılı `enemy-boundary-verification.log` geçici projededir. Mevcut Player'ın her karedeki debug kayıtları yalnızca test logunda filtrelenir; üretim kodu değişmez. Başlangıç SearchDatabase indeksleme istisnası kaydedildi; C# derleme hatası veya başarısız davranış kontrolü yoktur. **Ana bölümde sınır yerleşimi, elle oynanış/denge ve dış build testi bekliyor.** Aşağıdaki sayılar önceki oturumların kayıtlarıdır.
 
 31 Ekim 2026 yerçekimi/duvar düzeltmesi, Unity `6000.5.0f1`, ayrı `C:/Users/yhcan/AppData/Local/Temp/gameup-enemies-324e5073` projesi: güncel oyuncu/düşman kodu, gerçek prefablar, animasyonlar, zemin layer'ları ve Physics2D ayarlarıyla **72 kontrol geçti (19 asset, 53 Play Mode)**. Üç zemin katmanında dört yerdeki türün düşüşü/inişi, motor kapalıyken yerçekimi, takipte duvarda kalma ve geri ayrılma, Saw'ın havada kalması ve taban/tavan çarpışması, kenardan devriye/takipte düşüş, düşüşte rotaya dönüşün eski yüksekliğe taşımaması, motor kapatma, yerdeki dikey offset'in yok sayılması ve ısı/gövde hasarı ayrımı doğrulandı. Doğrulanan altı prefab mevcut meta/GUID'leri korunarak ana projeye aktarıldı. [Sonuç](verification/enemy-terrain-result.txt), [kontroller](verification/enemy-terrain-checks.txt).
 

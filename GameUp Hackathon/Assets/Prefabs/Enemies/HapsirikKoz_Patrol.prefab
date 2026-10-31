@@ -125,7 +125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2661966001545760718}
   - component: {fileID: 5345532810432772312}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: TerrainBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -160,10 +160,10 @@ BoxCollider2D:
   m_Material: {fileID: 6200000, guid: fa2da115a7792c6478901c90eeeeb538, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 1216
+    m_Bits: 3264
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4294966079
+    m_Bits: 4294964031
   m_LayerOverridePriority: 1
   m_ForceSendLayers:
     serializedVersion: 2
