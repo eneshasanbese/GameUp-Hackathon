@@ -15,6 +15,18 @@ public sealed class WaterMeter : MonoBehaviour
     [SerializeField, Min(0f)] private float dryDrainPerSecond = 3f;
     [SerializeField, Min(0f)] private float wetDrainPerSecond = 1f;
     [SerializeField, Min(0f)] private float extraDryDrainPerSecond = 6f;
+    [Header("Ground Idle Drain")]
+    [SerializeField, Min(0f)] private float wetIdleDrainPerSecond = 0.25f;
+    [SerializeField, Min(0f)] private float dryIdleDrainPerSecond = 0.5f;
+    [SerializeField, Min(0f)] private float extraDryIdleDrainPerSecond = 2f;
+
+    [Header("Ground Material Multipliers")]
+    [Tooltip("Independent of the ground's wet/dry/extra dry layer. Unmarked ground uses 1.")]
+    [SerializeField, Min(0.01f)] private float sandDrainMultiplier = 1f;
+    [SerializeField, Min(0.01f)] private float grassDrainMultiplier = 1f;
+    [SerializeField, Min(0.01f)] private float blackStoneDrainMultiplier = 1f;
+
+    [Header("Movement Detection")]
     [SerializeField, Min(0f)] private float minimumGroundSpeed = 0.05f;
 
     [Header("Visual")]
@@ -136,16 +148,28 @@ public sealed class WaterMeter : MonoBehaviour
             return;
         }
         float multiplier = DrainMultiplier;
-        // Heat keeps draining a stationary player; ordinary grounded idle remains free.
-        if (physics.grounded && speed <= minimumGroundSpeed && multiplier <= 1f)
-            return;
-
-        // In the air no ground flag is set, so the normal dry rate applies.
-        // Heat areas (DrainMultiplier) scale whichever surface rate is active.
-        float rate = physics.wetGrounded ? wetDrainPerSecond
-            : physics.extraDryGrounded ? extraDryDrainPerSecond
-            : dryDrainPerSecond;
+        // Air always uses the normal rate, without the previous ground's material.
+        float rate = dryDrainPerSecond;
+        if (physics.grounded)
+        {
+            bool idle = speed <= minimumGroundSpeed;
+            rate = physics.wetGrounded ? (idle ? wetIdleDrainPerSecond : wetDrainPerSecond)
+                : physics.extraDryGrounded ? (idle ? extraDryIdleDrainPerSecond : extraDryDrainPerSecond)
+                : (idle ? dryIdleDrainPerSecond : dryDrainPerSecond);
+            rate *= GetGroundMaterialMultiplier();
+        }
         Consume(rate * multiplier * Time.fixedDeltaTime);
+    }
+
+    private float GetGroundMaterialMultiplier()
+    {
+        switch (physics.GroundMaterial)
+        {
+            case GroundSurface.Material.Sand: return Mathf.Max(0.01f, sandDrainMultiplier);
+            case GroundSurface.Material.Grass: return Mathf.Max(0.01f, grassDrainMultiplier);
+            case GroundSurface.Material.BlackStone: return Mathf.Max(0.01f, blackStoneDrainMultiplier);
+            default: return 1f;
+        }
     }
 
     private void Update()

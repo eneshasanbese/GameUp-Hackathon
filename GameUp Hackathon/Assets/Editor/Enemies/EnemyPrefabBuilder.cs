@@ -142,6 +142,7 @@ public static class EnemyPrefabBuilder
                 var serialized = new SerializedObject(movement);
                 serialized.FindProperty("bodyVisual").objectReferenceValue = renderer;
                 serialized.FindProperty("faceMovement").boolValue = !saw;
+                serialized.FindProperty("horizontalChaseOnly").boolValue = !saw;
                 serialized.ApplyModifiedPropertiesWithoutUndo();
             }
             if (!saw)

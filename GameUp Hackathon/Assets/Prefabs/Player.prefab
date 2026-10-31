@@ -289,7 +289,7 @@ MonoBehaviour:
     m_Bits: 128
   extraDryGroundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   groundCheckDistance: 0.15
   maximumGroundAngle: 60
 --- !u!114 &6624425716347783292
@@ -356,6 +356,12 @@ MonoBehaviour:
   dryDrainPerSecond: 3
   wetDrainPerSecond: 1
   extraDryDrainPerSecond: 6
+  wetIdleDrainPerSecond: 0.25
+  dryIdleDrainPerSecond: 0.5
+  extraDryIdleDrainPerSecond: 2
+  sandDrainMultiplier: 1
+  grassDrainMultiplier: 1
+  blackStoneDrainMultiplier: 1
   minimumGroundSpeed: 0.05
   bodyVisual: {fileID: 916759671138770455}
   recoverySpeed: 12

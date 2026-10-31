@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingLayer: -1
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -8381659573352531839, guid: 504c7bd458fa435aa258a0b97f79a795, type: 3}
+  m_Sprite: {fileID: -8381659573352531839, guid: 3bfcff86505a4b25b4f62719d4eb67ca, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -258,6 +258,8 @@ MonoBehaviour:
   speed: 1.5
   bodyVisual: {fileID: 6348192947756846842}
   faceMovement: 1
+  detectionRadius: 4
+  horizontalChaseOnly: 1
 --- !u!114 &2799230104771242221
 MonoBehaviour:
   m_ObjectHideFlags: 0

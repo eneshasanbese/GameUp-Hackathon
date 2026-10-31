@@ -34,6 +34,7 @@ public sealed class PhysicsControl : MonoBehaviour
     public bool extraDryGrounded { get; private set; }
     public bool grounded => dryGrounded || wetGrounded || extraDryGrounded;
     public Vector2 GroundNormal { get; private set; } = Vector2.up;
+    public GroundSurface.Material GroundMaterial { get; private set; }
     public float BodyScale { get; private set; } = 1f;
 
     private void Awake()
@@ -58,6 +59,7 @@ public sealed class PhysicsControl : MonoBehaviour
         bool wasGrounded = grounded;
         dryGrounded = wetGrounded = extraDryGrounded = false;
         groundCollider = null;
+        GroundMaterial = GroundSurface.Material.Unspecified;
         groundDistance = float.PositiveInfinity;
         GroundNormal = Vector2.up;
         if (rb.linearVelocity.y <= 0f)
@@ -115,6 +117,9 @@ public sealed class PhysicsControl : MonoBehaviour
         wetGrounded = (wetGroundLayer.value & groundBit) != 0;
         extraDryGrounded = !wetGrounded && (extraDryGroundLayer.value & groundBit) != 0;
         dryGrounded = !wetGrounded && !extraDryGrounded;
+        GroundSurface surface = groundCollider.GetComponentInParent<GroundSurface>();
+        if (surface != null && surface.isActiveAndEnabled)
+            GroundMaterial = surface.SurfaceMaterial;
     }
 
     private void ConsiderGround(Collider2D other, Vector2 normal, float distance)
@@ -224,6 +229,8 @@ public sealed class PhysicsControl : MonoBehaviour
         isJumpAscending = false;
         dryGrounded = wetGrounded = extraDryGrounded = false;
         GroundNormal = Vector2.up;
+        groundCollider = null;
+        GroundMaterial = GroundSurface.Material.Unspecified;
     }
 
     public void SetExternalHorizontalSpeed(UnityEngine.Object source, float speed)
@@ -248,6 +255,8 @@ public sealed class PhysicsControl : MonoBehaviour
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, speed);
         isJumpAscending = true;
         dryGrounded = wetGrounded = extraDryGrounded = false;
+        groundCollider = null;
+        GroundMaterial = GroundSurface.Material.Unspecified;
     }
 
     private void OnDrawGizmosSelected()

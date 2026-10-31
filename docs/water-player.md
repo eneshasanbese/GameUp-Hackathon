@@ -10,13 +10,13 @@ PhysicsControl, güncel CircleCollider2D'nin gerçek temaslarını ve aşağı d
 
 - **Dry Ground Layer:** `Ground-Dry` (layer 6).
 - **Wet Ground Layer:** `Ground-Wet` (layer 7).
-- **Extra Dry Ground Layer:** `Ground-Extra-Dry` (layer 10). Atanmazsa Play başında uyarı verilir; bu zemin yer sayılmaz.
+- **Extra Dry Ground Layer:** `Ground-Extra-Dry` (layer 10); Player prefab'ına bağlıdır. Atanmazsa Play başında uyarı verilir; bu zemin yer sayılmaz.
 - **Ground Check Distance:** Tam boyda en fazla `0.15`; oyuncu küçüldükçe tarama mesafesi aynı oranda kısalır.
 - **Maximum Ground Angle:** `60` derece; dik duvar ve tavan destek sayılmaz.
 
 `dryGrounded`, `wetGrounded` ve `extraDryGrounded` destek collider'ının zemin türünü, `grounded` ise üçünün birleşimini verir. Aynı anda yalnızca biri doğrudur; nemli maske önceliklidir, hiçbir maskeye uymayan destek kuru sayılır. Yakın destek seçilir ve yüzey normali `GroundNormal` üzerinden okunabilir. Eğimde hız bu yüzeyin teğetini izler; tuş bırakıldığında eğimden kalan yukarı hız da durur. Yerdeyken yerçekimi kuvveti dengelenerek rampada boşta kayma önlenir. Gerçek zıplamada zemine yapışma devre dışıdır; kenardan çıkıldığında normal düşüş sürer. Seçili Player'ın güncel collider'ı ve tarama alanı Scene görünümünde çizilir. Eski sabit ray başlangıcı artık kullanılmaz; `groundRayDistance` verisi `groundCheckDistance` alanına taşınır.
 
-Sahnedeki Player `Player`, ana platform `Ground-Dry`, nemli şerit `Ground-Wet` layer'ındadır. Zeminlerde ayrıca script bulunmaz.
+Sahnedeki Player `Player`, ana platform `Ground-Dry`, nemli şerit `Ground-Wet` layer'ındadır. Kuruluk layer ile, malzeme ise bağımsız `GroundSurface` component'i ile belirlenir.
 
 ## Su ve küçülme
 
@@ -24,13 +24,22 @@ WaterMeter tek bir 0–100 su değeri tutar:
 
 | Durum | İlk deneme değeri |
 |---|---|
-| Isı dışında yerde hareketsiz | 0 |
-| Slime Fire ısısı / HapsirikKoz dumanında yerde hareketsiz | Kuru zeminde 6, nemli zeminde 2, çok kuru zeminde 12 birim/saniye (varsayılan 2× ısı) |
+| Nemli zeminde hareketsiz | 0.25 birim/saniye |
+| Kuru zeminde hareketsiz | 0.5 birim/saniye |
+| Çok kuru zeminde hareketsiz | 2 birim/saniye |
 | Kuru zeminde gerçek yatay ilerleme | 3 birim/saniye |
 | Islak zeminde gerçek yatay ilerleme | 1 birim/saniye |
 | Çok kuru zeminde gerçek yatay ilerleme | 6 birim/saniye (`Extra Dry Drain Per Second`) |
 | Havada | 3 birim/saniye (kuru oran; zeminin katsayısı havaya taşınmaz) |
 | Kaynağa temas | 100'e dolum |
+
+31 Ekim 2026 son talebiyle her zeminde beklemek su tüketir. Eşit malzeme ve ısı çarpanlarıyla `0.25 < 0.5 < 1 < 2 < 3 < 6` sırası kullanıcının istediği nemli bekleme < kuru bekleme < nemli yürüme < ekstra kuru bekleme < kuru yürüme < ekstra kuru yürüme sırasıdır. Sayılar doğrulanmış bölüm dengesi değildir; Inspector'dan ayarlanabilir.
+
+**Bekleme ayarları:** Player → WaterMeter → **Ground Idle Drain**: Wet Idle Drain Per Second=`0.25`, Dry Idle Drain Per Second=`0.5`, Extra Dry Idle Drain Per Second=`2`. Mevcut Dry/Wet/Extra Dry Drain Per Second alanları yürüme içindir; Dry Drain Per Second ayrıca havada kullanılır. Duvara basma ve tolerans altındaki titreşim düşük bekleme oranını kullanır; hareket gerçek yatay ilerlemeden ölçülür.
+
+**Bağımsız malzeme:** Zemin collider'ı/tilemap'i veya onun üst nesnesine `GroundSurface` ekleyip Surface Material alanında `Sand`, `Grass` veya `BlackStone` seç. Kuruluk için aynı collider'ın Ground-Wet/Ground-Dry/Ground-Extra-Dry layer'ını seç; malzeme seçimi layer'ı değiştirmez. Tek tilemap'te farklı malzemeler gerekiyorsa collider/tilemap'leri malzemeye göre ayır; component destek collider'ı içindir, tek tek tile okumaz. WaterMeter → **Ground Material Multipliers** altındaki üç ayrı çarpan başlangıçta `1`'dir. Malzeme belirtilmeyen veya component'i kapalı destek `1×` kullanır. Çarpanlar pozitif tutulur. Hesap: `bekleme/yürüme kuruluk oranı × malzeme çarpanı × etkin ısı çarpanı`. Verilen altılı sıra aynı malzeme/ısı çarpanı için geçerlidir; farklı malzemelerin birbirine oranı ayrıca ayarlanabilir.
+
+Level1'de mevcut görsellere göre Ground-Dry tilemap'inde `Sand`, Ground-Wet'te `Grass`, Ground-Extra-Dry'da `BlackStone` bağlıdır. Bu başlangıç yerleşimi bir kural değildir; Surface Material ve layer ayrı değiştirilebilir. Ground-Wet tilemap'indeki alt dolgu kum görseli aynı destek malzemesini kullanır; ayrı bir kum destek yolu gerekiyorsa ayrı tilemap gerekir.
 
 Kullanıcının knockback talebiyle kabul edilen düşman gövde darbesi ayrıca tek seferlik `WaterMeter.Consume` çağrısıyla su düşürür; varsayılan miktar Player'ın `KnockbackAbility → Contact Water Loss` alanında `10`'dur. Flash süresince yeni gövde darbeleri reddedilir; ısı/dumanın süreli tüketimi devam eder. Ayrıntılar [knockback belgesinde](player-state-machine.md#knockback-ve-temas-hasarı).
 
@@ -44,11 +53,11 @@ Kuru zeminde su daha hızlı azalır ve damla daha hızlı küçülür; ıslak z
 
 Tek CircleCollider2D'nin başlangıç yarıçapı ve offset'i tam boy referansıdır. `PhysicsControl.SetBodyScale` yarıçapı değiştirip alt hizayı koruyacak offset'i hesaplar; `BodyScale` gerçekleşen boyutu verir. Eğimde destek noktası için dikey konum telafisi yapılır. Dolumda dar tavan/duvar tam boyu engelliyorsa su hemen 100 olur; görsel ve collider sığan boyutta kalır, alan açılınca büyüme tamamlanır. Animasyonun esnemesi collider'a aktarılmaz.
 
-Dry Drain Per Second, Wet Drain Per Second, Minimum Scale ve hareket toleransı WaterMeter Inspector'ındadır. `CurrentWater`, `NormalizedWater`, `Consume(amount)`, `Refill()` ve `WaterChanged` ortak su arayüzüdür. `RefilledFromSource`, eksik suyla geçerli bir kaynağa girişte dolum tamamlanınca bir kez bildirilir; kaynakta kalma ve yeniden doğuş bu olayı üretmez.
+Yürüme ve bekleme oranları, malzeme çarpanları, Minimum Scale ve hareket toleransı WaterMeter Inspector'ındadır. `CurrentWater`, `NormalizedWater`, `Consume(amount)`, `Refill()` ve `WaterChanged` ortak su arayüzüdür. `RefilledFromSource`, eksik suyla geçerli bir kaynağa girişte dolum tamamlanınca bir kez bildirilir; kaynakta kalma ve yeniden doğuş bu olayı üretmez.
 
 ## Görsel hiyerarşi
 
-Slime Fire yakınlık alanları, aynı sayaç üzerindeki `DrainMultiplier` değerini geçici olarak artırabilir. Kaynaklar `SetDrainMultiplier(source, multiplier)` / `RemoveDrainMultiplier(source)` kullanır; örtüşmede en güçlü etki geçerlidir. 31 Ekim kullanıcı düzeltmesiyle etkin çarpan >1 iken yerde hareketsiz beklemek de zemin tüketimi × çarpan kadar su kaybettirir. Isı dışında dururken tüketim sıfırdır; dolum/yeniden doğma ve kapalı kontrolde tüketmeme kuralları korunur. Ayarlar ve yaşam döngüsü [düşman belgesindedir](enemies.md).
+Slime Fire yakınlık alanları, aynı sayaç üzerindeki `DrainMultiplier` değerini geçici olarak artırabilir. Kaynaklar `SetDrainMultiplier(source, multiplier)` / `RemoveDrainMultiplier(source)` kullanır; örtüşmede en güçlü etki geçerlidir. Isı, seçili bekleme/yürüme oranını ve malzeme etkisini çarpar. Örneğin nötr malzemede `2×` ısı ile bekleme nemli/kuru/çok kuru zeminde `0.5/1/4`, yürüme `2/6/12` su/saniyedir. Isıdan çıkınca pozitif normal bekleme tüketimi sürer. Dolum/yeniden doğma ve kapalı kontrolde tüketmeme kuralları korunur. Ayarlar ve yaşam döngüsü [düşman belgesindedir](enemies.md).
 
 ```text
 Player                         Rigidbody2D, collider, ability'ler ve WaterMeter
@@ -84,6 +93,10 @@ Inspector: **Fill** mavi dolgu RectTransform'u, **Portrait** portre Image'ı, **
 Önerilen hiyerarşi (`Level1`): `Canvas` (Scale With Screen Size, 1920×1080) → `WaterHUD` (WaterBarUI) → `Portrait` ve `BarFrame` (siyah) → `BarBack` (koyu, 4 px içeride) → `Fill` (mavi).
 
 ## Doğrulama
+
+31 Ekim 2026 son bekleme/malzeme güncellemesi: ayrı `C:/Users/yhcan/AppData/Local/Temp/gameup-enemies-324e5073` projesinde Unity 6000.5.0f1 ile güncel Player prefab'ı ve oyuncu/su kodu derlendi; **79 asset/Play Mode kontrolü geçti**. Altı oran `0.25/0.5/1/2/3/6` olarak ölçüldü. Üç malzemenin üç kuruluk layer'ında bekleme/yürüme tüketimi, işaretsiz/kapalı component varsayılanı, üst nesnedeki malzeme, gerçek yakın destek seçimi, duvara basma, ±30° eğimde bekleme, dikey zıplama/düşüşte malzemenin sıfırlanması, gerçek Slime ısı alanı ve örtüşmesi/temizliği, kapalı kontrol/fizik/su component'i, 0.01/0.04 fizik adımları, kaynakta tek Heal ve sıradan beklemeden tek ölüm/yeniden doğma doğrulandı. Denge testi için malzeme çarpanları yalnızca test nesnelerinde 1.25/0.8/1.5 yapıldı; gerçek prefab'da hepsi 1'dir.
+
+Düzenek `Assets/Editor/WaterDrainVerification.cs`; ayrı proje kopyasında `-executeMethod WaterDrainVerification.Run` ile çalışır. [Sonuç](verification/water-drain-result.txt), [geçen kontroller](verification/water-drain-checks.txt); tam log geçici projedeki `water-drain-verification.log` dosyasındadır. Testin ilk ısı örneğinde Slime gövdesinin teması knockback üretti; düzenekte gövde uzaklaştırılıp gerçek ısı trigger'ı korunarak son koşu geçti. Logda UnityEditor.Search başlangıç indeksleme istisnası vardır; oyun kodu derleme/çalışma istisnası yoktur. Level1'in yeni üç malzeme bağlantısı kaynak incelemesiyle kontrol edildi; asıl sahnede Play Mode/görüntü ve dış build testi yapılmadı. Aşağıdaki ücretsiz duruş sonuçları önceki tasarımın tarihsel kayıtlarıdır.
 
 Aşağıdaki ilk kayıtlar önceki sabit collider uygulamasına aittir; yeni fiziksel küçülme için bu bölümün sonundaki güncel sonuç geçerlidir.
 

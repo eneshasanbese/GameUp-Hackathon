@@ -1,0 +1,22 @@
+HAPŞIRIK KÖZ — YENİ SÜRÜM
+
+Masters_1080: 1080 x 1080, şeffaf kayıpsız PNG ana kareler.
+Unity_256: 256 x 256 kareler, 256 PPU.
+Unity_128: 128 x 128 kareler, 128 PPU.
+İki sürümün dünya tuval boyutu aynıdır. 256 çözünürlükte 128 PPU seçerseniz boyut iki katına çıkar.
+
+Idle: 8 kare, önerilen 8 FPS, döngü açık. Hafif gövde ve alev hareketi, bir göz kırpma.
+Sneeze: 12 kare, önerilen 12 FPS, döngü kapalı. 01-02 ağız açık hazırlık; 03-04 gözleri kapatarak gerilme; 05-07 büyük açık ağız ve ani sıkışma ile hapşırma; 08-11 toparlanma.
+Oyun efekt tetiklemesi için Sneeze_05 uygun başlangıç noktasıdır. Ateş dalgası ve efektler dahil değildir.
+
+UNITY
+Seçtiğiniz Unity_128 veya Unity_256 klasörünü PNG'ler ve .meta dosyaları birlikte olacak şekilde Assets'e taşıyın. Idle ve Sneeze sheetlerini genişletip kareleri sayısal sırayla ayrı animasyon kliplerine ekleyin.
+.anim ve Animator Controller dosyaları dahil değildir.
+Meta tanınmazsa: Sprite (2D and UI), Multiple; Grid by Cell Size 128 x 128 veya 256 x 256; PPU aynı sayı; Custom pivot (0.5, 0.07407407); Bilinear; mipmap kapalı; compression None. Sıra soldan sağa, yukarıdan aşağıya.
+Frames altındaki ayrı PNG'ler alternatif teslimdir; hazır meta yalnızca sheetlerde bulunur.
+
+KALİTE
+Ana kareler küçültülmüş sürümlerden büyütülmedi; doğrudan 1080 kaynak üzerinden üretildi. 128 sürüm doğal olarak daha az ayrıntı içerir. Kaynak JPG olduğundan mevcut sıkıştırma izleri tamamen giderilemez.
+Bu, orijinal çizim üzerinde yüz düzenlemeleri ve bölgesel deformasyonlarla hazırlanmış bir animasyon geçişidir; her karesi baştan çizilmiş cel animasyonu değildir.
+PNG arka planları şeffaftır. Önizleme GIF'i sadece hareketi değerlendirmek içindir, Unity varlığı olarak kullanılmamalıdır.
+Unity içinde test edilmemiştir; kendi sürümünüzde dilimleme ve pivotu kontrol edin.
