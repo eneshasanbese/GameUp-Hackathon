@@ -68,6 +68,14 @@ WaterMeter trigger temasında suyu doldurur; RespawnPoint varsa checkpoint'i kay
 
 Eksik suyla kaynağa giriş, dolumdan sonra Heal animasyonunu tetikler. Dolum anlıktır; animasyon su kazanımını geciktirmez veya kontrolü kilitlemez. Kaynakta beklerken OnTriggerStay dolumu sürdürür, Heal tekrarlanmaz. Dolu suyla giriş ve yeniden doğuştaki Refill Heal'ı tetiklemez.
 
+## Su göstergesi (T19)
+
+`Assets/Scripts/UI/WaterBarUI.cs`, sol üstteki portreli yatay su barını yönetir. Kendi su sayacı yoktur: açılışta `NormalizedWater` değerini gösterir, sonra `WaterChanged` olayındaki mutlak miktarı `Capacity` ile 0–1'e çevirir. Mavi `Fill` objesinin anchor'ları bu orana göre ayarlanır, bu yüzden sprite gerekmez. Yeniden doğuştaki dolum da aynı olayla bara yansır.
+
+Inspector: **Fill** mavi dolgu RectTransform'u, **Portrait** portre Image'ı, **Water Meter** boş bırakılırsa sahnedeki WaterMeter otomatik bulunur. **Low Water Portrait** isteğe bağlıdır; su **Low Water Threshold** (varsayılan 0.25) altına inince portre bu sprite'a geçer, böylece düşük su yalnızca renkle anlatılmaz (T50).
+
+Önerilen hiyerarşi (`Level1`): `Canvas` (Scale With Screen Size, 1920×1080) → `WaterHUD` (WaterBarUI) → `Portrait` ve `BarFrame` (siyah) → `BarBack` (koyu, 4 px içeride) → `Fill` (mavi).
+
 ## Doğrulama
 
 Aşağıdaki ilk kayıtlar önceki sabit collider uygulamasına aittir; yeni fiziksel küçülme için bu bölümün sonundaki güncel sonuç geçerlidir.
