@@ -21,7 +21,8 @@ WaterMeter tek bir 0–100 su değeri tutar:
 
 | Durum | İlk deneme değeri |
 |---|---|
-| Yerde hareketsiz | 0 |
+| Isı dışında yerde hareketsiz | 0 |
+| Slime Fire ısısında yerde hareketsiz | Kuru zeminde 6, nemli zeminde 2 birim/saniye (varsayılan 2× ısı) |
 | Kuru zeminde gerçek yatay ilerleme | 3 birim/saniye |
 | Islak zeminde gerçek yatay ilerleme | 1 birim/saniye |
 | Havada | 3 birim/saniye |
@@ -39,7 +40,7 @@ Dry Drain Per Second, Wet Drain Per Second, Minimum Scale ve hareket toleransı 
 
 ## Görsel hiyerarşi
 
-Slime Fire yakınlık alanları, aynı sayaç üzerindeki `DrainMultiplier` değerini geçici olarak artırabilir. Kaynaklar `SetDrainMultiplier(source, multiplier)` / `RemoveDrainMultiplier(source)` kullanır; örtüşmede en güçlü etki geçerlidir. Yerde dururken sıfır tüketim ve mevcut dolum/yeniden doğma kuralları korunur. Ayarlar ve yaşam döngüsü [düşman belgesindedir](enemies.md).
+Slime Fire yakınlık alanları, aynı sayaç üzerindeki `DrainMultiplier` değerini geçici olarak artırabilir. Kaynaklar `SetDrainMultiplier(source, multiplier)` / `RemoveDrainMultiplier(source)` kullanır; örtüşmede en güçlü etki geçerlidir. 31 Ekim kullanıcı düzeltmesiyle etkin çarpan >1 iken yerde hareketsiz beklemek de zemin tüketimi × çarpan kadar su kaybettirir. Isı dışında dururken tüketim sıfırdır; dolum/yeniden doğma ve kapalı kontrolde tüketmeme kuralları korunur. Ayarlar ve yaşam döngüsü [düşman belgesindedir](enemies.md).
 
 ```text
 Player                         Rigidbody2D, collider, ability'ler ve WaterMeter

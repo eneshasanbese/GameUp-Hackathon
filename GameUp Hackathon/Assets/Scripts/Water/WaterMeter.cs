@@ -134,11 +134,13 @@ public sealed class WaterMeter : MonoBehaviour
             RespawnAtCheckpoint();
             return;
         }
-        if (physics.grounded && speed <= minimumGroundSpeed)
+        float multiplier = DrainMultiplier;
+        // Heat keeps draining a stationary player; ordinary grounded idle remains free.
+        if (physics.grounded && speed <= minimumGroundSpeed && multiplier <= 1f)
             return;
 
         float rate = physics.wetGrounded ? wetDrainPerSecond : dryDrainPerSecond;
-        Consume(rate * DrainMultiplier * Time.fixedDeltaTime);
+        Consume(rate * multiplier * Time.fixedDeltaTime);
     }
 
     private void Update()

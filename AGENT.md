@@ -32,7 +32,7 @@ Build alırken `ProjectSettings/EditorBuildSettings.asset` ve varsa seçili Buil
 
 ## Korunacak oyun kuralları
 
-- Yerde gerçekten hareketsizken su kaybı yoktur. Zeminde hareket tüketimi yüzeye bağlıdır; nemli zemin normal/kuru zeminden az tüketir.
+- Slime Fire ısısı dışında yerde gerçekten hareketsizken su kaybı yoktur. 31 Ekim 2026 kullanıcı kararıyla etkin ısı çarpanı (>1) içinde durmak da su tüketir; hareket şartı aranmaz. Tüketim yüzeye bağlıdır; nemli zemin normal/kuru zeminden az tüketir.
 - Zıplama ve düşüş, yatay input olmasa da normal tüketim üretir. Önceki nemli zemin katsayısı havaya taşınmaz. Tüketim geçen süreye bağlıdır.
 - Su tek bir bileşende tutulur ve sınırlandırılır. UI ve görsel başka bir su sayacı oluşturmaz. Su sıfırken damla kazanamaz.
 - Ara duraklar su birikintileridir. Yaşayan ara fidan/ağaç checkpoint'i ekleme; yaşayan tek fidan finaldedir.

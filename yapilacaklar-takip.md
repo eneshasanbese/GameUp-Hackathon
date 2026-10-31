@@ -8,6 +8,10 @@
 
 31 Ekim 2026 ek kapsam: Saw ve Slime Fire için duran/git-gel prefabları ve Slime yakınlık erime çarpanı uygulandı. Unity 6000.5.0f1 ile ayrı geçici projede 20 asset ve 31 Play Mode kontrolü geçti; ayarlar ve doğrulama kaydı [düşman belgesinde](docs/enemies.md). Asıl sahnelere yerleşim ve build testi yapılmadı.
 
+31 Ekim 2026 Saw animasyon düzeltmesi: 10 FPS ve döngü sonundaki tekrarlı ilk kare yerine 24 FPS, eşit aralıklı sekiz kare kullanıldı. Aynı bağımsız Unity projesinde 4 asset ve 10 Play Mode kontrolü geçti; iki Saw prefabında beşer döngü örneklendi. Asıl sahnede görüntü/build kontrolü bekliyor ([kayıt](docs/enemies.md)).
+
+31 Ekim 2026 ısı hasarı düzeltmesi (T14/QA01): kullanıcının yeni kararıyla etkin Slime Fire ısısında yerde durmak da su kaybettiriyor; ısı dışında durmak ücretsiz. Ayrı Unity projesinde gerçek prefablarla 27 Play Mode kontrolü geçti: kuru/nemli duruş ve yürüyüş tüketimi, alan çıkışı/kapatma, çarpan 1, örtüşme, farklı fizik adımları ve ısıdan ölüm/yeniden doğma. Asıl sahne/build testi bekliyor ([kayıt](docs/enemies.md)).
+
 - [ ] Düşmanlarla doğrudan temas: Player knockback eklendikten sonra bağlanacak (kullanıcının açık TODO kararı).
 
 - [x] Unity 6000.5.0f1 projesi oluşturuldu (URP 2D, yeni Input System)
@@ -78,7 +82,7 @@ Cinemachine kamerayı oyuncunun peşinden götürür. Arka plan kameranın altı
 
 - [ ] T12 — Su değerini tek bir bileşen (`WaterMeter`) yönetiyor
 - [ ] T13 — Su 0–100 arasında kalıyor
-- [ ] T14 — Durum önceliği: oyun aktif değilken tüketim yok, kaynakta dolum, havada normal, yerde dururken sıfır, yerde hareket ederken zemin katsayılı
+- [ ] T14 — Durum önceliği: oyun aktif değilken tüketim yok, kaynakta dolum, havada normal, ısı dışında yerde dururken sıfır, yerde hareket ederken veya etkin Slime Fire ısısında dururken zemin ve ısı katsayılı
 - [ ] T15 — Kuru ve nemli zemin ayırt ediliyor; bilinmeyen zemin normal sayılıyor
 - [ ] T16 — Tüketim kare hızından bağımsız (geçen süreye göre hesaplanıyor)
 - [ ] T17 — Fizik titreşimi ve duvara doğru yürümek hareket sayılmıyor
