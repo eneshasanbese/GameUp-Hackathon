@@ -32,7 +32,9 @@ Build alırken `ProjectSettings/EditorBuildSettings.asset` ve varsa seçili Buil
 
 ## Korunacak oyun kuralları
 
-- Yerde gerçekten hareketsizken su kaybı yoktur. Zeminde hareket tüketimi yüzeye bağlıdır; nemli zemin normal/kuru zeminden az tüketir.
+- 31 Ekim 2026 Köz Ocağı talebiyle normal tüketimden bağımsız, mesafeyle artan mutlak su puanı/saniye kaybı ve yalnızca yatay çekim kapsam içindedir. Bu kayıp dururken/flash sırasında sürer; ısı çarpanına dönüşmez. Köz Ocağı gövdesi ek temas hasarı/knockback vermez. Kullanıcının netleştirmesi mevcut suya bağlı boyut/hız/zıplamayı korur. [Ayarlar ve testler](docs/koz-ocagi.md).
+
+- Slime Fire ısısı, HapsirikKoz'un geçici dumanı, Köz Ocağı alanı ve kabul edilen düşman gövde darbeleri dışında yerde gerçekten hareketsizken su kaybı yoktur. 31 Ekim 2026 kullanıcı kararlarıyla etkin ısı/duman çarpanı (>1) içinde durmak da su tüketir; hareket şartı aranmaz. Isı/duman aynı çarpan sistemini kullanır; Köz Ocağı yukarıdaki bağımsız puan/saniye yoludur. Normal tüketim yüzeye bağlıdır; nemli zemin normal/kuru zeminden az tüketir. Gövde darbesi ise Inspector'dan ayarlı tek `WaterMeter.Consume` işlemiyle su düşürür; flash yeni gövde darbelerini engeller.
 - Zıplama ve düşüş, yatay input olmasa da normal tüketim üretir. Önceki nemli zemin katsayısı havaya taşınmaz. Tüketim geçen süreye bağlıdır.
 - Su tek bir bileşende tutulur ve sınırlandırılır. UI ve görsel başka bir su sayacı oluşturmaz. Su sıfırken damla kazanamaz.
 - Ara duraklar su birikintileridir. Yaşayan ara fidan/ağaç checkpoint'i ekleme; yaşayan tek fidan finaldedir.
@@ -43,7 +45,7 @@ Build alırken `ProjectSettings/EditorBuildSettings.asset` ve varsa seçili Buil
 
 ## Mevcut kodla çalışma
 
-- `Player`, aynı GameObject üzerindeki `BaseAbility` component'lerini toplar ve `StateMachine` üzerinden çalıştırır. Mevcut durumlar `Idle`, `Move`, `Jump` olup `Jump` düşüşü de kapsar. [Oyuncu belgesini](docs/player-state-machine.md) oku.
+- `Player`, aynı GameObject üzerindeki `BaseAbility` component'lerini toplar ve `StateMachine` üzerinden çalıştırır. Mevcut durumlar `Idle`, `Move`, `Jump`, `Knockback` olup `Jump` düşüşü de kapsar. Knockback sırasında zıplama darbeyi kesmez; flash yeni gövde darbelerini engellerken ısı/duman tüketimi sürer. Player kapatılırken ability'lerin `OnPlayerDisabled` temizliği çalışır. [Oyuncu belgesini](docs/player-state-machine.md) oku.
 - `GatherInput`, InputActionAsset'in oyuncuya ait kopyasını yönetir; kısa zıplama basma/bırakma olaylarını fizik adımları arasında saklar. İkinci input sistemi ekleme.
 - `PhysicsControl`, `Ground-Dry` ve `Ground-Wet` desteğini gerçek collider temasları ve aşağı şekil taramasıyla algılar; `Rigidbody2D` ve `CircleCollider2D` ister. Tarama güncel collider boyutunu izler, duvar normalini zemin saymaz. Eğimde hareket yüzey teğetini izler; gerçek zıplamada zemine yapışma uygulanmaz. Takip dosyasındaki Capsule önerisi nedeniyle collider türünü otomatik değiştirme.
 - `WaterMeter` bugün birkaç sorumluluğu bir arada taşır. Genel belgedeki `WaterSource`, `RespawnController`, `PlayerSizeVisual`, `GameFlow` gibi isimler öneridir; bu sınıfların mevcut olduğunu varsayma veya yalnızca isimleri tamamlamak için sistemi bölme. [Su belgesini](docs/water-player.md) oku.

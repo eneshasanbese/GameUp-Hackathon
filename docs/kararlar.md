@@ -1,10 +1,36 @@
 # Kararlar
 
+## Köz Ocağı — sabit yatay çekim ve bağımsız su kaybı
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı `KozOcagi/` görselleri ve ayrıntılı istek metniyle sabit çevresel düşman, prefab ve test sahnesi istedi. Yalnızca yatay çekim; yaklaştıkça artan **mutlak su puanı/saniye** kaybı. Temas hasarı, knockback, takip, hapşırma ve mermi kapsam dışıdır. Tüketim ısı çarpanına dönüşmez; dururken ve gövde darbesi flash'ında da sürer.
+
+**Netleştirme:** İstek metnindeki sabit oyuncu boyutu/hızı/zıplaması mevcut K03 uygulamasıyla çeliştiğinden soruldu. Kullanıcı “Mevcut davranışı koru; Köz Ocağı'nı ekle” dedi. Suya bağlı küçülme ve ability çarpanları korunur.
+
+**Uygulama tercihi:** Kaynak başına yatay motor hedef hızı katkısı; su için tek `WaterMeter.Consume(rate * fixedDeltaTime)` yolu. Örtüşen Köz Ocağı katkıları toplanır; çıkış yalnızca ilgili kaynağı temizler. 3/0.75 menzil, 1–6 su puanı/saniye, 0.4–2.5 dünya birimi/saniye çekim ve 0.35 saniye rampa deneme değerleridir. [Prefab, sahne, birimler ve testler](koz-ocagi.md).
+
 ## Saw, Slime Fire ve yakınlıkta erime
 
 **Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı, mevcut Saw/Slime Fire sheet'lerinden duran ve belirli iki nokta arasında git-gel yapan prefablar istedi. Slime'ın yakınlıktaki oyuncunun erime çarpanını artırması açıkça istendi. Önceki düşmanları kapsam dışında tutan karar, yalnızca bu iki düşman ve davranışları için güncellendi.
 
-**Temas kararı:** Kullanıcının devam mesajı: “doğrudan temas şu anlık /to-do olarak kalsın player a knockback ekleyeceğiz.” Bu nedenle doğrudan temas şimdilik etkisizdir; knockback, temas hasarı veya temasla yeniden doğma uygulanmadı. Isı alanı ayrı trigger'dır ve mevcut tüketimi çarpar; yerde dururken sıfır tüketim kuralı korunur. Çarpan 2, alan yarıçapı 1.75, git-gel offset'i (3, 0) ve hızı 1.5 deneme değerleridir. Üst üste alanlarda en güçlü etki kullanılır. Ayrıntılar [düşman belgesindedir](enemies.md).
+**İlk temas kararı:** Kullanıcının devam mesajı: “doğrudan temas şu anlık /to-do olarak kalsın player a knockback ekleyeceğiz.” İlk uygulamada doğrudan temas bu nedenle etkisizdi. Sonraki knockback talebiyle bu TODO uygulamaya alındı; güncel karar aşağıdadır. Isı alanı ayrı trigger'dır ve mevcut tüketimi çarpar. Çarpan 2, alan yarıçapı 1.75, git-gel offset'i (3, 0) ve hızı 1.5 deneme değerleridir. Üst üste alanlarda en güçlü etki kullanılır. Ayrıntılar [düşman belgesindedir](enemies.md).
+
+**31 Ekim 2026 ısı düzeltmesi:** Kullanıcı “fire slime a yakınken sabit durunca canımız gitmiyor. sabit dursak da hasar yemeliyiz” dedi. Slime Fire'ın etkin ısı alanında hareketsizken de su tüketilir; önceki sıfır tüketim uygulaması bu alan için geçersizdir. Çarpan >1 olduğunda zeminin normal tüketimi çarpılır; varsayılan 2× ile kuru zeminde 6, nemli zeminde 2 birim/saniye. Alan dışında veya çarpan 1 iken yerde durma ücretsizdir. Ayrı bir can sayacı eklenmez; hasar mevcut su azalması ve sıfırda yeniden doğma yolunu izler. Bu aşamada temas/knockback TODO'ydu; sonraki karar aşağıdadır.
+
+## Gövde teması — Knockback, flash ve tek su kaybı
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı artık knockback'i eklemeyi, ayrı bir ability olmasını, diğer projesindeki `KnockbackAbility.cs` dosyasından esinlenilmesini ve birkaç saniyelik flash sırasında `player_death_01.png` görünümünü istedi. Devam sorusuna “Evet, su kaybı da olsun; miktarı Inspector’dan ayarlayalım” yanıtını verdi. Bu karar önceki doğrudan temas TODO'sunun yerini alır.
+
+**Uygulama:** Altı düşmanın yalnızca gövdeleri tek darbe verir; Player'ın mevcut state machine'ine `Knockback` ability/state'i eklendi. Tek su kaybı `WaterMeter.Consume` üzerinden olur. Darbe FixedUpdate'te düşmandan uzağa ve yukarı uygulanır; kısa kontrol kilidinden sonra kübik toparlanmayla normal harekete dönülür. Yeni input, çift zıplama veya can sayacı eklenmedi. Flash boyunca yeni gövde darbeleri engellenir; Slime ısısı ve dumanın süreli tüketimi devam eder. Isı/duman alanları knockback tetiklemez. Ölüm/yeniden doğma, Player veya ability kapanışı bekleyen itişi ve flash'ı temizler.
+
+**Inspector deneme değerleri:** Force `(6, 5)`, Contact Water Loss `10`, Control Lock Duration `0.2` saniye, Recovery Duration `0.3` saniye, Recovery Airspeed `4`, Flash Duration `2` saniye ve Flash Interval `0.1` saniye. Denge değerleri oynanışla ayarlanabilir. Hasar karesinin sprite kimliği korunarak PPU/pivot normal oyuncuyla eşlendi. Bağlantılar ve test kapsamı [oyuncu](player-state-machine.md#knockback-ve-temas-hasarı) ve [düşman](enemies.md) belgelerindedir.
+
+## HapsirikKoz — Rastgele hapşırma ve cooldown
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı mevcut `Assets/platformerPack/Sprites/Enemies/HapsirikKoz/` görsellerinden düşmanı eklemeyi ve Saw/Slime Fire prefablarını örnek almayı istedi. Devam mesajında her hapşırma öncesinde rastgele 1–5 saniye bekleme, ardından art arda sık hapşırmayı önlemek için 2–3 saniye cooldown istedi.
+
+**Uygulama:** Duran ve mevcut `EnemyPatrol` ile iki uç arasında hareket eden iki prefab; 8 FPS Idle ve tek seferlik 12 FPS Sneeze; hapşırma tamamlandıktan sonra rastgele 2–3 saniye cooldown ve ardından yeni rastgele 1–5 saniyelik bekleme. Her iki aralık Inspector'da ayarlanabilir. Varsayılan bir saniyelik animasyonla iki başlangıç arasında en az yaklaşık dört saniye vardır. İlk eklemede hapşırma görseldi; sonraki kullanıcı talebiyle aşağıdaki duman hasarı kapsama alındı. İlk eklemede asıl sahneye yerleşim yapılmadı. Knockback'in sonraki kapsamı yukarıdadır; ayrıntılar [düşman belgesinde](enemies.md).
+
+**31 Ekim 2026 duman hasarı:** Kullanıcı, hapşırınca birkaç saniye kalan ateş dumanının içindeki oyuncunun Slime Fire yakınlığıyla aynı mantıkta daha hızlı su tüketmesini istedi; duman animasyonunu sonraya bıraktı. Hapşırmanın çıkış karesinde bağımsız bir duman trigger'ı oluşur, çıktığı dünya konumunda kalır ve süresi dolunca yok olur. `EnemyHeatArea` ve mevcut tek `WaterMeter` kullanılır; yerde hareketsizken de tüketim vardır. Örtüşen Slime/duman kaynaklarında en güçlü çarpan geçerlidir; çıkış/kapanma/süre bitişi çarpanı temizler. Süre `3` saniye, yarıçap `1.75` ve çarpan `2` Inspector'dan ayarlanabilir deneme değerleridir. Dumanın görünümü/animasyonu bekliyor; sonradan eklenen gövde knockback'i duman alanına uygulanmaz.
 
 ## K03 — Suya bağlı görsel ve fiziksel küçülme
 
@@ -30,9 +56,9 @@
 
 **Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı bölüme "extra dry" zemin ekledi, `Ground-Extra-Dry` fizik layer'ını (10) oluşturdu ve kodun bu layer'ı algılamasını istedi. Genel plandaki "sıcak bölge ilk sürüm için zorunlu değil" notu ve P2 "özel sıcak/kuru alan" fikri bu talimatla kapsama alınmıştır.
 
-**Uygulama:** `PhysicsControl` üçüncü bir LayerMask (`Extra Dry Ground Layer`) taşır ve `extraDryGrounded` bilgisini verir; bu zemin de `grounded` sayılır, böylece yürüme ve zıplama normal çalışır. `WaterMeter`, çok kuru zeminde gerçek yatay ilerlemede `Extra Dry Drain Per Second` oranını kullanır. Yerde dururken tüketim yine yoktur; havada kuru oran geçerlidir, çok kuru katsayı havaya taşınmaz.
+**Uygulama:** `PhysicsControl` üçüncü bir LayerMask (`Extra Dry Ground Layer`) taşır ve `extraDryGrounded` bilgisini verir; bu zemin de `grounded` sayılır, böylece yürüme ve zıplama normal çalışır. `WaterMeter`, çok kuru zeminde gerçek yatay ilerlemede `Extra Dry Drain Per Second` oranını kullanır. Isı dışında yerde dururken tüketim yoktur; etkin Slime ısısında dururken de çok kuru oran ısı çarpanıyla uygulanır. Havada kuru oran geçerlidir, çok kuru katsayı havaya taşınmaz.
 
-**Isı alanıyla birlikte:** Slime Fire ısı alanının `DrainMultiplier` değeri, o an geçerli zemin oranını çarpar. Çok kuru zeminde ısı alanındaki hareket deneme değerleriyle 6 × 2 = 12 birim/saniye tüketir; bu birleşim dengelenirken birlikte test edilmelidir.
+**Isı alanıyla birlikte:** Slime Fire ısı alanının `DrainMultiplier` değeri, o an geçerli zemin oranını çarpar. Çok kuru zeminde etkin ısı alanında dururken ve hareket ederken deneme değerleriyle 6 × 2 = 12 birim/saniye tüketilir; bu birleşim dengelenirken birlikte test edilmelidir.
 
 **Deneme ayarı:** `Extra Dry Drain Per Second = 6` (kuru oranın iki katı). Oynanışla dengelenecek başlangıç değeridir. Görsel olarak yalnızca renkle değil doku/şekil ile de ayrılması gerekir (T43).
 

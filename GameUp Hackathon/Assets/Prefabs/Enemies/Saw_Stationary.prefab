@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1487232091876241008}
   - component: {fileID: 481575451537605890}
   - component: {fileID: 5833742083255009860}
+  - component: {fileID: 528280860369052714}
   m_Layer: 0
   m_Name: Saw_Stationary
   m_TagString: Untagged
@@ -97,6 +98,18 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.46
+--- !u!114 &528280860369052714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4377922089546733813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2225a4fdc47ec86419b839442e5fefb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContactKnockback
 --- !u!1 &6252241570361489882
 GameObject:
   m_ObjectHideFlags: 0

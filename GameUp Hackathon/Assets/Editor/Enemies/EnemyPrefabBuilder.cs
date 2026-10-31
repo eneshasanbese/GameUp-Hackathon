@@ -21,18 +21,27 @@ public static class EnemyPrefabBuilder
         RepairSawSlices("idle");
         RepairSawSlices("walk");
         // The walk sheet rotates the blade while keeping the face upright, even when stationary.
-        AnimatorController saw = CreateAnimation("SawSpin", "saw", "walk", false);
+        AnimatorController saw = CreateAnimation("SawSpin", "saw", "walk", false, 24f);
         AnimatorController idle = CreateAnimation("SlimeFireIdle", "slime_fire", "idle", true);
         AnimatorController walk = CreateAnimation("SlimeFireWalk", "slime_fire", "walk", true);
         CreatePrefab("Saw_Stationary", true, false, saw);
         CreatePrefab("Saw_Patrol", true, true, saw);
         CreatePrefab("SlimeFire_Stationary", false, false, idle);
         CreatePrefab("SlimeFire_Patrol", false, true, walk);
+        HapsirikKozPrefabBuilder.Rebuild();
         AssetDatabase.SaveAssets();
-        Debug.Log("Created four enemy prefabs. Direct contact/knockback remains TODO.");
+        Debug.Log("Created six enemy prefabs with contact knockback and timed HapsirikKoz smoke.");
     }
 
-    private static AnimatorController CreateAnimation(string name, string enemy, string action, bool footAnchored)
+    [MenuItem("GameUp/Enemies/Rebuild Saw Animation")]
+    public static void RebuildSawAnimation()
+    {
+        EnsureFolder(AnimationFolder);
+        CreateAnimation("SawSpin", "saw", "walk", false, 24f);
+        AssetDatabase.SaveAssets();
+    }
+
+    private static AnimatorController CreateAnimation(string name, string enemy, string action, bool footAnchored, float frameRate = 10f)
     {
         Sprite[] sprites = AssetDatabase.LoadAllAssetsAtPath(SpriteFolder + enemy + "/Sheets/" + enemy + "_" + action + ".png")
             .OfType<Sprite>()
@@ -48,12 +57,12 @@ public static class EnemyPrefabBuilder
             clip = new AnimationClip { name = name };
             AssetDatabase.CreateAsset(clip, clipPath);
         }
-        clip.frameRate = 10f;
-        var frames = new ObjectReferenceKeyframe[sprites.Length + 1];
-        var heights = new Keyframe[sprites.Length + 1];
-        for (int i = 0; i <= sprites.Length; i++)
+        clip.frameRate = frameRate;
+        var frames = new ObjectReferenceKeyframe[sprites.Length];
+        var heights = new Keyframe[sprites.Length];
+        for (int i = 0; i < sprites.Length; i++)
         {
-            Sprite sprite = sprites[i % sprites.Length];
+            Sprite sprite = sprites[i];
             float time = i / clip.frameRate;
             frames[i] = new ObjectReferenceKeyframe { time = time, value = sprite };
             heights[i] = new Keyframe(time, -sprite.bounds.min.y, float.PositiveInfinity, float.PositiveInfinity);
@@ -66,6 +75,9 @@ public static class EnemyPrefabBuilder
                 EditorCurveBinding.FloatCurve("", typeof(Transform), "m_LocalPosition.y"), new AnimationCurve(heights));
         }
         AnimationClipSettings settings = AnimationUtility.GetAnimationClipSettings(clip);
+        // Unity holds the final sprite for one sample. A repeated first key would double its loop-boundary hold.
+        settings.startTime = 0f;
+        settings.stopTime = sprites.Length / clip.frameRate;
         settings.loopTime = true;
         AnimationUtility.SetAnimationClipSettings(clip, settings);
         EditorUtility.SetDirty(clip);
@@ -108,8 +120,8 @@ public static class EnemyPrefabBuilder
                 box.offset = new Vector2(0f, 0.32f);
                 contact = box;
             }
-            // Reserved for a later knockback/contact response. Do not block the player now.
             contact.isTrigger = true;
+            root.AddComponent<EnemyContactKnockback>();
 
             var visual = new GameObject("Visual");
             visual.transform.SetParent(root.transform, false);

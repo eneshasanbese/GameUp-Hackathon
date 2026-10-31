@@ -1,5 +1,7 @@
 # Su damlası
 
+31 Ekim 2026 Köz Ocağı eki: ayrı çevresel puan/saniye kaybı tek `WaterMeter.Consume` yolunu kullanır; normal tüketim/ısı çarpanını değiştirmez. Dururken ve gövde flash'ında sürer, respawn/kontrol kapanışında durur. [Prefab ayarları ve doğrulama](koz-ocagi.md).
+
 Su miktarı, görsel küçülme/esneme, iz, dolum ve yeniden doğuş `Assets/Scripts/Water/WaterMeter.cs` içindedir. Player.cs ability/state machine yöneticisidir.
 
 ## Ground kontrolü
@@ -22,12 +24,17 @@ WaterMeter tek bir 0–100 su değeri tutar:
 
 | Durum | İlk deneme değeri |
 |---|---|
-| Yerde hareketsiz | 0 |
+| Isı dışında yerde hareketsiz | 0 |
+| Slime Fire ısısı / HapsirikKoz dumanında yerde hareketsiz | Kuru zeminde 6, nemli zeminde 2, çok kuru zeminde 12 birim/saniye (varsayılan 2× ısı) |
 | Kuru zeminde gerçek yatay ilerleme | 3 birim/saniye |
 | Islak zeminde gerçek yatay ilerleme | 1 birim/saniye |
 | Çok kuru zeminde gerçek yatay ilerleme | 6 birim/saniye (`Extra Dry Drain Per Second`) |
 | Havada | 3 birim/saniye (kuru oran; zeminin katsayısı havaya taşınmaz) |
 | Kaynağa temas | 100'e dolum |
+
+Kullanıcının knockback talebiyle kabul edilen düşman gövde darbesi ayrıca tek seferlik `WaterMeter.Consume` çağrısıyla su düşürür; varsayılan miktar Player'ın `KnockbackAbility → Contact Water Loss` alanında `10`'dur. Flash süresince yeni gövde darbeleri reddedilir; ısı/dumanın süreli tüketimi devam eder. Ayrıntılar [knockback belgesinde](player-state-machine.md#knockback-ve-temas-hasarı).
+
+HapsirikKoz'un hapşırma dumanı, Slime Fire ile aynı `EnemyHeatArea`/su çarpanı sistemini kullanır. Geçici alan varsayılan 3 saniyede yok olur; içinden çıkınca veya süre dolunca çarpan kalkar. Örtüşen alanlar çarpılmaz; en yüksek çarpan geçerlidir. Ayarlar ve zamanlama [düşman belgesindedir](enemies.md#hapsirikkoz-hapşırma-döngüsü).
 
 Kuru zeminde su daha hızlı azalır ve damla daha hızlı küçülür; ıslak zeminde ikisi de yavaştır. 31 Ekim kullanıcı kararlarına göre görsel ve collider kalan suya göre birlikte 1–0.45 aralığında küçülür; yürüme/hava hızı ve zıplama kalkış hızı mevcut ability'lerin Inspector çarpanlarıyla artar. Kök obje ölçeği değişmez. Duvara basılı tutmak yerine gerçek yatay ilerleme ölçülür. Önceki sabit collider/hız/zıplama kurallarının yerini [güncel kararlar](kararlar.md) almıştır.
 
@@ -41,7 +48,7 @@ Dry Drain Per Second, Wet Drain Per Second, Minimum Scale ve hareket toleransı 
 
 ## Görsel hiyerarşi
 
-Slime Fire yakınlık alanları, aynı sayaç üzerindeki `DrainMultiplier` değerini geçici olarak artırabilir. Kaynaklar `SetDrainMultiplier(source, multiplier)` / `RemoveDrainMultiplier(source)` kullanır; örtüşmede en güçlü etki geçerlidir. Yerde dururken sıfır tüketim ve mevcut dolum/yeniden doğma kuralları korunur. Ayarlar ve yaşam döngüsü [düşman belgesindedir](enemies.md).
+Slime Fire yakınlık alanları, aynı sayaç üzerindeki `DrainMultiplier` değerini geçici olarak artırabilir. Kaynaklar `SetDrainMultiplier(source, multiplier)` / `RemoveDrainMultiplier(source)` kullanır; örtüşmede en güçlü etki geçerlidir. 31 Ekim kullanıcı düzeltmesiyle etkin çarpan >1 iken yerde hareketsiz beklemek de zemin tüketimi × çarpan kadar su kaybettirir. Isı dışında dururken tüketim sıfırdır; dolum/yeniden doğma ve kapalı kontrolde tüketmeme kuralları korunur. Ayarlar ve yaşam döngüsü [düşman belgesindedir](enemies.md).
 
 ```text
 Player                         Rigidbody2D, collider, ability'ler ve WaterMeter
@@ -89,3 +96,5 @@ Unity 6000.5.0f1 ile ayrı geçici projede 17 Play Mode testi geçti: iki rayın
 31 Ekim 2026 fiziksel küçülme/eğim güncellemesi: Unity 6000.5.0f1 ile güncel Player prefab'ı, oyuncu/su kodu, Input System ve animasyon asset'leri ayrı geçici projeye kopyalanarak 47 Play Mode doğrulaması geçti. Tam/yarım/az su ve Inspector'da minimum boyut değişimi, ayak hizası, gerçek zıplama/kısa basış/basılı tutma, ±45° kuru/nemli eğimde hareket ve tuş bırakınca durma, küçük boyda eğim desteği, duvar/kenar ayrımı, kaynakta tek Heal, dolum ve yeniden doğmada tam boyuta dönüş kontrol edildi. Dar tavan altında büyümenin ertelenmesi ve alan açılınca tamamlanması da geçti. Yerde dururken sıfır, nemli yürüyüşte düşük ve havada normal tüketim korundu. Bu test gerçek prefab ve kodla geçici test geometrisinde yapıldı; asıl Components/Level 5 sahneleri veya build çalıştırılmadı.
 
 31 Ekim 2026 hız/zıplama çarpanları: ayrı Unity projesinde gerçek prefab ve güncel kodla 48 Play Mode doğrulaması geçti. Bonuslar aynı WaterMeter'ın su oranından okundu; dolum/yeniden doğma temel harekete döndü ve havada dolum/tüketim yeni zıplama itişi üretmedi. Inspector ayarı, ölçülen hız/mesafe ve regresyon kapsamı [oyuncu belgesindedir](player-state-machine.md#doğrulama). Asıl sahneler ve build bu kontrolde çalıştırılmadı.
+
+31 Ekim 2026 WaterMeter merge çözümü: yereldeki hareketsiz Slime ısı hasarı ile gelen Ground-Extra-Dry tüketimi aynı FixedUpdate satırlarında çakıştı; iki davranış birlikte korundu. Unity 6000.5.0f1 ile `C:/Users/yhcan/AppData/Local/Temp/gameup-enemies-324e5073` projesinde güncel WaterMeter/PhysicsControl, gerçek Player ve Slime prefablarıyla 33 Play Mode kontrolü geçti. Isı dışı duruş, kuru/nemli ısı hasarı, alan çıkışı/kapatma, örtüşme, fizik adımı farkları ve yeniden doğma regresyonlarına ek olarak gerçek çok kuru zemin algısı, çok kuru zeminde hareket tüketimi 6 ve 2× ısıda duruş/hareket tüketimi yaklaşık 12 birim/saniye doğrulandı. Havaya çıkınca çok kuru oran taşınmadı; ısıda normal hava tüketimi yaklaşık 6 birim/saniye oldu. Sonuç `water-merge-result.txt`, log `water-merge-verification.log`, düzenek `Assets/Editor/HeatIdleVerification.cs` dosyalarındadır. Asıl Level1 sahnesi ve build bu kontrolde çalıştırılmadı.

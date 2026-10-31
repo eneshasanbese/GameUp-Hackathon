@@ -5,6 +5,7 @@ public static class PlayerStates
         Idle,
         Move,
         // Jump covers both ascending and falling, including walking off an edge.
-        Jump
+        Jump,
+        Knockback
     }
 }

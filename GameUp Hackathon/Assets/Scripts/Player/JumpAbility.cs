@@ -21,7 +21,8 @@ public sealed class JumpAbility : BaseAbility
         // Jump input must be checked while Idle and Move are active as well.
         bool requested = linkedInput.ConsumeJump();
         bool released = linkedInput.ConsumeJumpRelease();
-        if (!isPermitted || !player.isActiveAndEnabled)
+        if (!isPermitted || !player.isActiveAndEnabled ||
+            linkedStateMachine.currentState == PlayerStates.State.Knockback)
             return;
 
         if (requested && linkedPhysicsControl.grounded && linkedStateMachine.ChangeState(thisAbilityState))

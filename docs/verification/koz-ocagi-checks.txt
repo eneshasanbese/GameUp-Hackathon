@@ -1,0 +1,55 @@
+﻿EMBER_PASS One stationary suction component in the saved prefab
+EMBER_PASS No added body, patrol, projectiles, body-hit damage or knockback
+EMBER_PASS Visual, range origin, mouth and trigger have separate transforms
+EMBER_PASS Only the explicit 3-unit Player-filtered trigger is present
+EMBER_PASS Both origin references are wired
+EMBER_PASS Real idle sheet sprite has its existing 128 PPU, cell and foot pivot
+EMBER_PASS Demo uses the existing water HUD wired to its actual Player
+EMBER_PASS Demo Player and furnace use unlit sprite materials without needing scene lights
+EMBER_PASS Saved demo has a safe starting area, dry floor, one furnace and restart controls
+EMBER_PASS Outside grounded idle has zero pull and zero extra/normal loss
+EMBER_PASS A collider overlapping the trigger with its body centre outside produces no effect
+EMBER_PASS Distance increases stationary additional points/sec: edge=1,22223, middle=3,666689, inner=6,00014
+EMBER_PASS Full and lower starting water both lose 6 points/sec (about 3 points in 0.5s)
+EMBER_PASS Fixture enters actual body-hit flash
+EMBER_PASS Continuous suction water loss remains active during body-hit immunity
+EMBER_PASS Heat-scaled dry loss (6) and independent suction loss (6) add to 12, with no multiplier on suction
+EMBER_PASS Entry ramps the bounded motor offset from a gentle start to 2.5 world units/sec
+EMBER_PASS Idle suction moves horizontally without directly adding vertical speed
+EMBER_PASS Disabling the source immediately removes its motor contribution
+EMBER_PASS Actual full opposite input escapes the strongest zone on the left
+EMBER_PASS Actual full opposite input escapes the strongest zone on the right
+EMBER_PASS The horizontal mouth dead zone has no alternating pull or idle jitter
+EMBER_PASS Multiple player colliders do not multiply the water loss
+EMBER_PASS Losing one collider does not end the remaining player's contact
+EMBER_PASS Disabling the last player collider clears the effect without Exit callbacks
+EMBER_PASS Two independent sources add their 6 and 3 points/sec once each
+EMBER_PASS One source exiting leaves the other water source active
+EMBER_PASS Horizontal motor contributions are composed per source
+EMBER_PASS Removing one pull source preserves the other pull
+EMBER_PASS Disabling the trigger stops environmental loss
+EMBER_PASS Re-enabled trigger reacquires the player
+EMBER_PASS Teleport out clears loss without relying on a trigger exit
+EMBER_PASS Disabled control / non-playing state takes no environmental loss
+EMBER_PASS Disabled WaterMeter takes no environmental loss
+EMBER_PASS Non-simulated player takes no environmental loss
+EMBER_PASS Pause stops fixed-step environmental loss
+EMBER_PASS Environmental depletion clamps at zero and starts exactly one existing respawn
+EMBER_PASS Respawn restores water and control at the safe checkpoint without old effects
+EMBER_PASS Destroying the source clears its loss and pull
+EMBER_PASS Unloading the source's scene leaves no motor or water contribution
+EMBER_PASS Original dry movement still consumes 3 points/sec
+EMBER_PASS Original wet-ground movement still consumes 1 point/sec
+EMBER_PASS Jump remains airborne near the apex, run 0
+EMBER_PASS Jump remains airborne near the apex, run 1
+EMBER_PASS Suction does not change actual jump height: 5,002723 vs 5,002198
+EMBER_PASS 6 points/sec at target render FPS 30 and fixed step 0,01
+EMBER_PASS 6 points/sec at target render FPS 120 and fixed step 0,01
+EMBER_PASS 6 points/sec at target render FPS 30 and fixed step 0,04
+EMBER_PASS 6 points/sec at target render FPS 120 and fixed step 0,04
+EMBER_PASS Trigger stays at the configured world radius after root scaling
+EMBER_PASS Invalid radius, negative and non-finite settings are sanitized
+EMBER_PASS Actual saved demo starts grounded in the safe zone with stable water
+EMBER_PASS Actual saved demo applies furnace loss when approached
+EMBER_PASS Actual demo R shortcut returns to the start with full water and no retained suction; water=100, position=(-6.00, 0.51), respawning=False
+EMBER_RESULT PASS: Unity 6000.5.0f1; 54 checks (9 asset, 45 Play Mode). Isolated project; main level rendering and exported build not tested.
