@@ -39,6 +39,8 @@ Dry Drain Per Second, Wet Drain Per Second, Minimum Scale ve hareket toleransı 
 
 ## Görsel hiyerarşi
 
+Slime Fire yakınlık alanları, aynı sayaç üzerindeki `DrainMultiplier` değerini geçici olarak artırabilir. Kaynaklar `SetDrainMultiplier(source, multiplier)` / `RemoveDrainMultiplier(source)` kullanır; örtüşmede en güçlü etki geçerlidir. Yerde dururken sıfır tüketim ve mevcut dolum/yeniden doğma kuralları korunur. Ayarlar ve yaşam döngüsü [düşman belgesindedir](enemies.md).
+
 ```text
 Player                         Rigidbody2D, collider, ability'ler ve WaterMeter
 ├── Visual                     SpriteRenderer; küçülme ve esneme burada birleşir

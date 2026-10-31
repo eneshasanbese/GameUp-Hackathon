@@ -1,5 +1,11 @@
 # Kararlar
 
+## Saw, Slime Fire ve yakınlıkta erime
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı, mevcut Saw/Slime Fire sheet'lerinden duran ve belirli iki nokta arasında git-gel yapan prefablar istedi. Slime'ın yakınlıktaki oyuncunun erime çarpanını artırması açıkça istendi. Önceki düşmanları kapsam dışında tutan karar, yalnızca bu iki düşman ve davranışları için güncellendi.
+
+**Temas kararı:** Kullanıcının devam mesajı: “doğrudan temas şu anlık /to-do olarak kalsın player a knockback ekleyeceğiz.” Bu nedenle doğrudan temas şimdilik etkisizdir; knockback, temas hasarı veya temasla yeniden doğma uygulanmadı. Isı alanı ayrı trigger'dır ve mevcut tüketimi çarpar; yerde dururken sıfır tüketim kuralı korunur. Çarpan 2, alan yarıçapı 1.75, git-gel offset'i (3, 0) ve hızı 1.5 deneme değerleridir. Üst üste alanlarda en güçlü etki kullanılır. Ayrıntılar [düşman belgesindedir](enemies.md).
+
 ## K03 — Suya bağlı görsel ve fiziksel küçülme
 
 **Tarih:** 31 Ekim 2026.
