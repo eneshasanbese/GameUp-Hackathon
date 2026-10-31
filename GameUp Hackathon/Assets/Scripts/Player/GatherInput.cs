@@ -11,6 +11,7 @@ public sealed class GatherInput : MonoBehaviour
     private InputAction moveAction;
     private InputAction jumpAction;
     private bool jumpRequested;
+    private bool jumpReleaseRequested;
 
     public float horizontalInput => moveAction != null && moveAction.enabled
         ? Mathf.Clamp(moveAction.ReadValue<Vector2>().x, -1f, 1f)
@@ -31,6 +32,7 @@ public sealed class GatherInput : MonoBehaviour
         moveAction = actions.FindAction("Player/Move", true);
         jumpAction = actions.FindAction("Player/Jump", true);
         jumpAction.performed += RequestJump;
+        jumpAction.canceled += ReleaseJump;
     }
 
     private void OnEnable()
@@ -50,6 +52,7 @@ public sealed class GatherInput : MonoBehaviour
 
         DisablePlayerMap();
         jumpAction.performed -= RequestJump;
+        jumpAction.canceled -= ReleaseJump;
         Destroy(actions);
     }
 
@@ -59,6 +62,7 @@ public sealed class GatherInput : MonoBehaviour
             return;
 
         jumpRequested = false;
+        jumpReleaseRequested = false;
         moveAction.Enable();
         jumpAction.Enable();
     }
@@ -68,6 +72,7 @@ public sealed class GatherInput : MonoBehaviour
         moveAction?.Disable();
         jumpAction?.Disable();
         jumpRequested = false;
+        jumpReleaseRequested = false;
     }
 
     public bool ConsumeJump()
@@ -78,8 +83,20 @@ public sealed class GatherInput : MonoBehaviour
         return requested;
     }
 
+    public bool ConsumeJumpRelease()
+    {
+        bool requested = jumpReleaseRequested;
+        jumpReleaseRequested = false;
+        return requested;
+    }
+
     private void RequestJump(InputAction.CallbackContext context)
     {
         jumpRequested = true;
+    }
+
+    private void ReleaseJump(InputAction.CallbackContext context)
+    {
+        jumpReleaseRequested = true;
     }
 }

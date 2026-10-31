@@ -14,11 +14,15 @@ public sealed class JumpAbility : BaseAbility
     {
         // Jump input must be checked while Idle and Move are active as well.
         bool requested = linkedInput.ConsumeJump();
-        if (!requested || !isPermitted || !player.isActiveAndEnabled || !linkedPhysicsControl.grounded)
+        bool released = linkedInput.ConsumeJumpRelease();
+        if (!isPermitted || !player.isActiveAndEnabled)
             return;
 
-        if (linkedStateMachine.ChangeState(thisAbilityState))
+        if (requested && linkedPhysicsControl.grounded && linkedStateMachine.ChangeState(thisAbilityState))
             linkedPhysicsControl.Jump(jumpForce);
+
+        if (released && linkedStateMachine.currentState == thisAbilityState && linkedPhysicsControl.rb.linearVelocityY > 0f)
+            linkedPhysicsControl.rb.linearVelocityY = 0f;
     }
 
     public override void ProcessAbility()

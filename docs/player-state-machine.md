@@ -4,7 +4,7 @@ T09 kapsamı: sağ/sol hareket, tek zıplama, yere temas ve düşüş. Yapı, pa
 
 ## Kullanım
 
-`Assets/Scenes/Components.unity` sahnesini açıp Play'e bas. A/D veya sol/sağ ok hareket ettirir; Space zıplatır. Havada yön değiştirilebilir. Space basılı tutulduğunda inişte otomatik tekrar zıplanmaz; havada ikinci zıplama yoktur.
+`Assets/Scenes/Components.unity` sahnesini açıp Play'e bas. A/D veya sol/sağ ok hareket ettirir; Space zıplatır. Yükselirken Space bırakılırsa Y hızı sıfırlanır ve yerçekimiyle düşüş başlar. Havada yön değiştirilebilir. Space basılı tutulduğunda inişte otomatik tekrar zıplanmaz; havada ikinci zıplama yoktur.
 
 Player üzerindeki component ayarları:
 
