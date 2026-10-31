@@ -23,7 +23,20 @@ Prefab'ı istenen sahneye sürüklemek yeterlidir. Sahnelere otomatik düşman y
 
 HapsirikKoz kökü de ayak seviyesindedir. Sprite'ların ortak `(64, 13)` piksel pivot'u korunur; `Visual` yerel konumu sıfırdır. Gövde trigger'ının boyutu `(0.64, 0.7)`, offset'i `(0, 0.35)` deneme ayarıdır. Devriye sırasında Idle/Sneeze oynatılır; pakette ayrı yürüyüş animasyonu yoktur.
 
-Hareketli türlerde **EnemyPatrol → End Offset**, yerleştirilen başlangıca göre dünya birimi cinsinden diğer uçtur; varsayılan `(3, 0)`. **Speed** varsayılan `1.5` birim/saniyedir. Negatif, dikey ve çapraz offset kullanılabilir. Sıfır hız veya sıfır offset hareketi durdurur. Seçili prefab'ın iki ucu Scene görünümünde sarı çizilir. Slime hareket yönüne döner; Saw'ın yüzü dik kalırken dişleri sheet animasyonuyla döner.
+Hareketli türlerde **EnemyPatrol → End Offset**, yerleştirilen başlangıca göre dünya birimi cinsinden diğer uçtur; varsayılan `(3, 0)`. **Speed** varsayılan `1.5` birim/saniyedir; devriyede, takipte ve rotaya dönüşte kullanılır. Negatif, dikey ve çapraz offset kullanılabilir. Sıfır hız veya sıfır offset hareketi ve takibi durdurur. Seçili prefab'ın iki ucu Scene görünümünde sarı çizilir. Slime hareket yönüne döner; Saw'ın yüzü dik kalırken dişleri sheet animasyonuyla döner.
+
+## Hareketli düşmanların takip alanı
+
+31 Ekim 2026 kullanıcı talebiyle `Saw_Patrol`, `SlimeFire_Patrol` ve `HapsirikKoz_Patrol`, oyuncu dış algılama çemberine girdiğinde devriyeyi kesip onu takip eder. Oyuncu tamamen çemberden çıkınca düşman ayrıldığı rota noktasına döner, önceki devriye yönüyle aynı iki uç arasında devam eder. Dönüş sırasında oyuncu yeniden alana girerse takip hemen başlar; özgün dönüş noktası korunur.
+
+- **EnemyPatrol → Player Chase → Detection Radius:** Varsayılan `4` dünya birimi. Çemberin merkezi düşmanın kök konumudur ve düşmanla birlikte hareket eder. `0` takibi kapatır. Scene görünümünde seçili düşmanın alanı camgöbeği, takipte kırmızı görünür; **Gizmos** açık olmalıdır.
+- **Horizontal Chase Only:** Slime Fire ve HapsirikKoz'da açık; oyuncu zıplarken düşman mevcut yüksekliğini koruyup yatayda yaklaşır. Saw'da kapalı; iki eksende oyuncuya yaklaşır. Bu ayar yalnızca takip hareketini etkiler; dikey/çapraz devriye rotası korunur.
+
+Algılama, her fizik adımında gerçek oyuncu collider'larının çemberle örtüşmesini sorgular; yeni bir hasar/trigger collider'ı eklenmez. Oyuncunun trigger sensörleri ve Player component'i taşımayan nesneler takip başlatmaz. Oyuncu kapanınca, ölürken/yeniden doğarken, collider'ı kapanınca/silinince veya uzağa ışınlanınca takip bırakılır. Çoklu oyuncu collider'larında kalan fiziksel örtüşme yeterlidir. Takip alanı Slime ısısından ve gövde temasından bağımsızdır; kendisi su kaybı veya knockback üretmez.
+
+Üç prefab hazır ayarlıdır; sahnede oyuncu referansı, ek layer veya collider bağlantısı gerekmez. Prefab üreticisi Saw'ın iki eksenli ayarını da korur. Duran türlerde ve Köz Ocağı'nda takip yoktur. Hareket mevcut kinematik düzeni kullanır; duvar/zemin arama veya yol bulma eklenmediğinden takip alanını bölümün güvenli geçişlerine göre ayarla.
+
+## Slime Fire ısı alanı
 
 Slime'ın `HeatArea` çocuğunda:
 
@@ -87,6 +100,10 @@ Yalnızca HapsirikKoz'u üretmek için **GameUp → Enemies → Rebuild Hapsirik
 - [ ] Asıl bölümde yerleşim, rota güvenliği, ısı yarıçapı ve çarpan dengesini elle oynayarak doğrula; dış build'i test et.
 
 ## Doğrulama
+
+31 Ekim 2026 takip alanı: Unity `6000.5.0f1` ile `C:/Users/yhcan/AppData/Local/Temp/gameup-enemies-324e5073` altındaki ayrı projede **52 kontrol geçti (9 asset, 43 Play Mode)**. Bu oturumdaki kaynak kod ve gerçek Player/düşman prefabları kullanıldı. Üç hareketli prefabın varsayılanları, animasyon/gövde referansları ve duran türlerin değişmemesi doğrulandı. Oyuncu alana girince ters yöndeki devriyenin kesilmesi, yatay/iki eksenli takip, yüz yönü, çıkışta özgün rotaya dönüş, negatif/çapraz rota, sınırdaki fiziksel örtüşme, çoklu/çocuk collider, yalnızca trigger sensörünün reddi, sıfır hız/offset/yarıçap ve kapatma/yeniden açma kontrolleri geçti. Oyuncu/collider kapanışı, simülasyonun durması, teleport, silinme ve ölüm/yeniden doğmada eski takip kalmadı. Algılama tek başına hasar/flash üretmedi; takipte Slime ısısı ve gerçek gövde darbesi ayrı çalıştı, çıkışta ısı temizlendi.
+
+Yeniden çalıştırılabilir düzenek: `Assets/Editor/Enemies/EnemyChaseVerification.cs`. Ayrı kopya projeyi Unity ile `-batchmode -nographics -projectPath "<test projesi>" -executeMethod EnemyChaseVerification.Run -logFile "<log yolu>"` kullanarak çalıştır; asenkron Play Mode bitişini düzenek yönettiği için `-quit` ekleme. [Sonuç](verification/enemy-chase-result.txt) ve [geçen kontroller](verification/enemy-chase-checks.txt) depoda saklandı; ayrıntılı `enemy-chase-verification.log` geçici projede bulunur. Logdaki bağımsız `UnityEditor.Search.SearchDatabase` başlangıç indeksleme hatası ve mevcut Player'ın boş çok kuru zemin maskesi uyarısı kaydedildi; C# derleme hatası veya başarısız davranış kontrolü yoktur. Ana Level1 oynanışı/rota güvenliği ve dış build testi bekliyor.
 
 İlk uygulamada Unity 6000.5.0f1 ile `C:/Users/yhcan/AppData/Local/Temp/gameup-enemies-324e5073` altındaki bağımsız projede 51 doğrulama geçti: 20 asset/bağlantı kontrolü ve 31 Play Mode davranış kontrolü. Bu ilk kayıt, kullanıcı hareketsiz ısı hasarını istemeden önceki davranışa aittir. Asıl projede açık editör bulunduğundan ikinci editör bu projeye başlatılmadı. Güncel Player prefab'ı/kodu, Input System, oyuncu animasyonları ve gerçek düşman sheet'leri kopyalandı; düşman prefabları Unity tarafından üretildi. Geçen kontrollerin ardından aynı prefab/animasyon dosyaları ve meta'ları asıl projeye aktarıldı.
 

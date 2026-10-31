@@ -6,6 +6,8 @@
 
 ## 1. Proje kurulumu
 
+31 Ekim 2026 hareketli düşman takip alanı (kullanıcı ek kapsamı): Saw, Slime Fire ve HapsirikKoz devriye prefablarına ayarlanabilir dış algılama çemberi eklendi. Oyuncu içerideyken takip, çıkışta ayrıldığı noktaya dönüş ve aynı devriyeyi sürdürme uygulanır; duran türler değişmez. Ayrı Unity `6000.5.0f1` projesinde bu oturumda **52 kontrol geçti (9 asset, 43 Play Mode)**; giriş/çıkış, takip eksenleri, rotaya dönüş, yaşam döngüsü ve algılama/ısı/gövde hasarı ayrımı doğrulandı. Ana Level1 oynanışı ve dış build testi bekliyor ([ayarlar ve test kaydı](docs/enemies.md#hareketli-düşmanların-takip-alanı)).
+
 31 Ekim 2026 ek kapsam: Saw ve Slime Fire için duran/git-gel prefabları ve Slime yakınlık erime çarpanı uygulandı. Unity 6000.5.0f1 ile ayrı geçici projede 20 asset ve 31 Play Mode kontrolü geçti; ayarlar ve doğrulama kaydı [düşman belgesinde](docs/enemies.md). Asıl sahnelere yerleşim ve build testi yapılmadı.
 
 31 Ekim 2026 Saw animasyon düzeltmesi: 10 FPS ve döngü sonundaki tekrarlı ilk kare yerine 24 FPS, eşit aralıklı sekiz kare kullanıldı. Aynı bağımsız Unity projesinde 4 asset ve 10 Play Mode kontrolü geçti; iki Saw prefabında beşer döngü örneklendi. Asıl sahnede görüntü/build kontrolü bekliyor ([kayıt](docs/enemies.md)).

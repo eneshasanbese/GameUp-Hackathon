@@ -1,5 +1,11 @@
 # Kararlar
 
+## Hareketli düşmanlar — algılama alanında oyuncuyu takip
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı `Assets/Prefabs/Enemies/` altındaki hareket edebilen düşmanlar için dış bölge istedi: karakter bölgeye girince normal hareket şemasını bırakıp, bölgeden çıkana kadar karakteri takip edecekler.
+
+**Uygulama tercihleri:** Mevcut `EnemyPatrol` kullanan Saw, Slime Fire ve HapsirikKoz prefabları; düşmanla hareket eden, Inspector'dan ayarlı `4` dünya birimi yarıçaplı algılama çemberi; mevcut `Speed` ile takip; çıkışta ayrıldığı noktaya dönüp aynı rota/yönde devriyeyi sürdürme. Slime/HapsirikKoz yatayda, Saw iki eksende takip eder; `Horizontal Chase Only` değiştirilebilir. Duran türler değişmez. Algılama hasar üretmez; mevcut ısı, duman ve gövde darbesi kendi alanlarında çalışır. Ölüm/kapanma/teleport eski takip bırakmaz. Bu değerler oynanışta ayarlanabilir başlangıç tercihleridir; yeni zemin arama veya yol bulma eklenmedi. [Inspector ve doğrulama](enemies.md#hareketli-düşmanların-takip-alanı).
+
 ## Köz Ocağı — sabit yatay çekim ve bağımsız su kaybı
 
 **Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı `KozOcagi/` görselleri ve ayrıntılı istek metniyle sabit çevresel düşman, prefab ve test sahnesi istedi. Yalnızca yatay çekim; yaklaştıkça artan **mutlak su puanı/saniye** kaybı. Temas hasarı, knockback, takip, hapşırma ve mermi kapsam dışıdır. Tüketim ısı çarpanına dönüşmez; dururken ve gövde darbesi flash'ında da sürer.

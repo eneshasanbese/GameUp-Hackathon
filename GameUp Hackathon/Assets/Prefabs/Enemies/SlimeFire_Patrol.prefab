@@ -323,6 +323,8 @@ MonoBehaviour:
   speed: 1.5
   bodyVisual: {fileID: 663034450825811311}
   faceMovement: 1
+  detectionRadius: 4
+  horizontalChaseOnly: 1
 --- !u!114 &2671934282921404439
 MonoBehaviour:
   m_ObjectHideFlags: 0
