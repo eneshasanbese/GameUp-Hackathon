@@ -114,6 +114,26 @@ Geçiş ekranı: `Assets/Scripts/Level/SceneFader.cs` kodla oluşturulur, sahney
 
 Lav için önerilen kurulum: `Grid` altında ayrı bir `Hazard-Lava` tilemap, layer `Default` (Player ile çarpışır, zemin maskelerinde yok). Bu tilemap'te Tilemap Collider 2D (Is Trigger açık, Composite yok) ve `KillZone` bulunur. Collider katı olmadığı için damla lavın üstünde durmaz, içine girer ve ölür. Final fidanı (T27) bu bileşen değildir; son bölümde kazanma ayrı kurulacak.
 
+## Final fidanı ve sulama sahnesi (FinalSapling, T27)
+
+`Assets/Scripts/Level/FinalSapling.cs`, `Level_3`'teki `Fidan` nesnesinde durur. Bileşen eklenince aynı nesneye Box Collider 2D gelir; boyutu sprite'a göre ayarlanır ve Is Trigger açılır. Fidan Water layer'ında değildir, su doldurmaz.
+
+Damla fidana **suyu varken** değdiğinde aşağıdaki sahne bir kez oynar. Su sıfırken ya da yeniden doğarken başlamaz. Adımlar aynı anda başlar ve kendi sürelerinde ilerler:
+
+1. **Oyun durur:** Player ve WaterMeter kapatılır, Rigidbody durdurulur. Input, tüketim, ölüm ve yeniden doğma olmaz; düşman ve ısı etkileri de işlemez.
+2. **Arayüz kapanır:** **UI Fade Duration** (0.4 sn) içinde kaybolur. **Hide On Touch** boşsa sahnedeki `WaterBarUI` nesneleri kullanılır; her birine gerekirse `CanvasGroup` eklenir.
+3. **Kamera yakınlaşır:** Player'ı izleyen CinemachineCamera otomatik bulunur. Takip hedefi **Camera Focus**'a (boşsa fidana) çevrilir. Lens **Zoom Duration** (2 sn) içinde **Zoom Orthographic Size**'a (3) iner. Confiner 2D lens değişimini kendisi algılamadığı için her karede `InvalidateLensCache()` çağrılır. Kayma, Position Composer'ın mevcut damping'iyle yumuşaktır.
+4. **Damla emilir:** **Shrink Duration** (1.5 sn) boyunca damlanın `Visual`'ı zemine doğru küçülüp kaybolur. Player altındaki Light 2D'ler (damla ışığı) aynı sürede söner. **Pull Drop To Sapling** açıksa damla fidanın ortasına kayar.
+5. **Fidan canlanır:** Ardından **Bloom Duration** (2.5 sn) boyunca susuz sprite, **Green Sprite**'a (`sapling_green_tall`) geçer. Çalışma anında `Green` adlı bir üst katman oluşturulur.
+6. **Hüzme parlar:** Shrink + Bloom süresince **Light Shaft** alfası **Target Shaft Alpha**'ya (1) çıkar. Varsa **Sapling Light** yoğunluğu başlangıç değerinin **Light Intensity Multiplier** (2) katına çıkar. Bu iki alan boşsa, sırasıyla `Shaft` adlı çocuk ve çocuklardaki ilk Light 2D otomatik bulunur.
+7. **Kazanma olayı:** **Hold Duration** (1 sn) sonra **On Finished** çağrılır (kazanma paneli için). `RestartGame()` tekrar oyna düğmesi içindir: 0.5 sn kararmayla build listesindeki ilk sahneyi (`Level_1`) yükler (T28).
+
+Diskteki `Level_3` (1 Kasım 2026, 01:58 kaydı):
+- `Fidan` (43.47, −2.30) üzerinde `FinalSapling` var, Green Sprite henüz atanmamış.
+- `Shaft` (`light_shaft`, Unlit, `Level` / −1, local (0.01, 3.79), Scale (0.7, 0.6), alfa 0.39) fidanın üstünde.
+- Fidanın Spot Light 2D'si yoğunluk 3, Rotation Z 180, local (0, 3.33). **Target Sorting Layers'ında yalnızca `Level` seçili**; bu yüzden fidanı (Default), arka planı ve damlayı aydınlatmıyor.
+- Boş `FinalLight` nesnesi (43.09, −0.36) **Camera Focus** olarak kullanılabilir.
+
 ## Doğrulama
 
 1 Kasım 2026 ölüm/harita sıfırlaması (T25–T26, QA07–QA10): ayrı `C:/Users/yhcan/AppData/Local/Temp/gameup-death-3e0ce196` projesinde Unity **6000.5.0f1** ile toplam **156 kontrol geçti**: [ölüm/respawn 36 (7 asset, 29 Play Mode)](verification/death-respawn-result.txt), [su tüketimi regresyonu 79](verification/death-water-drain-result.txt), [düşen taş regresyonu 41 (9 asset, 32 Play Mode)](verification/death-stone-result.txt). Gerçek Player prefab'ı, Slip fizik materyali, input, ölüm kareleri/controller'lar, WaterBarUI ve özgün taş prefab/sprite'ı kullanıldı. Yeni düzenek `Assets/Editor/DeathRespawnVerification.cs`, komut `-executeMethod DeathRespawnVerification.ConfigureAndRun`; yalnızca ayrı batch projesinde çalışır ve o projenin sahne/build listesini test için değiştirir.

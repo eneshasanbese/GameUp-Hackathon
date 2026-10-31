@@ -1,5 +1,13 @@
 # Kararlar
 
+## Final — fidanı sulama sahnesi
+
+**Tarih ve dayanak:** 1 Kasım 2026. Kullanıcı: “ben fidana değdiğimde cutscene girmesini istiyorum… karakter yavaş yavaş küçülcek, çiçek üzerindeki ışığın değeri yavaşça artıcak ve çiçek yavaşça … canlı gibi duran [görsele] dönüşcek.”
+
+**Ek istek (1 Kasım 2026):** “karakter fidana değdiği an ui kapansın, kamera da fidana doğru yakınlaşsın, shaftın ışık değeri artsın ve fidan sulanmış ve kendine gelmiş haline geçsin.” Kullanıcı sahnedeki hüzme/ışık yerleşimini kendisi düzenledi.
+
+**Uygulama:** `FinalSapling` (bkz. [su belgesi](water-player.md#final-fidanı-ve-sulama-sahnesi-finalsapling-t27)). Damlanın küçülmesi yalnızca görseldir; su değeri düşürülmez, çünkü sıfır su ölüm akışını başlatır. Kazanınca kontrol ve tüketim durur. Su sıfırken kazanılmaz. Sahne tek kez oynar. Kazanma mesajı ve tekrar oyna paneli `On Finished` olayına bağlanacak (T27/T28).
+
 ## Lav — anında ölüm
 
 **Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı, planladığı mağara bölümünün (Level 3) altına lav eklemek istedi: “karakter lavaya girdiği gibi ölsün istiyorum.” Meşale ısı alanı ve ışıklandırma da bu bölüm için konuşuldu, ancak henüz plan aşamasındalar ve kod değişikliği istemiyorlar.
