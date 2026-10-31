@@ -1,5 +1,7 @@
 # Su Damlası Oyunu — Genel Yapılacaklar
 
+31 Ekim 2026 ek kapsamı: kullanıcının açık talebiyle Köz Ocağı sabit çevresel düşmanı, yalnızca yatay çekim ve normal tüketimden bağımsız puan/saniye su kaybıyla kapsama alındı (T09/T14–T16, ilgili QA01–QA09/QA16). Gövde temas hasarı/knockback eklenmez. Mevcut suya bağlı boyut/hız/zıplama kullanıcının netleştirmesiyle korunur. [Karar ve uygulama](docs/koz-ocagi.md).
+
 **Sürüm:** 1.0 — 30 Ekim 2026, 23.41 itibarıyla verilen yanıtlara göre.
 **Okuyucular:** İki kişilik geliştirme takımı ve AI agent’lar.
 **Amaç:** Son fidanı yeşertmek için ilerleyen, hareket ettikçe suyunu kaybeden bir damlayı konu alan kısa bir Unity 2D platform oyununun tamamlanması.
@@ -250,7 +252,7 @@ Bu liste uygulama talimatı değildir. Her ek fikir tamamlanma süresini ve test
 
 ## Son test kontrol listesi
 
-- [ ] **QA01:** Isı/duman ve düşman gövde teması dışında yerde hiç hareket etmeden bekleyince su aynı kalıyor; Slime Fire'ın etkin ısı alanı veya HapsirikKoz dumanında dururken su azalıyor; alandan çıkınca veya geçici dumanın süresi dolunca tekrar duruyor. Gövde darbesi tek su kaybı üretir; flash yeni gövde darbelerini engeller.
+- [ ] **QA01:** Isı/duman, Köz Ocağı ve düşman gövde teması dışında yerde hiç hareket etmeden bekleyince su aynı kalıyor; Slime Fire'ın etkin ısı alanı veya HapsirikKoz dumanında dururken su azalıyor. Köz Ocağı ayrıca mesafeye bağlı mutlak puan/saniye tüketir. Alan çıkışı/kapanışı veya dumanın ömrünün bitişi yalnızca ilgili etkiyi kaldırır. Gövde darbesi tek su kaybı üretir; flash yeni gövde darbelerini engeller, çevresel tüketimi engellemez.
 - [ ] **QA02:** Normal zeminde yürüyüşte tüketim var; nemli zeminde daha düşük.
 - [ ] **QA03:** Yalnızca dikey zıplarken ve düşerken normal tüketim var.
 - [ ] **QA04:** Zeminden ayrılınca nemli zemin katsayısı havaya taşınmıyor.

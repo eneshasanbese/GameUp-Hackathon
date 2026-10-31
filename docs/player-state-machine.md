@@ -1,5 +1,7 @@
 # Player state machine
 
+31 Ekim 2026 Köz Ocağı eki: `PhysicsControl` kaynak başına yatay hedef hız katkılarını normal Idle/Move/Jump hedefiyle birleştirir. `Player.OnDisable` kayıtları temizler; mevcut suya bağlı hız/zıplama korunur. [Birimler, yaşam döngüsü ve testler](koz-ocagi.md).
+
 T09 kapsamı: sağ/sol hareket, tek zıplama, yere temas ve düşüş. Yapı, paylaşılan örnekteki gibi `BaseAbility : MonoBehaviour` üzerinden ayrı ability component'leri kullanır.
 
 ## Kullanım

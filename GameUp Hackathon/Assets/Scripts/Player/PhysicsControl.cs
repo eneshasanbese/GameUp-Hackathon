@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -26,6 +27,7 @@ public sealed class PhysicsControl : MonoBehaviour
     private float minimumGroundNormalY;
     private Collider2D groundCollider;
     private bool isJumpAscending;
+    private readonly Dictionary<UnityEngine.Object, float> externalHorizontalSpeeds = new Dictionary<UnityEngine.Object, float>();
 
     public bool dryGrounded { get; private set; }
     public bool wetGrounded { get; private set; }
@@ -195,6 +197,13 @@ public sealed class PhysicsControl : MonoBehaviour
 
     public void ApproachHorizontalSpeed(float targetSpeed, float acceleration)
     {
+        // Environmental entries are velocity offsets (world units/second), not forces.
+        // Compose the motor target here so Idle/Move/Jump cannot overwrite a separate AddForce.
+        foreach (var entry in externalHorizontalSpeeds)
+        {
+            if (entry.Key != null)
+                targetSpeed += entry.Value;
+        }
         float speed = Mathf.MoveTowards(rb.linearVelocity.x, targetSpeed, acceleration * Time.fixedDeltaTime);
         if (!grounded)
         {
@@ -209,12 +218,30 @@ public sealed class PhysicsControl : MonoBehaviour
 
     public void ResetMotion()
     {
+        ClearExternalHorizontalSpeeds();
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
         isJumpAscending = false;
         dryGrounded = wetGrounded = extraDryGrounded = false;
         GroundNormal = Vector2.up;
     }
+
+    public void SetExternalHorizontalSpeed(UnityEngine.Object source, float speed)
+    {
+        if (source == null || !isActiveAndEnabled || !rb.simulated || float.IsNaN(speed) || float.IsInfinity(speed))
+            return;
+        externalHorizontalSpeeds[source] = speed;
+    }
+
+    public void RemoveExternalHorizontalSpeed(UnityEngine.Object source)
+    {
+        if (!ReferenceEquals(source, null))
+            externalHorizontalSpeeds.Remove(source);
+    }
+
+    public void ClearExternalHorizontalSpeeds() => externalHorizontalSpeeds.Clear();
+
+    private void OnDisable() => ClearExternalHorizontalSpeeds();
 
     public void Jump(float speed)
     {

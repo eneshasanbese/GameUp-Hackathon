@@ -1,5 +1,13 @@
 # Kararlar
 
+## Köz Ocağı — sabit yatay çekim ve bağımsız su kaybı
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı `KozOcagi/` görselleri ve ayrıntılı istek metniyle sabit çevresel düşman, prefab ve test sahnesi istedi. Yalnızca yatay çekim; yaklaştıkça artan **mutlak su puanı/saniye** kaybı. Temas hasarı, knockback, takip, hapşırma ve mermi kapsam dışıdır. Tüketim ısı çarpanına dönüşmez; dururken ve gövde darbesi flash'ında da sürer.
+
+**Netleştirme:** İstek metnindeki sabit oyuncu boyutu/hızı/zıplaması mevcut K03 uygulamasıyla çeliştiğinden soruldu. Kullanıcı “Mevcut davranışı koru; Köz Ocağı'nı ekle” dedi. Suya bağlı küçülme ve ability çarpanları korunur.
+
+**Uygulama tercihi:** Kaynak başına yatay motor hedef hızı katkısı; su için tek `WaterMeter.Consume(rate * fixedDeltaTime)` yolu. Örtüşen Köz Ocağı katkıları toplanır; çıkış yalnızca ilgili kaynağı temizler. 3/0.75 menzil, 1–6 su puanı/saniye, 0.4–2.5 dünya birimi/saniye çekim ve 0.35 saniye rampa deneme değerleridir. [Prefab, sahne, birimler ve testler](koz-ocagi.md).
+
 ## Saw, Slime Fire ve yakınlıkta erime
 
 **Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı, mevcut Saw/Slime Fire sheet'lerinden duran ve belirli iki nokta arasında git-gel yapan prefablar istedi. Slime'ın yakınlıktaki oyuncunun erime çarpanını artırması açıkça istendi. Önceki düşmanları kapsam dışında tutan karar, yalnızca bu iki düşman ve davranışları için güncellendi.

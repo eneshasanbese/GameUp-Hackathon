@@ -1,4 +1,6 @@
-# Saw, Slime Fire ve HapsirikKoz prefabları
+# Saw, Slime Fire, HapsirikKoz ve Köz Ocağı prefabları
+
+31 Ekim 2026 ek kapsamı: `KozOcagi_Stationary.prefab` ve `KozOcagiDemo.unity` sabit yatay çekim ve bağımsız puan/saniye su kaybı için eklendi. Köz Ocağı temas hasarı/knockback taşımaz. [Inspector, hareket entegrasyonu ve 54 kontrolün kaydı](koz-ocagi.md).
 
 31 Ekim 2026 kullanıcı talebiyle iki düşmanın duran ve iki nokta arasında git-gel yapan türleri eklendi. Doğrudan temas başlangıçta knockback eklenene kadar TODO'ydu; kullanıcının sonraki talebiyle altı düşman gövdesine temas hasarı ve knockback bağlandı. Gövdeler trigger'dır; fiziksel engel oluşturmaz.
 

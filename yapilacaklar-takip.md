@@ -1,5 +1,7 @@
 # Su Damlası — Yapılacaklar Takibi
 
+31 Ekim 2026 Köz Ocağı (T09/T14–T16 ek kapsamı): sabit yatay çekim, bağımsız 1–6 su puanı/saniye çevresel kayıp, kullanılabilir prefab ve ayrı demo sahnesi eklendi. Mevcut küçülme/hız/zıplama korunur. Ayrı Unity 6000.5.0f1 projesinde 9 asset ve 45 Play Mode kontrolü geçti; iki yönden gerçek kaçış, zıplama, tüketim ayrımı, çoklu collider/kaynak, yaşam döngüsü ve demo görünürlüğü doğrulandı. Ana bölüm yerleşimi/görüntü ve dış build bekliyor ([ayarlar ve kayıt](docs/koz-ocagi.md)).
+
 **Son kontrol:** 31 Ekim 2026, 02:05 (diskteki dosyalara göre)
 **Ana belge:** [genel-yapilacaklar.md](genel-yapilacaklar.md). T numaraları oradaki görevlerle aynıdır.
 **Kural:** Bir madde ancak Unity'de denenip çalıştığı görüldükten sonra işaretlenir. Kaydedilmemiş değişiklikler sayılmaz.

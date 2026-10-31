@@ -1,5 +1,7 @@
 # Su damlası
 
+31 Ekim 2026 Köz Ocağı eki: ayrı çevresel puan/saniye kaybı tek `WaterMeter.Consume` yolunu kullanır; normal tüketim/ısı çarpanını değiştirmez. Dururken ve gövde flash'ında sürer, respawn/kontrol kapanışında durur. [Prefab ayarları ve doğrulama](koz-ocagi.md).
+
 Su miktarı, görsel küçülme/esneme, iz, dolum ve yeniden doğuş `Assets/Scripts/Water/WaterMeter.cs` içindedir. Player.cs ability/state machine yöneticisidir.
 
 ## Ground kontrolü

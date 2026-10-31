@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
 
     private void OnDisable()
     {
+        physicsControl.ClearExternalHorizontalSpeeds();
         gatherInput.DisablePlayerMap();
         stateMachine.ExitCurrentState();
         foreach (BaseAbility ability in playerAbilities)
