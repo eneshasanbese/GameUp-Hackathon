@@ -1,6 +1,6 @@
 # Su Damlası Oyunu — Genel Yapılacaklar
 
-31 Ekim 2026 hareketli düşman ek kapsamı: açık kullanıcı talebiyle Saw, Slime Fire ve HapsirikKoz'un devriye türleri, dış algılama alanına giren oyuncuyu alanı terk edene kadar takip eder, sonra normal devriyeye döner. Duran türler etkilenmez. [Karar](docs/kararlar.md#hareketli-düşmanlar--algılama-alanında-oyuncuyu-takip), [ayarlar ve doğrulama](docs/enemies.md#hareketli-düşmanların-takip-alanı).
+31 Ekim 2026 hareketli düşman ek kapsamı: açık kullanıcı talebiyle Saw, Slime Fire ve HapsirikKoz'un devriye türleri, dış algılama alanına giren oyuncuyu alanı terk edene kadar takip eder, sonra normal devriyeye döner. Sonraki fizik düzeltmesinde Saw uçarak zemin/duvara çarpar; SlimeFire/HapsirikKoz duran ve devriye türleri yerçekimiyle düşer, motor yalnızca yatay hareketi yönetir. Hasar trigger'ları korunur. [Karar](docs/kararlar.md#hareketli-düşmanlar--algılama-alanında-oyuncuyu-takip), [fizik ayarları ve doğrulama](docs/enemies.md#yerçekimi-ve-zeminduvar-çarpışması).
 
 31 Ekim 2026 ek kapsamı: kullanıcının açık talebiyle Köz Ocağı sabit çevresel düşmanı, yalnızca yatay çekim ve normal tüketimden bağımsız puan/saniye su kaybıyla kapsama alındı (T09/T14–T16, ilgili QA01–QA09/QA16). Gövde temas hasarı/knockback eklenmez. Mevcut suya bağlı boyut/hız/zıplama kullanıcının netleştirmesiyle korunur. [Karar ve uygulama](docs/koz-ocagi.md).
 
@@ -103,7 +103,7 @@ Gri kutu prototip, nihai resim beklemeden basit şekillerle oyunun tamamlanabile
 ### Hareket ve kamera
 
 - [ ] **T08 — Oyuncu prefab’ını kur.** Fizik bileşenlerini kök objede, `SpriteRenderer` bileşenini `Visual` alt objesinde tut. İlk prototipte çarpışma kutusu sabit olsun.
-- [ ] **T09 — Yürüme ve zıplamayı çalıştır.** Sağ-sol, yere basma kontrolü, zıplama ve düşme test edilsin. Mevcut çalışan kodu sırf farklı mimari uğruna yeniden yazma.
+- [ ] **T09 — Yürüme ve zıplamayı çalıştır.** Sağ-sol, yere basma kontrolü, zıplama ve düşme test edilsin. Sprite yatay girdiye göre yerde/havada çevrilsin; girdi yokken son yön korunsun. Mevcut çalışan kodu sırf farklı mimari uğruna yeniden yazma.
 - [ ] **T10 — Kamerayı ayarla.** İlerideki iniş platformu görülsün; karakter ekran dışında kaybolmasın. İlk testte sabit kamera da yeterli olabilir.
 - [ ] **T11 — Yere düşme sınırı koy.** Boşluğa düşen oyuncu sonsuza kadar düşmesin; yeniden deneme akışına girsin.
 

@@ -5,11 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public sealed class EnemyPatrol : MonoBehaviour
 {
-    [Tooltip("Displacement from the placed starting point, in world units. Zero keeps the enemy stationary.")]
+    [Tooltip("Displacement from the placed starting point, in world units. Ground enemies use only X. Zero stops the motor, but not gravity.")]
     [SerializeField] private Vector2 endOffset = new Vector2(3f, 0f);
     [SerializeField, Min(0f)] private float speed = 1.5f;
     [SerializeField] private SpriteRenderer bodyVisual;
     [SerializeField] private bool faceMovement;
+    [Tooltip("Fly in two dimensions. Ground enemies steer only X and leave vertical motion to gravity and collisions.")]
+    [SerializeField] private bool flying;
 
     [Header("Player Chase")]
     [Tooltip("Detection radius in world units, centred on and moving with the enemy. Zero disables chasing.")]
@@ -37,9 +39,11 @@ public sealed class EnemyPatrol : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!body.simulated || speed <= 0f || endOffset.sqrMagnitude < 0.000001f)
+        Vector2 routeOffset = flying ? endOffset : new Vector2(endOffset.x, 0f);
+        if (!body.simulated || speed <= 0f || routeOffset.sqrMagnitude < 0.000001f)
         {
             IsChasing = false;
+            StopMotor();
             return;
         }
 
@@ -55,19 +59,27 @@ public sealed class EnemyPatrol : MonoBehaviour
                 resumingPatrol = true;
             }
             target = playerBody.position;
-            if (horizontalChaseOnly)
+            if (horizontalChaseOnly || !flying)
                 target.y = position.y;
         }
         else
         {
-            target = resumingPatrol ? resumePosition : returning ? start : start + endOffset;
+            target = resumingPatrol ? resumePosition : returning ? start : start + routeOffset;
         }
+        if (!flying)
+            target.y = position.y;
 
         Vector2 next = Vector2.MoveTowards(position, target, speed * Time.fixedDeltaTime);
         if (faceMovement && bodyVisual != null && Mathf.Abs(next.x - position.x) > 0.00001f)
             bodyVisual.flipX = next.x < position.x ? !initialFlipX : initialFlipX;
-        body.MovePosition(next);
-        if (!IsChasing && (next - target).sqrMagnitude < 0.000001f)
+        // MovePosition suppresses gravity for the step. Velocity lets the solver stop at terrain
+        // and preserves a ground enemy's falling speed even during chase and route recovery.
+        Vector2 velocity = (next - position) / Time.fixedDeltaTime;
+        if (!flying)
+            velocity.y = body.linearVelocity.y;
+        body.linearVelocity = velocity;
+        // Use the actual position: a target behind a wall has not been reached.
+        if (!IsChasing && (position - target).sqrMagnitude < 0.000025f)
         {
             if (resumingPatrol)
                 resumingPatrol = false;
@@ -110,12 +122,19 @@ public sealed class EnemyPatrol : MonoBehaviour
     {
         IsChasing = false;
         overlaps.Clear();
+        StopMotor();
+    }
+
+    private void StopMotor()
+    {
+        if (body != null && body.simulated)
+            body.linearVelocity = flying ? Vector2.zero : new Vector2(0f, body.linearVelocity.y);
     }
 
     private void OnDrawGizmosSelected()
     {
         Vector3 origin = Application.isPlaying ? (Vector3)start : transform.position;
-        Vector3 end = origin + (Vector3)endOffset;
+        Vector3 end = origin + (flying ? (Vector3)endOffset : new Vector3(endOffset.x, 0f, 0f));
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(origin, end);
         Gizmos.DrawWireSphere(origin, 0.12f);

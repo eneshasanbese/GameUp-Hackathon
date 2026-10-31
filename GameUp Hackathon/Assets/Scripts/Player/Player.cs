@@ -9,14 +9,17 @@ public class Player : MonoBehaviour
     public StateMachine stateMachine;
 
     private BaseAbility[] playerAbilities;
+    private SpriteRenderer bodyVisual;
 
     public PlayerStates.State CurrentState => stateMachine.currentState;
     public bool IsGrounded => physicsControl.grounded;
+    public bool FacingRight => bodyVisual == null || !bodyVisual.flipX;
 
     private void Awake()
     {
         gatherInput = GetComponent<GatherInput>();
         physicsControl = GetComponent<PhysicsControl>();
+        bodyVisual = GetComponentInChildren<SpriteRenderer>();
         playerAbilities = GetComponents<BaseAbility>();
         stateMachine = new StateMachine { arrayOfAbilities = playerAbilities };
 
@@ -43,6 +46,8 @@ public class Player : MonoBehaviour
     {
         Debug.Log("Current State: " + CurrentState);
         stateMachine.ProcessAbility();
+        if (CurrentState != PlayerStates.State.Knockback)
+            Flip();
 
         foreach (BaseAbility ability in playerAbilities)
         {
@@ -54,5 +59,11 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         stateMachine.ProcessFixedAbility();
+    }
+
+    public void Flip()
+    {
+        if (bodyVisual != null && gatherInput.horizontalInput != 0f)
+            bodyVisual.flipX = gatherInput.horizontalInput < 0f;
     }
 }

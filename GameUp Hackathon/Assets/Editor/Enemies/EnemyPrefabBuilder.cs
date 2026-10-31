@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Animations;
-using UnityEditor.U2D.Sprites;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -13,17 +11,91 @@ public static class EnemyPrefabBuilder
     private const string AnimationFolder = "Assets/Animations/Enemies";
     private const string SpriteFolder = "Assets/platformerPack/Sprites/Enemies/";
 
+    [MenuItem("GameUp/Enemies/Configure Terrain Physics")]
+    public static void ConfigureTerrainPhysics()
+    {
+        foreach (string name in new[] { "Saw", "SlimeFire", "HapsirikKoz" })
+        {
+            foreach (string variant in new[] { "Stationary", "Patrol" })
+            {
+                string path = PrefabFolder + "/" + name + "_" + variant + ".prefab";
+                GameObject root = PrefabUtility.LoadPrefabContents(path);
+                try
+                {
+                    ConfigureBody(root, name == "Saw", variant == "Stationary");
+                    PrefabUtility.SaveAsPrefabAsset(root, path);
+                }
+                finally { PrefabUtility.UnloadPrefabContents(root); }
+            }
+        }
+        AssetDatabase.SaveAssets();
+    }
+
+    public static void ConfigureBody(GameObject root, bool flying, bool stationary)
+    {
+        Rigidbody2D body = root.GetComponent<Rigidbody2D>();
+        body.bodyType = flying && stationary ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic;
+        body.gravityScale = flying ? 0f : 1f;
+        body.constraints = RigidbodyConstraints2D.FreezeRotation |
+            (!flying && stationary ? RigidbodyConstraints2D.FreezePositionX : RigidbodyConstraints2D.None);
+        body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        body.interpolation = RigidbodyInterpolation2D.Interpolate;
+        EnemyPatrol patrol = root.GetComponent<EnemyPatrol>();
+        if (patrol != null)
+        {
+            var settings = new SerializedObject(patrol);
+            settings.FindProperty("flying").boolValue = flying;
+            settings.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        // Keep damage on the original root trigger. Only this separate shape blocks terrain;
+        // it must never push the player or another enemy, or block a heat/smoke trigger.
+        Transform existing = root.transform.Find("TerrainBody");
+        GameObject terrain = existing != null ? existing.gameObject : new GameObject("TerrainBody");
+        terrain.transform.SetParent(root.transform, false);
+        Collider2D contact = root.GetComponent<Collider2D>();
+        Collider2D solid;
+        Vector2 offset = contact.offset;
+        if (contact is CircleCollider2D circle)
+        {
+            var shape = terrain.GetComponent<CircleCollider2D>();
+            if (shape == null) shape = terrain.AddComponent<CircleCollider2D>();
+            shape.radius = circle.radius;
+            solid = shape;
+        }
+        else
+        {
+            var shape = terrain.GetComponent<BoxCollider2D>();
+            if (shape == null) shape = terrain.AddComponent<BoxCollider2D>();
+            Vector2 size = ((BoxCollider2D)contact).size;
+            // Ground sprite roots are at the feet. A deliberately shortened damage trigger
+            // must not make the visible feet sink into the floor.
+            float bottom = Mathf.Min(0f, offset.y - size.y * 0.5f);
+            float top = offset.y + size.y * 0.5f;
+            shape.size = new Vector2(size.x, top - bottom);
+            offset.y = (top + bottom) * 0.5f;
+            solid = shape;
+        }
+        solid.offset = offset;
+        solid.isTrigger = false;
+        int groundLayers = LayerMask.GetMask("Ground-Dry", "Ground-Wet", "Ground-Extra-Dry");
+        if (groundLayers == 0) throw new InvalidOperationException("Enemy physics requires the ground layers.");
+        solid.includeLayers = groundLayers;
+        solid.excludeLayers = ~groundLayers;
+        solid.layerOverridePriority = 1;
+        solid.sharedMaterial = AssetDatabase.LoadAssetAtPath<PhysicsMaterial2D>("Assets/platformerPack/Material/Slip.physicsMaterial2D");
+        if (solid.sharedMaterial == null) throw new InvalidOperationException("Missing Slip physics material.");
+    }
+
     [MenuItem("GameUp/Enemies/Rebuild Enemy Prefabs")]
     public static void Rebuild()
     {
         EnsureFolder(PrefabFolder);
         EnsureFolder(AnimationFolder);
-        RepairSawSlices("idle");
-        RepairSawSlices("walk");
-        // The walk sheet rotates the blade while keeping the face upright, even when stationary.
-        AnimatorController saw = CreateAnimation("SawSpin", "saw", "walk", false, 24f);
-        AnimatorController idle = CreateAnimation("SlimeFireIdle", "slime_fire", "idle", true);
-        AnimatorController walk = CreateAnimation("SlimeFireWalk", "slime_fire", "walk", true);
+        // Both saw variants keep spinning; use the same timing as the dedicated Saw rebuild.
+        AnimatorController saw = CreateSawAnimation();
+        AnimatorController idle = CreateAnimation("SlimeFireIdle", "FireSlime/Unity_256/Idle.png", 12, 0.9f);
+        AnimatorController walk = CreateAnimation("SlimeFireWalk", "FireSlime/Unity_256/Patrol.png", 12, 0.7f);
         CreatePrefab("Saw_Stationary", true, false, saw);
         CreatePrefab("Saw_Patrol", true, true, saw);
         CreatePrefab("SlimeFire_Stationary", false, false, idle);
@@ -37,18 +109,42 @@ public static class EnemyPrefabBuilder
     public static void RebuildSawAnimation()
     {
         EnsureFolder(AnimationFolder);
-        CreateAnimation("SawSpin", "saw", "walk", false, 24f);
+        CreateSawAnimation();
         AssetDatabase.SaveAssets();
     }
 
-    private static AnimatorController CreateAnimation(string name, string enemy, string action, bool footAnchored, float frameRate = 10f)
+    private static AnimatorController CreateSawAnimation()
     {
-        Sprite[] sprites = AssetDatabase.LoadAllAssetsAtPath(SpriteFolder + enemy + "/Sheets/" + enemy + "_" + action + ".png")
+        // Preserve the authored 12 sprite changes/sec independently of the user's 90-sample editor grid.
+        const float duration = 16f / 12f;
+        AnimatorController controller = CreateAnimation("SawSpin", "Saw 1/Unity_256/Patrol.png", 16, duration);
+        AnimationClip clip = (AnimationClip)controller.layers[0].stateMachine.defaultState.motion;
+        clip.frameRate = 90f;
+        var binding = EditorCurveBinding.PPtrCurve("", typeof(SpriteRenderer), "m_Sprite");
+        ObjectReferenceKeyframe[] frames = AnimationUtility.GetObjectReferenceCurve(clip, binding);
+        Object lastSprite = frames[frames.Length - 1].value;
+        Array.Resize(ref frames, frames.Length + 1);
+        // Unity derives the native end from the last key + one Samples tick. Anchor the hold
+        // with the same final sprite so 90 Samples cannot shorten its visible 1/12-second hold.
+        frames[frames.Length - 1] = new ObjectReferenceKeyframe { time = duration - 1f / clip.frameRate, value = lastSprite };
+        AnimationUtility.SetObjectReferenceCurve(clip, binding, frames);
+        AnimationClipSettings settings = AnimationUtility.GetAnimationClipSettings(clip);
+        // The final sprite must hold for the same 1/12 second as every other sprite.
+        settings.stopTime = duration;
+        AnimationUtility.SetAnimationClipSettings(clip, settings);
+        EditorUtility.SetDirty(clip);
+        return controller;
+    }
+
+    private static AnimatorController CreateAnimation(string name, string sheet, int frameCount, float duration)
+    {
+        Sprite[] sprites = AssetDatabase.LoadAllAssetsAtPath(SpriteFolder + sheet)
             .OfType<Sprite>()
-            .OrderBy(sprite => sprite.rect.x)
+            .OrderBy(sprite => sprite.name, StringComparer.Ordinal)
             .ToArray();
-        if (sprites.Length == 0)
-            throw new InvalidOperationException("No sliced sprites found for " + enemy + "/" + action);
+        string prefix = System.IO.Path.GetFileNameWithoutExtension(sheet);
+        if (sprites.Length != frameCount || sprites.Where((sprite, i) => sprite.name != prefix + "_" + i.ToString("D2")).Any())
+            throw new InvalidOperationException("Expected " + frameCount + " numerically named sprites in " + sheet);
 
         string clipPath = AnimationFolder + "/" + name + ".anim";
         AnimationClip clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(clipPath);
@@ -57,27 +153,26 @@ public static class EnemyPrefabBuilder
             clip = new AnimationClip { name = name };
             AssetDatabase.CreateAsset(clip, clipPath);
         }
-        clip.frameRate = frameRate;
+        clip.frameRate = sprites.Length / duration;
         var frames = new ObjectReferenceKeyframe[sprites.Length];
-        var heights = new Keyframe[sprites.Length];
         for (int i = 0; i < sprites.Length; i++)
         {
             Sprite sprite = sprites[i];
             float time = i / clip.frameRate;
             frames[i] = new ObjectReferenceKeyframe { time = time, value = sprite };
-            heights[i] = new Keyframe(time, -sprite.bounds.min.y, float.PositiveInfinity, float.PositiveInfinity);
         }
         AnimationUtility.SetObjectReferenceCurve(clip,
             EditorCurveBinding.PPtrCurve("", typeof(SpriteRenderer), "m_Sprite"), frames);
-        if (footAnchored)
+        // The new sheets have a common foot pivot; old cropped-sprite offsets would lift the slime.
+        foreach (EditorCurveBinding binding in AnimationUtility.GetCurveBindings(clip))
         {
-            AnimationUtility.SetEditorCurve(clip,
-                EditorCurveBinding.FloatCurve("", typeof(Transform), "m_LocalPosition.y"), new AnimationCurve(heights));
+            if (binding.type == typeof(Transform))
+                AnimationUtility.SetEditorCurve(clip, binding, null);
         }
         AnimationClipSettings settings = AnimationUtility.GetAnimationClipSettings(clip);
         // Unity holds the final sprite for one sample. A repeated first key would double its loop-boundary hold.
         settings.startTime = 0f;
-        settings.stopTime = sprites.Length / clip.frameRate;
+        settings.stopTime = duration;
         settings.loopTime = true;
         AnimationUtility.SetAnimationClipSettings(clip, settings);
         EditorUtility.SetDirty(clip);
@@ -132,8 +227,8 @@ public static class EnemyPrefabBuilder
             AnimationClip clip = (AnimationClip)controller.layers[0].stateMachine.defaultState.motion;
             var binding = EditorCurveBinding.PPtrCurve("", typeof(SpriteRenderer), "m_Sprite");
             renderer.sprite = (Sprite)AnimationUtility.GetObjectReferenceCurve(clip, binding)[0].value;
-            if (!saw)
-                visual.transform.localPosition = Vector3.up * -renderer.sprite.bounds.min.y;
+            // Saw roots are centred on the blade; slime roots stay at the prepared foot pivot.
+            visual.transform.localPosition = saw ? Vector3.down * 0.425f : Vector3.zero;
             visual.AddComponent<Animator>().runtimeAnimatorController = controller;
 
             if (patrol)
@@ -155,6 +250,7 @@ public static class EnemyPrefabBuilder
                 area.offset = new Vector2(0f, 0.4f);
                 heat.AddComponent<EnemyHeatArea>();
             }
+            ConfigureBody(root, saw, !patrol);
             PrefabUtility.SaveAsPrefabAsset(root, PrefabFolder + "/" + name + ".prefab");
         }
         finally
@@ -173,35 +269,4 @@ public static class EnemyPrefabBuilder
         AssetDatabase.CreateFolder(parent, path.Substring(separator + 1));
     }
 
-    private static void RepairSawSlices(string action)
-    {
-        string path = SpriteFolder + "saw/Sheets/saw_" + action + ".png";
-        var importer = (TextureImporter)AssetImporter.GetAtPath(path);
-        var factories = new SpriteDataProviderFactories();
-        factories.Init();
-        ISpriteEditorDataProvider provider = factories.GetSpriteEditorDataProviderFromObject(importer);
-        provider.InitSpriteEditorDataProvider();
-        List<SpriteRect> rects = provider.GetSpriteRects().ToList();
-        // Automatic slicing merged the first two touching saw frames. Repair only that known layout.
-        if (rects.Count != 7 || !rects.Any(rect => rect.rect.width > 200f))
-            return;
-        foreach (SpriteRect sprite in rects)
-        {
-            int column = Mathf.RoundToInt(sprite.rect.x / 128f);
-            sprite.rect = new Rect(column * 128f, 0f, 128f, 128f);
-        }
-        rects.Add(new SpriteRect
-        {
-            name = "saw_" + action + "_01",
-            rect = new Rect(128f, 0f, 128f, 128f),
-            alignment = SpriteAlignment.Center,
-            pivot = new Vector2(0.5f, 0.5f),
-            spriteID = GUID.Generate()
-        });
-        provider.SetSpriteRects(rects.OrderBy(sprite => sprite.rect.x).ToArray());
-        var names = provider.GetDataProvider<ISpriteNameFileIdDataProvider>();
-        names.SetNameFileIdPairs(rects.Select(sprite => new SpriteNameFileIdPair(sprite.name, sprite.spriteID)));
-        provider.Apply();
-        importer.SaveAndReimport();
-    }
 }

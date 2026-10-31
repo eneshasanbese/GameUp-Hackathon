@@ -1,0 +1,52 @@
+Saw chase defaults are saved
+Saw retains body hits and animation
+Saw stationary variant remains stationary
+SlimeFire chase defaults are saved
+SlimeFire retains body hits and animation
+SlimeFire stationary variant remains stationary
+HapsirikKoz chase defaults are saved
+HapsirikKoz retains body hits and animation
+HapsirikKoz stationary variant remains stationary
+Saw patrols with player outside
+Saw interrupts patrol to chase player
+Saw follows its configured chase axes
+Saw returns to the interrupted route and resumes patrol
+Saw animation keeps playing during movement
+SlimeFire patrols with player outside
+SlimeFire interrupts patrol to chase player
+SlimeFire follows its configured chase axes
+SlimeFire faces the chase direction
+SlimeFire returns to the interrupted route and resumes patrol
+SlimeFire animation keeps playing during movement
+HapsirikKoz patrols with player outside
+HapsirikKoz interrupts patrol to chase player
+HapsirikKoz follows its configured chase axes
+HapsirikKoz faces the chase direction
+HapsirikKoz returns to the interrupted route and resumes patrol
+HapsirikKoz animation keeps playing during movement
+Player initially inside the area is detected without an enter event
+Disabled Player releases chase
+Re-enabled Player inside the area is reacquired
+Unsimulated player releases chase
+Disabled player collider releases chase
+An attached child collider can maintain detection
+Player trigger sensors alone do not start chase
+Restoring the physical player collider reacquires chase
+Zero detection radius disables chase
+Physical player overlap at the area boundary is detected
+Crossing fully outside the area stops chase
+Disabling patrol clears chase state immediately
+Re-enabled patrol reacquires the player
+Respawning player is not chased
+Living player can be reacquired after respawn
+Inactive player cannot leave stale chase state
+Destroyed player safely releases chase
+Negative diagonal patrol offsets still work
+Diagonal patrol can be interrupted
+Chase restores the original diagonal route without moving its endpoints
+Zero speed stops patrol and chase
+Zero patrol offset remains stationary
+Chase detection outside the heat/body area adds no damage or knockback
+Chasing Slime retains its separate heat area without a body hit
+Actual chasing enemy body contact still applies one hit and flash
+Leaving a chasing Slime clears chase and heat independently
