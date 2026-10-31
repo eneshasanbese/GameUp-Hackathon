@@ -317,6 +317,7 @@ MonoBehaviour:
   isPermitted: 1
   speed: 6
   acceleration: 60
+  lowWaterSpeedMultiplier: 1.4
 --- !u!114 &2497285578069972097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -333,6 +334,8 @@ MonoBehaviour:
   airspeed: 6
   jumpForce: 10
   airAcceleration: 90
+  lowWaterAirSpeedMultiplier: 1.4
+  lowWaterJumpMultiplier: 1.1
 --- !u!114 &5969134430943223080
 MonoBehaviour:
   m_ObjectHideFlags: 0
