@@ -28,8 +28,9 @@ public static class EnemyPrefabBuilder
         CreatePrefab("Saw_Patrol", true, true, saw);
         CreatePrefab("SlimeFire_Stationary", false, false, idle);
         CreatePrefab("SlimeFire_Patrol", false, true, walk);
+        HapsirikKozPrefabBuilder.Rebuild();
         AssetDatabase.SaveAssets();
-        Debug.Log("Created four enemy prefabs. Direct contact/knockback remains TODO.");
+        Debug.Log("Created six enemy prefabs and timed HapsirikKoz smoke. Direct contact/knockback remains TODO.");
     }
 
     [MenuItem("GameUp/Enemies/Rebuild Saw Animation")]

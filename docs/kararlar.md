@@ -8,6 +8,14 @@
 
 **31 Ekim 2026 ısı düzeltmesi:** Kullanıcı “fire slime a yakınken sabit durunca canımız gitmiyor. sabit dursak da hasar yemeliyiz” dedi. Slime Fire'ın etkin ısı alanında hareketsizken de su tüketilir; önceki sıfır tüketim uygulaması bu alan için geçersizdir. Çarpan >1 olduğunda zeminin normal tüketimi çarpılır; varsayılan 2× ile kuru zeminde 6, nemli zeminde 2 birim/saniye. Alan dışında veya çarpan 1 iken yerde durma ücretsizdir. Ayrı bir can sayacı eklenmez; hasar mevcut su azalması ve sıfırda yeniden doğma yolunu izler. Doğrudan temas/knockback TODO kararı sürer.
 
+## HapsirikKoz — Rastgele hapşırma ve cooldown
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı mevcut `Assets/platformerPack/Sprites/Enemies/HapsirikKoz/` görsellerinden düşmanı eklemeyi ve Saw/Slime Fire prefablarını örnek almayı istedi. Devam mesajında her hapşırma öncesinde rastgele 1–5 saniye bekleme, ardından art arda sık hapşırmayı önlemek için 2–3 saniye cooldown istedi.
+
+**Uygulama:** Duran ve mevcut `EnemyPatrol` ile iki uç arasında hareket eden iki prefab; 8 FPS Idle ve tek seferlik 12 FPS Sneeze; hapşırma tamamlandıktan sonra rastgele 2–3 saniye cooldown ve ardından yeni rastgele 1–5 saniyelik bekleme. Her iki aralık Inspector'da ayarlanabilir. Varsayılan bir saniyelik animasyonla iki başlangıç arasında en az yaklaşık dört saniye vardır. İlk eklemede hapşırma görseldi; sonraki kullanıcı talebiyle aşağıdaki duman hasarı kapsama alındı. Knockback TODO kararı korunur. Asıl sahneye yerleşim yapılmadı. Ayrıntılar [düşman belgesinde](enemies.md).
+
+**31 Ekim 2026 duman hasarı:** Kullanıcı, hapşırınca birkaç saniye kalan ateş dumanının içindeki oyuncunun Slime Fire yakınlığıyla aynı mantıkta daha hızlı su tüketmesini istedi; duman animasyonunu sonraya bıraktı. Hapşırmanın çıkış karesinde bağımsız bir duman trigger'ı oluşur, çıktığı dünya konumunda kalır ve süresi dolunca yok olur. `EnemyHeatArea` ve mevcut tek `WaterMeter` kullanılır; yerde hareketsizken de tüketim vardır. Örtüşen Slime/duman kaynaklarında en güçlü çarpan geçerlidir; çıkış/kapanma/süre bitişi çarpanı temizler. Süre `3` saniye, yarıçap `1.75` ve çarpan `2` Inspector'dan ayarlanabilir deneme değerleridir. Dumanın görünümü/animasyonu ve doğrudan temas/knockback bekliyor.
+
 ## K03 — Suya bağlı görsel ve fiziksel küçülme
 
 **Tarih:** 31 Ekim 2026.

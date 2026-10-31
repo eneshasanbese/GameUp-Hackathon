@@ -109,9 +109,9 @@ Gri kutu prototip, nihai resim beklemeden basit şekillerle oyunun tamamlanabile
 
 - [ ] **T12 — Tek su kaynağı oluştur.** Su değerini tek bileşen yönetsin. UI ve görseller bu değeri okusun; farklı script’lerde birbirinden bağımsız su değerleri tutulmasın.
 - [ ] **T13 — Su aralığını sınırla.** Önerilen normalizasyon 0–100’dür; değer negatife veya üst sınırın üzerine çıkmasın.
-- [ ] **T14 — Durum önceliğini uygula.** Oyun aktif değilse tüketim yok; kaynak işlemi sırasında su doldurulur; havada normal tüketim; ısı dışında yerde dururken sıfır; yerde hareket ederken zemin katsayılı tüketim. Slime Fire'ın etkin ısı alanında hareket şartı olmadan zemin tüketimi ısı çarpanıyla uygulanır.
+- [ ] **T14 — Durum önceliğini uygula.** Oyun aktif değilse tüketim yok; kaynak işlemi sırasında su doldurulur; havada normal tüketim; ısı/duman dışında yerde dururken sıfır; yerde hareket ederken zemin katsayılı tüketim. Slime Fire'ın etkin ısı alanında veya HapsirikKoz'un geçici dumanında hareket şartı olmadan zemin tüketimi ısı çarpanıyla uygulanır.
 - [ ] **T15 — Kuru/normal ve nemli zemini ayırt et.** Bilinmeyen zeminin nemli kabul edilip bedava yol oluşturmaması için açık bir varsayılan tanımla. Teknik öneri: bilinmeyen zeminde normal tüketim.
-- [ ] **T16 — Tüketimi kare hızından bağımsız yap.** Tüketimi “her karede sabit miktar” yerine geçen süre üzerinden hesapla. Bu prototipte önerilen model, aktif hareket veya Slime Fire ısı etkisi süresine bağlı tüketimdir; kat edilen mesafeye dayalı ayrı bir model ekleme.
+- [ ] **T16 — Tüketimi kare hızından bağımsız yap.** Tüketimi “her karede sabit miktar” yerine geçen süre üzerinden hesapla. Bu prototipte önerilen model, aktif hareket veya Slime Fire/HapsirikKoz ısı-duman etkisi süresine bağlı tüketimdir; kat edilen mesafeye dayalı ayrı bir model ekleme.
 - [ ] **T17 — Hareket algısını test et.** Düz zemindeki fizik titreşimi durmayı hareket saymasın; duvara doğru basılı tutmakla gerçekten ilerlemek arasındaki davranışı kontrol et. Teknik öneri: yerde gerçek yatay ilerleme ve küçük bir tolerans kullan.
 - [ ] **T18 — Havada tüketimi doğrula.** Dikey zıplama, yatay giriş bırakma ve serbest düşüş normal tüketim üretmeli. Havada nemli zeminin önceki katsayısı taşınmamalı.
 - [ ] **T19 — Su göstergesini bağla.** Su azalması ve dolması anında görünür olsun; prototip bu göstergeyle oynanabilsin.
@@ -122,7 +122,7 @@ Gri kutu prototip, nihai resim beklemeden basit şekillerle oyunun tamamlanabile
 | Durum | Beklenen davranış |
 |---|---|
 | Yerde, hareketsiz ve ısı dışında | Su değişmez |
-| Slime Fire ısısında, yerde dururken veya hareket ederken | Zemin tüketimi × etkin ısı çarpanı |
+| Slime Fire ısısı / HapsirikKoz dumanında, yerde dururken veya hareket ederken | Zemin tüketimi × etkin ısı çarpanı |
 | Normal/kuru zeminde ilerleme | Normal tüketim |
 | Nemli zeminde ilerleme | Normalden düşük tüketim; kesin oran testle belirlenir |
 | Zıplama veya düşme | Normal tüketim |
@@ -246,11 +246,11 @@ Bu liste uygulama talimatı değildir. Her ek fikir tamamlanma süresini ve test
 | Kolay tüketim ayarı | Daha erişilebilir deneme | Orta; temel denge oturduktan sonra |
 | Geçici yeşil görsel iz | Umut/hayat teması | Hikâye onayı gerekir; başka canlı bitki üretip “son fidan” fikrini çeliştirmesin |
 
-**Şimdilik dışarıda:** İkinci bölüm, hareket eden platformlar, ayrıca tasarlanmış dar geçit/puzzle mekaniği, dinamik gölge sistemi, diğer düşmanlar, silah, karmaşık su fiziği, envanter, kayıt/yükleme ve çok oyunculu mod. Suya bağlı collider küçülmesi ve hareket/zıplama çarpanları 31 Ekim kullanıcı kararlarıyla kapsam içindedir. Aynı günkü açık kullanıcı talebiyle Saw ve Slime Fire'ın duran/git-gel türleri ile Slime yakınlık erime çarpanı kapsama alındı; doğrudan temas, ileride Player knockback eklenecek TODO'dur ([karar](docs/kararlar.md), [prefab ayarları](docs/enemies.md)).
+**Şimdilik dışarıda:** İkinci bölüm, hareket eden platformlar, ayrıca tasarlanmış dar geçit/puzzle mekaniği, dinamik gölge sistemi, diğer düşmanlar, silah, karmaşık su fiziği, envanter, kayıt/yükleme ve çok oyunculu mod. Suya bağlı collider küçülmesi ve hareket/zıplama çarpanları 31 Ekim kullanıcı kararlarıyla kapsam içindedir. Aynı günkü açık kullanıcı talepleriyle Saw, Slime Fire ve HapsirikKoz'un duran/git-gel türleri, Slime yakınlık erime çarpanı, HapsirikKoz'un rastgele bekleme/cooldown ile hapşırması ve birkaç saniyelik hasarlı duman alanı kapsama alındı. Duman görseli/animasyonu bekliyor; doğrudan temas, ileride Player knockback eklenecek TODO'dur ([karar](docs/kararlar.md), [prefab ayarları](docs/enemies.md)).
 
 ## Son test kontrol listesi
 
-- [ ] **QA01:** Isı dışında yerde hiç hareket etmeden bekleyince su aynı kalıyor; Slime Fire'ın etkin ısı alanında dururken su azalıyor ve alandan çıkınca tekrar duruyor.
+- [ ] **QA01:** Isı/duman dışında yerde hiç hareket etmeden bekleyince su aynı kalıyor; Slime Fire'ın etkin ısı alanı veya HapsirikKoz dumanında dururken su azalıyor; alandan çıkınca veya geçici dumanın süresi dolunca tekrar duruyor.
 - [ ] **QA02:** Normal zeminde yürüyüşte tüketim var; nemli zeminde daha düşük.
 - [ ] **QA03:** Yalnızca dikey zıplarken ve düşerken normal tüketim var.
 - [ ] **QA04:** Zeminden ayrılınca nemli zemin katsayısı havaya taşınmıyor.
@@ -289,7 +289,7 @@ Bu liste uygulama talimatı değildir. Her ek fikir tamamlanma süresini ve test
 - Tek seferde küçük bir görev al; hangi T/QA/D maddesine çalıştığını belirt.
 - Mevcut dosyaları ve Unity sürümünü incelemeden var olmayan script/API veya kurulu paket varsayma.
 - Onay gerektiren görsel kararları kendin verme. Dört boy sprite, 30 karelik sheet veya Kenney kullanımı otomatik şart değildir.
-- Bitki checkpoint’i veya ısı dışında yerde dururken tüketim ekleme. Slime Fire ısısında hareketsiz su kaybı, suya bağlı collider değişikliği ve ayarlanabilir hareket/zıplama artışı onaylıdır; yeni bir su sayacı oluşturma veya zıplama itişini havada tekrarlama.
+- Bitki checkpoint’i veya ısı/duman dışında yerde dururken tüketim ekleme. Slime Fire ısısı/HapsirikKoz dumanında hareketsiz su kaybı, suya bağlı collider değişikliği ve ayarlanabilir hareket/zıplama artışı onaylıdır; yeni bir su sayacı oluşturma veya zıplama itişini havada tekrarlama.
 - Çalışan kodu gereksiz yeniden düzenleme; yeni bağımlılık ve paket eklemeden gerekçe/onay iste.
 - Sahne, prefab ve `.meta` dosyalarını körlemesine yeniden üretme. Takım arkadaşının sahip olduğu dosyayı habersiz değiştirme.
 - Kodun yazılmış olmasını testin geçmesiyle karıştırma. Unity’de çalıştıramadıysan “uygulandı; editör/build testi bekliyor” olarak raporla.

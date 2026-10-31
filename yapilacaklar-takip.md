@@ -14,6 +14,10 @@
 
 - [ ] Düşmanlarla doğrudan temas: Player knockback eklendikten sonra bağlanacak (kullanıcının açık TODO kararı).
 
+31 Ekim 2026 HapsirikKoz ek kapsamı: duran/devriye prefabları, Idle/Sneeze animasyonları ve kullanıcının istediği rastgele 1–5 saniye bekleme → tam hapşırma → rastgele 2–3 saniye cooldown döngüsü eklendi. Her tur cooldown sonrası yeni bekleme seçilir; aralıklar Inspector'dan değiştirilebilir. Ayrı Unity 6000.5.0f1 projesinde 18 asset ve 25 Play Mode kontrolü geçti; test edilmiş asset'ler gerçek meta dosyalarıyla projeye aktarıldı. Asıl sahnede yerleştirme/görüntü ve build testi bekliyor ([ayarlar ve test kaydı](docs/enemies.md)).
+
+31 Ekim 2026 HapsirikKoz duman hasarı (T14/QA01): yeni kullanıcı talebiyle hapşırmanın çıkış karesinde birkaç saniye kalan hasar alanı eklendi. Varsayılan süre 3 saniye, yarıçap 1.75, su tüketim çarpanı 2; ayarlar duman prefab'ının Inspector'ında. Duman, Slime Fire'ın `EnemyHeatArea`/tek su sayacı yolunu kullanır; dururken de hasar verir, çıktığı noktada kalır ve süresi dolunca çarpanı temizler. Ayrı Unity projesinde 10 asset ve 30 Play Mode kontrolü geçti; kuru/nemli/çok kuru/hava tüketimi, giriş/çıkış, ömür, Slime/duman örtüşmesi, kapatma/silme, çoklu collider, kontrol kapalıyken koruma, ölüm/yeniden doğma ve devriye emisyonu doğrulandı. Test edilmiş prefablar projeye aktarıldı. Duman görseli/animasyonu sonraya bırakıldı; asıl sahne ve build testi bekliyor ([kayıt](docs/enemies.md)).
+
 - [x] Unity 6000.5.0f1 projesi oluşturuldu (URP 2D, yeni Input System)
 - [x] `.gitignore` eklendi; `Library`, `Temp`, `Logs`, `UserSettings` depo dışında (T05)
 - [x] Unity git ayarları doğru: Force Text, Visible Meta Files
@@ -82,7 +86,7 @@ Cinemachine kamerayı oyuncunun peşinden götürür. Arka plan kameranın altı
 
 - [ ] T12 — Su değerini tek bir bileşen (`WaterMeter`) yönetiyor
 - [ ] T13 — Su 0–100 arasında kalıyor
-- [ ] T14 — Durum önceliği: oyun aktif değilken tüketim yok, kaynakta dolum, havada normal, ısı dışında yerde dururken sıfır, yerde hareket ederken veya etkin Slime Fire ısısında dururken zemin ve ısı katsayılı
+- [ ] T14 — Durum önceliği: oyun aktif değilken tüketim yok, kaynakta dolum, havada normal, ısı/duman dışında yerde dururken sıfır, yerde hareket ederken veya etkin Slime Fire ısısı/HapsirikKoz dumanında dururken zemin ve ısı katsayılı
 - [ ] T15 — Kuru ve nemli zemin ayırt ediliyor; bilinmeyen zemin normal sayılıyor
 - [ ] T16 — Tüketim kare hızından bağımsız (geçen süreye göre hesaplanıyor)
 - [ ] T17 — Fizik titreşimi ve duvara doğru yürümek hareket sayılmıyor
