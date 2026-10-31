@@ -4,14 +4,14 @@ Su miktarı, görsel küçülme/esneme, iz, dolum ve yeniden doğuş `Assets/Scr
 
 ## Ground kontrolü
 
-PhysicsControl aynı noktadan aşağı doğru iki Physics2D.Raycast atar:
+PhysicsControl, güncel CircleCollider2D'nin gerçek temaslarını ve aşağı doğru şekil taramasını kullanır:
 
 - **Dry Ground Layer:** `Ground-Dry` (layer 6).
 - **Wet Ground Layer:** `Ground-Wet` (layer 7).
-- **Ground Check Offset:** Player merkezine göre `(0, -0.45)`.
-- **Ground Ray Distance:** `0.15`.
+- **Ground Check Distance:** Tam boyda en fazla `0.15`; oyuncu küçüldükçe tarama mesafesi aynı oranda kısalır.
+- **Maximum Ground Angle:** `60` derece; dik duvar ve tavan destek sayılmaz.
 
-`dryGrounded` ve `wetGrounded` zemin türünü, `grounded` ise ikisinin birleşimini verir. Ray iki katmana da çarparsa daha yakın yüzey seçilir. Zıplama yükselirken önceki zemin tekrar grounded sayılmaz. Seçili Player'ın rayı Scene görünümünde çizilir.
+`dryGrounded` ve `wetGrounded` destek collider'ının zemin türünü, `grounded` ise ikisinin birleşimini verir. Yakın destek seçilir ve yüzey normali `GroundNormal` üzerinden okunabilir. Eğimde hız bu yüzeyin teğetini izler; tuş bırakıldığında eğimden kalan yukarı hız da durur. Yerdeyken yerçekimi kuvveti dengelenerek rampada boşta kayma önlenir. Gerçek zıplamada zemine yapışma devre dışıdır; kenardan çıkıldığında normal düşüş sürer. Seçili Player'ın güncel collider'ı ve tarama alanı Scene görünümünde çizilir. Eski sabit ray başlangıcı artık kullanılmaz; `groundRayDistance` verisi `groundCheckDistance` alanına taşınır.
 
 Sahnedeki Player `Player`, ana platform `Ground-Dry`, nemli şerit `Ground-Wet` layer'ındadır. Zeminlerde ayrıca script bulunmaz.
 
@@ -27,7 +27,13 @@ WaterMeter tek bir 0–100 su değeri tutar:
 | Havada | 3 birim/saniye |
 | Kaynağa temas | 100'e dolum |
 
-Kuru zeminde su daha hızlı azalır ve damla daha hızlı küçülür; ıslak zeminde ikisi de yavaştır. Görsel boyut kalan suya göre 1–0.70 aralığındadır. Collider, kök obje ölçeği, hareket hızı ve zıplama kuvveti bu değerle değiştirilmez. Duvara basılı tutmak yerine gerçek yatay ilerleme ölçülür.
+Kuru zeminde su daha hızlı azalır ve damla daha hızlı küçülür; ıslak zeminde ikisi de yavaştır. 31 Ekim kullanıcı kararlarına göre görsel ve collider kalan suya göre birlikte 1–0.45 aralığında küçülür; yürüme/hava hızı ve zıplama kalkış hızı mevcut ability'lerin Inspector çarpanlarıyla artar. Kök obje ölçeği değişmez. Duvara basılı tutmak yerine gerçek yatay ilerleme ölçülür. Önceki sabit collider/hız/zıplama kurallarının yerini [güncel kararlar](kararlar.md) almıştır.
+
+**Boyut ayarı:** Hierarchy'de kök **Player** objesini seç → **WaterMeter → Water Size → Minimum Scale**. Varsayılan `0.45`, su sıfıra yaklaşırken tam boyun %45'ine yaklaşılmasıdır; `0.35` daha küçük, `0.60` daha büyük bir minimum verir. Alan aralığı 0.25–1.00'dır ve Play Mode'da değiştirildiğinde de uygulanır. Sıfır su, küçük boyda yaşamayı sürdürmek yerine mevcut yeniden doğmayı başlatır.
+
+**Hız/zıplama ayarları:** Aynı Player üzerinde MoveAbility ve JumpAbility'nin **Low Water Boost** alanlarındadır; [oyuncu belgesine](player-state-machine.md#düşük-suda-hız-ve-zıplama) bak. Katsayılar mevcut `NormalizedWater` değerini okur; WaterMeter ikinci bir hareket hesabı veya kaynak sayacı tutmaz. Minimum Scale, boyut sınırını; ability çarpanları hareket artışının sınırını ayrı ayrı belirler.
+
+Tek CircleCollider2D'nin başlangıç yarıçapı ve offset'i tam boy referansıdır. `PhysicsControl.SetBodyScale` yarıçapı değiştirip alt hizayı koruyacak offset'i hesaplar; `BodyScale` gerçekleşen boyutu verir. Eğimde destek noktası için dikey konum telafisi yapılır. Dolumda dar tavan/duvar tam boyu engelliyorsa su hemen 100 olur; görsel ve collider sığan boyutta kalır, alan açılınca büyüme tamamlanır. Animasyonun esnemesi collider'a aktarılmaz.
 
 Dry Drain Per Second, Wet Drain Per Second, Minimum Scale ve hareket toleransı WaterMeter Inspector'ındadır. `CurrentWater`, `NormalizedWater`, `Consume(amount)`, `Refill()` ve `WaterChanged` ortak su arayüzüdür. `RefilledFromSource`, eksik suyla geçerli bir kaynağa girişte dolum tamamlanınca bir kez bildirilir; kaynakta kalma ve yeniden doğuş bu olayı üretmez.
 
@@ -36,11 +42,10 @@ Dry Drain Per Second, Wet Drain Per Second, Minimum Scale ve hareket toleransı 
 ```text
 Player                         Rigidbody2D, collider, ability'ler ve WaterMeter
 ├── Visual                     SpriteRenderer; küçülme ve esneme burada birleşir
-│   └── Highlight              Beyaz parlama
 └── TrailAnchor                TrailRenderer
 ```
 
-Önceki SizeRoot → DeformRoot → Body düzeni, küçülme ile esnemenin aynı localScale değerini ayrı scriptlerden ezmesini önlemek içindi. Tek script artık `başlangıç ölçeği × su boyutu × esneme` sonucunu Visual'a bir kez yazar; bu üç ayrı objeye ihtiyaç kalmaz. Fizikten ayrı bir Visual çocuğu, collider'ın görselle beraber küçülmesini/esnemesini önler. Görsel konumu da ayak hizasını sabit tutacak şekilde ayarlanır.
+Önceki SizeRoot → DeformRoot → Body düzeni, küçülme ile esnemenin aynı localScale değerini ayrı scriptlerden ezmesini önlemek içindi. WaterMeter artık `başlangıç ölçeği × gerçekleşen gövde boyutu × esneme` sonucunu Visual'a bir kez yazar; bu üç ayrı objeye ihtiyaç kalmaz. Fizikten ayrı Visual çocuğu, animasyon esnemesinin collider'ı bozmasını önler; suya bağlı fizik boyutu ayrıca PhysicsControl'de ayarlanır. Görsel konumu da ayak hizasını sabit tutacak şekilde ayarlanır.
 
 WaterMeter'da **Body Visual** alanına Visual'ın SpriteRenderer'ı, **Trail** alanına TrailAnchor'ın TrailRenderer'ı bağlıdır. Duruş, hareket, zıplama ve iniş şekilleri aynı scriptte hesaplanır. İz 0.6 saniye yaşar; `Assets/Materials/WaterTrail.mat` kullanılır. Kalıcı zemin lekesi üretmez.
 
@@ -61,8 +66,14 @@ Eksik suyla kaynağa giriş, dolumdan sonra Heal animasyonunu tetikler. Dolum an
 
 ## Doğrulama
 
+Aşağıdaki ilk kayıtlar önceki sabit collider uygulamasına aittir; yeni fiziksel küçülme için bu bölümün sonundaki güncel sonuç geçerlidir.
+
 Unity 6000.5.0f1 ile ayrı geçici projede 17 Play Mode testi geçti: iki rayın zemin ayrımı, üst üste zeminlerde yakın yüzey seçimi, zıplama, yürüyüş/duruş, kuru ve ıslak tüketim/küçülme, duvara dayanma, havada tüketim, ayak/collider sabitliği, farklı kare/fizik adımları, scriptsiz kaynak ve yeniden doğuş doğrulandı. Sahne Unity Editor'de açılarak layer, tek Visual ve script referansları ayrıca kontrol edildi. Build testi yapılmadı.
 
 31 Ekim 2026 idle düzeltmesi: Unity 6000.5.0f1 ile ayrı, küçük bir geçici projede güncel klip, controller, sprite sheet ve başlangıç sprite'ı içe aktarıldı. Editor'de Animator üç döngü boyunca örneklendi; 0.8 saniyelik döngü, dört eşit kare süresi ve 1.0/0.7 su ölçeklerinde taban sabitliği doğrulandı. GUID/fileID referansları ve başlangıç taban hizası korundu; dilimlerin görünür pikselleri kesmediği ayrıca kontrol edildi. Bu kontrol sahnenin Play Mode veya build testi değildir; sahne içi görsel doğrulama bekliyor.
 
 31 Ekim 2026 Move/Jump/Heal bağlantısı: aynı Unity sürümünde ayrı bir test sahnesinde güncel kod ve asset'lerle 19 Play Mode doğrulaması geçti. Kaynak dolumunun anlık kalması, Heal'ın kaynakta tekrarlanmaması, yeniden girişte oynayabilmesi, oynarken hareket edilebilmesi ve yeniden doğmada temizlenmesi doğrulandı. Kök ölçek ve collider korundu. Asıl Components sahnesi veya dış build bu kontrolde çalıştırılmadı; kapsam [oyuncu belgesinde](player-state-machine.md#doğrulama) kayıtlıdır.
+
+31 Ekim 2026 fiziksel küçülme/eğim güncellemesi: Unity 6000.5.0f1 ile güncel Player prefab'ı, oyuncu/su kodu, Input System ve animasyon asset'leri ayrı geçici projeye kopyalanarak 47 Play Mode doğrulaması geçti. Tam/yarım/az su ve Inspector'da minimum boyut değişimi, ayak hizası, gerçek zıplama/kısa basış/basılı tutma, ±45° kuru/nemli eğimde hareket ve tuş bırakınca durma, küçük boyda eğim desteği, duvar/kenar ayrımı, kaynakta tek Heal, dolum ve yeniden doğmada tam boyuta dönüş kontrol edildi. Dar tavan altında büyümenin ertelenmesi ve alan açılınca tamamlanması da geçti. Yerde dururken sıfır, nemli yürüyüşte düşük ve havada normal tüketim korundu. Bu test gerçek prefab ve kodla geçici test geometrisinde yapıldı; asıl Components/Level 5 sahneleri veya build çalıştırılmadı.
+
+31 Ekim 2026 hız/zıplama çarpanları: ayrı Unity projesinde gerçek prefab ve güncel kodla 48 Play Mode doğrulaması geçti. Bonuslar aynı WaterMeter'ın su oranından okundu; dolum/yeniden doğma temel harekete döndü ve havada dolum/tüketim yeni zıplama itişi üretmedi. Inspector ayarı, ölçülen hız/mesafe ve regresyon kapsamı [oyuncu belgesindedir](player-state-machine.md#doğrulama). Asıl sahneler ve build bu kontrolde çalıştırılmadı.

@@ -31,9 +31,9 @@
 | Ara duraklar | Su birikintileri; yaşayan ara fidan/ağaç checkpoint’leri yok |
 | Final | Yaşayan tek fidan yolculuğun sonunda |
 | İz | İlerlerken geride su izi bırakma fikri korunur |
-| İlk prototip | Geçici tek sprite ve sabit çarpışma kutusu |
-| İlk prototip fiziği | Su azaldığında hız, zıplama ve çarpışma boyutu değişmez |
-| Nihai görseller | Tarz ve küçülme yöntemi ayrı kararlar; henüz onaylanmadı |
+| Boyut — 31 Ekim güncellemesi | Su azaldıkça görsel ve collider birlikte küçülür; [K03 kararı](docs/kararlar.md) önceki sabit collider kararının yerini alır |
+| Hareket fiziği — 31 Ekim güncellemesi | Kök ölçek sabit; su azaldıkça yürüme/hava hızı ve zıplama kalkış hızı ayrı Inspector çarpanlarıyla artar ([karar](docs/kararlar.md)) |
+| Nihai görseller | Görsel tarz hâlâ ayrı karardır; mevcut görsel ve collider için sürekli küçülme kapsam içindedir |
 | Çalışma çıktısı | Takım ve AI agent’lar için indirilebilir Markdown görev listesi |
 
 **Önemli ayrım:** “İlk prototipte tek sprite” kararı, teslim oyununda küçülmenin tamamen kaldırıldığı anlamına gelmez. İlk aşamada su kaybını göstergeyle test etmek mümkündür; karakterin son görsel küçülme yöntemi görsel karar kapısından sonra uygulanır.
@@ -59,7 +59,7 @@ Bu maddeler görev listesini hazırlamayı değil, ilgili uygulamayı sınırlar
 |---|---|---|---|
 | K01 — Etkinlik | Resmî tema, son teslim saati/saat dilimi, platform, hazır kod/asset ve AI kuralları | Proje kurulurken | Uygunluk onayı veya teslim formatı iddia edilmez |
 | K02 — Görsel tarz | Kenney piksel ailesi mi, başka bir tarz mı? | Gri kutu prototip çalıştıktan sonra | Geçici görsellerle devam edilir |
-| K03 — Küçülme | Ayrı boy sprite’ları mı, tek sprite’ın görsel ölçeklenmesi mi? | K02 ile birlikte | Dört boy/30 kare üretimi başlatılmaz; temel mantık göstergeyle test edilir |
+| K03 — Küçülme | 31 Ekim kullanıcı kararı: mevcut görsel ve collider birlikte küçülür; [karar kaydı](docs/kararlar.md) | Karar alındı; boyut ve eğim birlikte test edilir | Dört boy/30 kare üretimi zorunlu değildir |
 | K04 — Teslim içeriği | Bölüm uzunluğu, su birikintisi sayısı ve finalde tek/çok kademeli sonuç | Test bölümünün ilk denemesinden sonra | Ek bölüm ve çok kademeli son eklenmez |
 | K05 — Kurulum | Unity sürümü, mevcut render hattı ve input yöntemi | Mevcut proje kontrolünde | Sürüm yükseltme veya render hattı dönüşümü yapılmaz |
 
@@ -177,14 +177,14 @@ Kenney Pixel Platformer ana paketinin resmî sayfası 18×18 tile ölçüsü ve 
 
 ### Küçülme onaylandıktan sonra
 
-- [ ] **T45 — Görsel küçülmeyi uygula.** Yalnızca `Visual` değişsin; kök obje, fizik boyutu ve zıplama değişmesin. İlk aşamanın sabit collider kararı korunur.
-- [ ] **T46 — En küçük damlayı kontrol et.** Görünmez çarpışma kenarları rahatsız ediyorsa platform aralıklarını veya görsel küçülme aralığını düzenle; çözüm diye fizik küçülmesini sessizce ekleme.
+- [ ] **T45 — Görsel ve collider küçülmesini uygula.** 31 Ekim kullanıcı kararlarına göre `Visual` ve çarpışma boyutu birlikte değişsin; kök ölçek sabit kalsın. Yürüme/hava hızı ve zıplama artışı mevcut ability Inspector ayarlarıyla suya bağlansın. Animasyon esnemesi collider'ı değiştirmesin.
+- [ ] **T46 — En küçük damlayı kontrol et.** Görsel/collider uyumu, eğimde durma, platform kenarı ve dar alanda dolum test edilsin; dolum collider'ı tavan veya duvar içine büyütmesin.
 - [ ] **T47 — Su izini ekle.** İlk sürümde iz görseldir; yeni nemli zemin, yürünebilir yol veya geri toplanabilir su oluşturmaz. Particle veya basit geçici sprite kullanılabilir; eski izler temizlensin.
 - [ ] **T48 — Küçülme, dolma ve yeniden doğmayı birlikte test et.** Havada sprite değişince karakterin ayak hizası sıçramasın; kaynakta görünüm tekrar dolu hâle gelsin.
 
 **Dört boy seçilirse:** Asset dosyasındaki 18/15/12/9 piksel yüksekliği ve L/M/S/XS düzeni aday şartnamedir. İlk olarak her boy için tek kare yeterlidir; 30 karelik tam animasyon seti P0 değildir. Eşiklerde hangi kademenin kullanılacağı çakışmasız tanımlansın; 0 su canlı XS durumu değil ölüm durumudur. Bu ölçüler ve tam kare listesi yüklenen dosyadan gelir, kullanıcı tarafından henüz kesinleştirilmiş değildir. [cite:17]
 
-**Kesintisiz ölçek seçilirse:** Ölçek yalnızca `Visual` üzerinde değişsin. Piksel tarzıyla birlikte kullanılacaksa kenar tutarlılığı ve kamera hareketi gerçek build’de denensin; görünüm onayı alınsın.
+**Kesintisiz ölçek — güncel uygulama:** Transform ölçeği yalnızca `Visual` üzerinde değişir; collider yarıçapı/offset'i suya göre ayrıca ayarlanır. Piksel tarzıyla birlikte kullanılacaksa kenar tutarlılığı ve kamera hareketi gerçek build’de denensin; görünüm onayı alınsın.
 
 ## P1 — Arayüz, ses ve sunum
 
@@ -245,7 +245,7 @@ Bu liste uygulama talimatı değildir. Her ek fikir tamamlanma süresini ve test
 | Kolay tüketim ayarı | Daha erişilebilir deneme | Orta; temel denge oturduktan sonra |
 | Geçici yeşil görsel iz | Umut/hayat teması | Hikâye onayı gerekir; başka canlı bitki üretip “son fidan” fikrini çeliştirmesin |
 
-**Şimdilik dışarıda:** İkinci bölüm, hareket eden platformlar, dar geçit için fiziksel küçülme, zıplamanın boyuta bağlanması, dinamik gölge sistemi, düşmanlar, silah, karmaşık su fiziği, envanter, kayıt/yükleme ve çok oyunculu mod. Bunlar ana döngüyü tamamlamak için gerekli değildir.
+**Şimdilik dışarıda:** İkinci bölüm, hareket eden platformlar, ayrıca tasarlanmış dar geçit/puzzle mekaniği, dinamik gölge sistemi, düşmanlar, silah, karmaşık su fiziği, envanter, kayıt/yükleme ve çok oyunculu mod. Suya bağlı collider küçülmesi ve hareket/zıplama çarpanları 31 Ekim kullanıcı kararlarıyla kapsam içindedir.
 
 ## Son test kontrol listesi
 
@@ -259,7 +259,7 @@ Bu liste uygulama talimatı değildir. Her ek fikir tamamlanma süresini ve test
 - [ ] **QA08:** İlk kaynak öncesinde başlangıca, sonrasında güvenli kaynağa dönülüyor.
 - [ ] **QA09:** Yeniden doğmada hız, su, UI, giriş ve görsel doğru sıfırlanıyor.
 - [ ] **QA10:** Kaynağa art arda girip çıkmak tekrarlı olay veya kilitlenme yaratmıyor.
-- [ ] **QA11:** En küçük görselde hareket fiziği değişmiyor; görünmez çarpışmalar oyunu anlaşılmaz kılmıyor.
+- [ ] **QA11:** En küçük görselde collider görselle birlikte küçülüyor; kök ölçek sabit, hız/zıplama artışı seçilen çarpanları izliyor. Eğim, kenar ve dolum çarpışmaları tutarlı; dolum/yeniden doğma eski hız bonusunu taşımıyor.
 - [ ] **QA12:** Su izi zamanla temizleniyor; uzun oynayışta sınırsız obje birikmiyor.
 - [ ] **QA13:** Fidana ulaşınca bir kez kazanılıyor, tüketim duruyor.
 - [ ] **QA14:** Su bitmesi ve final teması aynı ana denk gelirse sonuç tutarlı. Prototip teknik önerisi: suyu bitmiş damla kazanamasın; bu sıra bilinçli test edilsin.
@@ -288,7 +288,7 @@ Bu liste uygulama talimatı değildir. Her ek fikir tamamlanma süresini ve test
 - Tek seferde küçük bir görev al; hangi T/QA/D maddesine çalıştığını belirt.
 - Mevcut dosyaları ve Unity sürümünü incelemeden var olmayan script/API veya kurulu paket varsayma.
 - Onay gerektiren görsel kararları kendin verme. Dört boy sprite, 30 karelik sheet veya Kenney kullanımı otomatik şart değildir.
-- Bitki checkpoint’i, dururken tüketim veya boyuta bağlı fizik ekleme.
+- Bitki checkpoint’i veya dururken tüketim ekleme. Suya bağlı collider değişikliği ve ayarlanabilir hareket/zıplama artışı onaylıdır; yeni bir su sayacı oluşturma veya zıplama itişini havada tekrarlama.
 - Çalışan kodu gereksiz yeniden düzenleme; yeni bağımlılık ve paket eklemeden gerekçe/onay iste.
 - Sahne, prefab ve `.meta` dosyalarını körlemesine yeniden üretme. Takım arkadaşının sahip olduğu dosyayı habersiz değiştirme.
 - Kodun yazılmış olmasını testin geçmesiyle karıştırma. Unity’de çalıştıramadıysan “uygulandı; editör/build testi bekliyor” olarak raporla.

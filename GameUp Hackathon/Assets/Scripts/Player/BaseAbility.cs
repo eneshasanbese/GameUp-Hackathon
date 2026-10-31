@@ -6,6 +6,7 @@ public abstract class BaseAbility : MonoBehaviour
     protected GatherInput linkedInput;
     protected StateMachine linkedStateMachine;
     protected PhysicsControl linkedPhysicsControl;
+    private WaterMeter water;
 
     public abstract PlayerStates.State thisAbilityState { get; }
     public bool isPermitted = true;
@@ -21,6 +22,14 @@ public abstract class BaseAbility : MonoBehaviour
         linkedInput = player.gatherInput;
         linkedStateMachine = player.stateMachine;
         linkedPhysicsControl = player.physicsControl;
+        water = player.GetComponent<WaterMeter>();
+    }
+
+    protected float GetLowWaterMultiplier(float maximumMultiplier)
+    {
+        return water != null
+            ? Mathf.Lerp(1f, maximumMultiplier, 1f - water.NormalizedWater)
+            : 1f;
     }
 
     public virtual void EnterAbility() { }
