@@ -6,6 +6,38 @@
 
 **Uygulama:** `Assets/Scripts/Level/KillZone.cs` lavın trigger collider'ına eklenir. Damla değdiği anda suyu sıfırlanır; bu, mevcut tek ölüm akışını başlatır (buharlaşma, son checkpoint'te doğma, dolum). Ayrı bir ölüm sistemi kurulmadı; knockback flash'ı lavdan korumaz. Üç bölüme geçiş aşağıdaki K04 bölümünde (1 Kasım 2026) kayıtlıdır.
 
+## Köz Ocağı — sürekli HeatAura
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı SlimeFire_Patrol prefabındaki sürekli ısı animasyonunun Köz Ocağı'nda da kullanılmasını istedi.
+
+**Uygulama:** Aynı HeatAura klibi/controller'ı oyuncu uzaktayken de döner. Görsel mevcut etki alanına uyar; geniş alanda rüzgâr/çevre okunabilirliği için alfa 0.35'tir. Ocağın mevcut su kaybı ve yatay çekimi korunur; ek ısı çarpanı veya hasar alanı oluşturulmaz. [Bağlantılar ve doğrulama](koz-ocagi.md#sürekli-heataura--31-ekim-2026).
+
+## Köz Ocağı — menzile bağlı emiş rüzgârı
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı önerilen emiş yaklaşımından sonra hazır `KozOcagi/SuctionWind/` setini vererek eklenmesini istedi.
+
+**Uygulama:** Hafif Idle sürekli; ana emiş yalnızca gerçek çekim hedefi varken döner, yakınlaşınca güçlü klibe geçer. Akış oyuncunun bulunduğu taraftan ağıza doğrudur ve yatay çekimi gösterir. Çıkışta mevcut faz alfa ile söner. Mevcut ayarlı menzil/çekim/su değerleri korunur. [Bağlantılar, ayarlar ve doğrulama](koz-ocagi.md#suctionwind--31-ekim-2026).
+
+## Köz Püskürten — sabit atıcı ve tek ateş topu
+
+**Sonraki açık kullanıcı kararı — 31 Ekim 2026:** Idle'ın hareket etmediğinin kontrolü ve diğer yerdeki düşmanlar gibi yerçekimi istendi. Önceki tek kare/Animator'sız gövde yerine hazır 12 karelik Idle döngüsü bağlanır. Atıcı Dynamic Rigidbody2D ile düşer; X ve dönüş kilitlidir. Ayrı TerrainBody yalnızca zemin/sınırlarla çarpışır, gövde hasarı/oyuncuyu itme eklenmez. Bu karar önceki tamamen yerinde sabit ve fizik gövdesiz uygulamayı bu kapsamda değiştirir.
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı EmberPack/EmberSpitter/EmberFireball klasörlerini ve ayrıntılı davranış/kabul metnini verdi; iki prefab ve kontrollü test alanının uygulanmasını istedi. Bu açık talep ilgili dar düşman kapsamını onaylar.
+
+**Karar:** Atıcı hareket etmez; 360° görüş/menzil kontrolü, okunabilir hazırlık, fırlatma anındaki oyuncu merkezine tek düz mermi ve sabit cooldown kullanır. Hasar yalnızca mermiden sabit su puanı olarak gelir; mevcut WaterMeter ve flash dokunulmazlığı kullanılır. Gövde teması, çekim/ısı, düşman canı, oyuncu saldırısı ve güdümlü/alan etkili mermi eklenmez. Verilen iki tek kareyle çalışır; yeni paket veya Animator zorunluluğu yoktur. [Dosyalar, ayarlar ve doğrulama](ember-spitter.md).
+
+## HapsirikKoz — duman HeatAura ve alfa geçişi
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı duran/devriye HapsirikKoz'un ortak `HapsirikKoz_Smoke` prefabına Slime ile aynı HeatAura tasarımını, oluşurken 0→1 ve biterken 1→0 alfa geçişiyle eklemeyi istedi.
+
+**Uygulama:** Ortak nefes animasyonu dumanın bağımsız konumunda oynar; alfa dumanın toplam ömrünü izler ve her nefes döngüsünde sıfırlanmaz. Başlangıç ayarı 3 saniye ömür, 0.25 saniye açılma ve son 0.5 saniye kapanmadır; Inspector'dan değiştirilebilir. Isı yarıçapı, çarpanı ve hapşırmanın çıkış karesi korunur. İki düşmanın mevcut ortak prefab bağlantısı yeterlidir. [Ayarlar ve doğrulama](enemies.md#hapsirikkoz-hapşırma-döngüsü).
+
+## Slime Fire — HeatAura ile ısı alanını gösterme
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı `SlimeFire_Patrol` ve `SlimeFire_Stationary` prefablarının HeatArea'sını belirginleştirmek için mevcut `FireSlime/HeatAura/` efektinin eklenmesini istedi.
+
+**Uygulama:** Paketin 256 piksel sheet'i, 24 kare/12 FPS/2 saniye nefes döngüsüyle Slime'ın arkasında oynatılır. Görsel merkez ve çap mevcut HeatArea collider'ını izler; hasar yarıçapı ve çarpanı değişmez. Alternatif çözünürlükler korunur. İki prefab ve yeniden üretici hazır bağlanır. [Ayarlar ve doğrulama](enemies.md#slime-fire-ısı-alanının-heataura-görseli).
+
 ## Saw — Samples 90 ve eşit döngü birleşimi
 
 **Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı Saw'ın fazla hızlı döndüğünü ve döngü sonunda takıldığını bildirdi; devam yanıtıyla 15'ten 90'a çıkardığı ayarın Animation penceresindeki **Samples** olduğunu netleştirdi.
@@ -33,6 +65,8 @@ Isı/duman, artık seçilen bekleme veya yürüme tabanını malzeme çarpanınd
 **Uygulama:** `Unity_256/Idle.png` ve `Sneeze.png`; 256×256 kareler, 256 PPU, ortak pivot `(0.5, 0.07407407)`, Bilinear, mipmap kapalı ve sıkıştırmasız import. Mevcut 8 kare/8 FPS Idle döngüsü ve 12 kare/12 FPS tek hapşırma korunur. Duman yine 05 numaralı karede çıkar. İki prefabın başlangıç sprite'ı, mevcut kliplerin sprite referansları ve üreticinin kaynak yolu değişir; hareket/takip, collider ve duman ayarları korunur. Bu, diğer görsellerin K02 kararını değiştirmez. [Bağlantılar ve doğrulama](enemies.md#görseller-ve-yeniden-üretim).
 
 ## Hareketli düşmanlar — algılama alanında oyuncuyu takip
+
+**Görünmez sınır (31 Ekim 2026):** Kullanıcı yerçekimli takip eden düşmanların uçurumdan düşmesini önlemek için kameraya benzer, Edge ile çizilen gizli duvar istedi. `GroundEnemyBoundary` prefabında düzenlenebilir, trigger olmayan `EdgeCollider2D` kullanılır. Yalnızca yerdeki SlimeFire/HapsirikKoz fizik gövdeleriyle çarpışır; oyuncu ve uçan Saw geçebilir. Katmanlar `EnemyBoundary` ve `GroundEnemy`; kamera sınırı ayrı kalır. Düşman sınırın ötesindeki hedefi takip etmeyi denerken duvarda durur; çizgi kapalıysa düşüş normal sürer. [Yerleştirme ve ayarlar](enemies.md#yerdeki-düşmanlar-için-görünmez-sınır).
 
 **Sonraki fizik düzeltmesi (31 Ekim 2026):** Kullanıcı takipte duvar/yer içinden geçmeyi bildirdi; uçan `Saw_Patrol` ile diğer gövde düşmanlarını ayrı değerlendirmeyi ve yerdekilerin düşmesini istedi. Saw yerçekimsiz uçar, zemin/duvara çarpar. SlimeFire ve HapsirikKoz'un duran/devriye türleri yerçekimiyle düşer; devriye/takip/dönüş motoru yalnızca X hızını belirler. Hasar trigger'ı korunur, ayrı `TerrainBody` yalnızca mevcut üç zemin katmanıyla çarpışır. Önceki yerdeki çapraz rota/yüksekliğe doğrudan dönüş davranışı bu düzeltmeyle geçersizdir. Köz Ocağı ve dumanın sabit çevresel rolleri korunur. [Fizik ve Inspector ayarları](enemies.md#yerçekimi-ve-zeminduvar-çarpışması).
 

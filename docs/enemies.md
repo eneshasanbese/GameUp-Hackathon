@@ -25,6 +25,18 @@ HapsirikKoz kökü de ayak seviyesindedir. 31 Ekim 2026 görsel geçişiyle `Hap
 
 Hareketli türlerde **EnemyPatrol → End Offset**, yerleştirilen başlangıca göre dünya birimi cinsinden diğer uçtur; varsayılan `(3, 0)`. **Speed** varsayılan `1.5` birim/saniyedir; devriyede, takipte ve rotaya dönüşte kullanılır. Saw negatif, dikey ve çapraz offset kullanabilir. Yerdeki Slime/HapsirikKoz yalnızca X offset'ini kullanır; Y hareketi yerçekimi/çarpışmadan gelir. Sıfır hız veya sıfır etkili offset motoru ve takibi durdurur, yerçekimini durdurmaz. Seçili prefab'ın iki ucu Scene görünümünde sarı çizilir. Slime hareket yönüne döner; Saw'ın yüzü dik kalırken dişleri sheet animasyonuyla döner.
 
+## Slime Fire ısı alanının HeatAura görseli
+
+31 Ekim 2026 kullanıcı talebi (T42/T43 ek kapsamı): iki SlimeFire prefabında `HeatArea/HeatAura` çocuğu, mevcut `FireSlime/HeatAura/256/Heat_Sheet.png` setini oynatır. 24 kare, 12 FPS, 2 saniyelik döngü; ilk kare sonda yinelenmez. Sheet sabit 256×256 hücrelere, merkez pivot'a ve 256 PPU'ya ayarlanmıştır; Bilinear, mipmap kapalı ve sıkıştırmasızdır. Mevcut sheet GUID'i ve dilimlerin sprite kimlikleri korunur; alternatif 128/1080 dosyaları değiştirilmez.
+
+`EnemyHeatAuraVisual`, görseli `HeatArea` collider'ının offset'ine hizalar ve yarıçap değişince ölçeği günceller; Editor ve Play Mode'da çalışır. Referans karedeki görünür çap 202/256 dünya birimidir; şeffaf kenar boşluğu hesaba katılır. Varsayılan 1.75 yarıçap için görsel ölçeği yaklaşık 4.436'dır. Karelerdeki hafif nefes hareketi yalnızca görseldir; hasar yarıçapı sabit kalır. `EnemyHeatArea`, circle collider veya trigger kapatılırsa aura gizlenir; yeniden açılınca geri gelir.
+
+SpriteRenderer beyaz/alpha 1 ve alpha-blended unlit `Sprites/Default` materyalindedir; `Level` sorting layer, Order 0 kullanır. Slime gövdesi Order 1 ile önde kalır. Görsel düşmanla birlikte taşınır; gövdenin yön çevirmesinden bağımsızdır. Gövde/zemin collider'ları, ısı çarpanı, temas hasarı ve devriye/takip ayarları korunur. Prefablar hazır bağlıdır; ek Inspector veya sahne bağlantısı gerekmez.
+
+Yalnızca bu efekti yeniden kurmak için **GameUp → Enemies → Rebuild Slime Fire Heat Aura** kullanılabilir (`SlimeFireHeatAuraBuilder.cs`). Bu menü iki prefabın aura çocuğunu ve ortak efekt klibi/controller'ını günceller; diğer düşmanları veya Slime hareket/hasar ayarlarını sıfırlamaz. Genel **Rebuild Enemy Prefabs** üreticisi de HeatAura'yı bağlar; genel menünün mevcut ayarları varsayılana yazma davranışı sürer.
+
+Doğrulama: ayrı Unity `6000.5.0f1` projesinde 35 kontrol geçti (14 asset, 21 Play Mode/render). Sabit grid/sıra, iki saniyelik döngü, iki prefabda üç döngü boyunca 24 kare, gerçek zamanda bağımsız gövde/aura animasyonu, yarıçap/offset/ölçek/konum uyumu, kapatma/açma ve collider/hasar ayarlarının korunması kontrol edildi. [Sonuç](verification/heat-aura-result.txt), [kontroller](verification/heat-aura-checks.txt), [960×540 render önizlemesi](verification/heat-aura-preview.png). Ana bölümde görünüm/oynanış ve dış build testi bekliyor.
+
 ## Hareketli düşmanların takip alanı
 
 31 Ekim 2026 kullanıcı talebiyle `Saw_Patrol`, `SlimeFire_Patrol` ve `HapsirikKoz_Patrol`, oyuncu dış algılama çemberine girdiğinde devriyeyi kesip onu takip eder. Oyuncu tamamen çemberden çıkınca düşman ayrıldığı rota noktasına döner, önceki devriye yönüyle aynı iki uç arasında devam eder. Dönüş sırasında oyuncu yeniden alana girerse takip hemen başlar; özgün dönüş noktası korunur.
@@ -41,11 +53,28 @@ Algılama, her fizik adımında gerçek oyuncu collider'larının çemberle ört
 
 31 Ekim 2026 kullanıcı bildirimi: takipte duvar/zemin içinden geçme ve yerdeki düşmanların havada kalması. Üç devriye türünde `MovePosition` yerine `linearVelocity` kullanılır. Yerdeki türlerin Y hızı her fizik adımında korunur; takip bitince eski yüksekliğe uçmak yerine yalnızca rota X konumuna dönerler. Motor kapanınca yatay hız kesilir, düşüş sürer. [Unity MovePosition belgesi](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Rigidbody2D.MovePosition.html), bu metodun taşıma adımında yerçekimini uygulamadığını açıklar.
 
-Altı gövde prefabında `TerrainBody` çocuğu vardır. **Is Trigger kapalıdır**; yalnızca `Ground-Dry`, `Ground-Wet`, `Ground-Extra-Dry` katmanlarıyla çarpışır. `Include Layers` bu üç katmanı, `Exclude Layers` diğerlerini seçer; `Layer Override Priority = 1`. Oyuncu, diğer düşmanlar, ısı/duman alanları bu fizik kutusuyla engellenmez. Mevcut kök hasar trigger'ı ve bütün ısı/duman bağlantıları korunur. Yerdeki kutu ayak hizasına kadar uzanır; hasar kutusunun kısaltılması görseli zemine gömmez. Mevcut sürtünmesiz `Slip` materyali duvarda asılı kalmayı önler; hareketli gövdelerde Continuous çarpışma kullanılır.
+Altı gövde prefabında `TerrainBody` çocuğu vardır. **Is Trigger kapalıdır**; `Ground-Dry`, `Ground-Wet`, `Ground-Extra-Dry` katmanlarıyla çarpışır. Slime/HapsirikKoz'un fizik çocuğu `GroundEnemy` katmanındadır ve ayrıca `EnemyBoundary` ile çarpışır; Saw bu görünmez sınırdan geçer. `Include Layers` izin verilen katmanları, `Exclude Layers` diğerlerini seçer; `Layer Override Priority = 1`. Oyuncu, diğer düşmanlar, ısı/duman alanları bu fizik kutusuyla engellenmez. Mevcut kök hasar trigger'ı ve bütün ısı/duman bağlantıları korunur. Yerdeki kutu ayak hizasına kadar uzanır; hasar kutusunun kısaltılması görseli zemine gömmez. Mevcut sürtünmesiz `Slip` materyali duvarda asılı kalmayı önler; hareketli gövdelerde Continuous çarpışma kullanılır.
 
 Slime/HapsirikKoz'un duran türlerinde yalnızca yatay konum ve dönüş kilitlidir; düşebilirler. Köz Ocağı sabit çevresel kaynak, duman ise çıktığı yerde kalan geçici alan olarak korunur. Uçurumdan düşen yürüyen düşman eski platforma tırmanmaz; güvenli devriye uçlarını sahnede ayarla. Ayrı düşman ölüm/respawn veya yol bulma sistemi eklenmedi.
 
 Mevcut prefab ayarlarını, animasyonları ve GUID'leri koruyarak yeniden uygulamak için **GameUp → Enemies → Configure Terrain Physics** kullanılır. Normal prefab üreticileri de aynı fizik ayarlarını uygular. Sahnedeki zemin/duvar collider'ları trigger olmamalı ve üç zemin katmanından birinde bulunmalıdır. Prefab instance'larında eski Rigidbody/collider override'ı varsa Inspector'dan kontrol et; sahneler bu düzeltmede yeniden yazılmadı.
+
+## Yerdeki düşmanlar için görünmez sınır
+
+31 Ekim 2026 kullanıcı talebiyle, takip sırasında uçurumdan düşebilen SlimeFire/HapsirikKoz için `Assets/Prefabs/Enemies/GroundEnemyBoundary.prefab` eklendi. Görseli ve runtime script'i yoktur; düzenlenebilir `EdgeCollider2D` fiziksel bir duvardır. Kamera sınırı mevcut sahnelerde PolygonCollider2D/Cinemachine ile çalışır; bu yeni nesne ayrı bir fizik sınırıdır.
+
+Sahnede kullanım:
+
+1. **GameUp → Enemies → Create Ground Enemy Boundary** seç veya prefab'ı Hierarchy'ye sürükle.
+2. Nesneyi uçurumun güvenli tarafına, düşmanın duracağı kenara yerleştir. Sınırı bölüm hiyerarşisinde sabit bir nesne olarak tut.
+3. **Edge Collider 2D → Edit Collider** ile çizgiyi kenarda dikey çiz. Alt ucu zeminin altında, üst ucu düşmanın başından yukarıda kalsın. Varsayılan yerel noktalar `(0, -1)` ve `(0, 2)`; kalınlık yarıçapı `0.02` dünya birimidir. Birden fazla noktayla çizgi şekillendirilebilir.
+4. Platformun diğer ucunu da kapatmak için nesneyi çoğaltıp taşı. **Is Trigger kapalı** kalmalıdır. Nesne Game görünümünde görünmez; çizgiyi Scene görünümünde düzenlersin.
+
+Prefab `EnemyBoundary` layer'ını kullanır. Collider yalnızca `GroundEnemy` katmanını dahil eder, diğer tüm katmanları dışlar ve önceliği `2`'dir. Bu nedenle oyuncu ve Saw içinden geçer; SlimeFire/HapsirikKoz'un `TerrainBody` collider'ı durur. Hasar/ısı alanları sınırdan etkilenmez. Yeni iki layer boş kullanıcı slotlarına eklenir; mevcut layer numaraları ve global collision matrix korunur. [Unity layer override önceliği](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Collider2D-layerOverridePriority.html).
+
+Takip hedefi sınırın ötesindeyken düşman çizgide kalır; oyuncu geri gelince ondan uzaklaşabilir, algılama alanından çıkınca mevcut rotaya dönüşü sürdürür. Normal devriye uçlarını sınırların içinde tut. Sınır kapatılırsa veya yerleştirilmezse yerçekimi ve uçurumdan düşüş devam eder. Yeni sınırları sahnede hangi uçuruma koyacağın bölüm tasarımına bağlıdır; bu değişiklik ana sahnelere otomatik yerleşim yapmaz.
+
+**Configure Ground Enemy Boundary** menüsü prefab ve dört yerdeki gövde türünün çarpışma ayarlarını yeniler; var olan sınır prefabının çizgi noktalarını korur. **Rebuild Enemy Prefabs** de yeni layer/mask ayarlarını korur. Kamera sınırının layer'ını bu amaçla değiştirmek gerekmez.
 
 ## Slime Fire ısı alanı
 
@@ -55,7 +84,7 @@ Slime'ın `HeatArea` çocuğunda:
 - **CircleCollider2D → Radius:** Varsayılan `1.75`; offset `(0, 0.4)`.
 - **Is Trigger:** Açık tutulmalı. Kök gövde collider'ı, yakınlık alanından ayrıdır.
 
-Yeni fizik layer'ı veya Player prefab bağlantısı gerekmez. Oyuncunun gerçek Rigidbody2D'si üzerindeki mevcut `Player` ve `WaterMeter` bulunur; düşman alanı Water layer'ına taşınmamalıdır. Özel collision matrix değişikliği yapılırsa Default ve Player arasındaki trigger etkileşimi korunmalıdır.
+Isı alanı ve Player prefab bağlantısı korunur. Oyuncunun gerçek Rigidbody2D'si üzerindeki mevcut `Player` ve `WaterMeter` bulunur; düşman alanı Water layer'ına taşınmamalıdır. Özel collision matrix değişikliği yapılırsa Default ve Player arasındaki trigger etkileşimi korunmalıdır.
 
 ## HapsirikKoz hapşırma döngüsü
 
@@ -67,15 +96,23 @@ Kökteki `HapsirikKozSneeze`, `Visual` Animator'ına bağlıdır; prefab'larda b
 
 Varsayılanlarla sıra **1–5 saniye bekleme → 1 saniye hapşırma → 2–3 saniye cooldown → yeni bekleme** şeklindedir. İki hapşırmanın başlangıcı arasında en az yaklaşık 4 saniye vardır. Süreler oyun zamanını izler; oyun duraklatılınca ilerlemez. Obje/component yeniden etkinleşince yeni bekleme seçilir.
 
-Kullanıcının sonraki talebiyle hapşırmaya geçici duman hasarı eklendi. Hazırlık kareleri duman üretmez; `Sneeze` animasyonunun 05 numaralı çıkış karesinde (sıfır tabanlı, yaklaşık 0.417 saniye) tek bir `HapsirikKoz_Smoke.prefab` oluşturulur. Dumanın bağımsız Rigidbody2D'si vardır; devriye düşmanı uzaklaşsa veya kapatılsa da çıktığı noktada ömrünü tamamlar. Alan oluşmadan veya alanın dışındayken duman hasarı uygulanmaz. Duman görseli/animasyonu sonraya bırakıldı. Düşmanın gövdesi animasyonundan bağımsız olarak aşağıdaki temas darbesini verebilir.
+Kullanıcının sonraki talebiyle hapşırmaya geçici duman hasarı eklendi. Hazırlık kareleri duman üretmez; `Sneeze` animasyonunun 05 numaralı çıkış karesinde (sıfır tabanlı, yaklaşık 0.417 saniye) tek bir `HapsirikKoz_Smoke.prefab` oluşturulur. Dumanın bağımsız Rigidbody2D'si vardır; devriye düşmanı uzaklaşsa veya kapatılsa da çıktığı noktada ömrünü tamamlar. Alan oluşmadan veya alanın dışındayken duman hasarı uygulanmaz. Sonraki HeatAura talebiyle aşağıdaki alfa geçişli görsel bağlandı. Düşmanın gövdesi animasyonundan bağımsız olarak aşağıdaki temas darbesini verebilir.
 
 `Assets/Prefabs/Enemies/HapsirikKoz_Smoke.prefab` üzerindeki Inspector ayarları:
 
 - **EnemySmokeCloud → Duration:** Varsayılan `3` saniye; süre sonunda obje ve ısı etkisi temizlenir.
+- **EnemySmokeCloud → Smoke Visual:** Prefabın `HeatAura` çocuğundaki SpriteRenderer; hazır bağlıdır.
+- **EnemySmokeCloud → Fade In Duration / Fade Out Duration:** Varsayılan `0.25 / 0.5` saniye. Oluşurken alfa 0→1, ömrünün son yarım saniyesinde 1→0 ilerler. `0` ilgili geçişi anlık yapar. Toplam geçiş süresi duman ömrünü aşarsa iki süre aynı oranda kısalır.
 - **EnemyHeatArea → Drain Multiplier:** Varsayılan `2`; Slime Fire ile aynı tüketim sistemini kullanır. `1` etkiyi kapatır.
 - **CircleCollider2D → Radius:** Varsayılan `1.75`; offset `(0, 0.4)`, **Is Trigger** açık.
 
 İki düşman prefabının **HapsirikKozSneeze → Smoke Cloud Prefab** bağlantısı hazırdır. Sahneye ayrıca duman yerleştirmek gerekmez. Duman içinde hareketsizken de zemin tüketimi çarpılır; Slime/duman alanları örtüşürse en yüksek çarpan uygulanır. Alandan çıkınca, duman kapanınca veya süresi dolunca o kaynağın çarpanı kalkar. Duman fiziksel engel değildir ve Water layer'ında değildir.
+
+31 Ekim 2026 HeatAura eki (T42/T43): `HapsirikKoz_Smoke/HeatAura`, Slime ile aynı 256 piksel sheet'i, 24 kare/12 FPS/2 saniyelik ortak nefes klibini, unlit materyali ve collider hizalama bileşenini kullanır. `Level`, Order 0 ile düşman gövdesinin arkasındadır. `EnemySmokeCloud` yalnızca bu dumanın renderer alfa değerini kendi yaşam süresinden hesaplar; ortak klip alfa yazmaz. Böylece iki saniyelik nefes döngüsü yeni bir 0→1 geçişi başlatmaz ve Slime'ın sürekli aurası etkilenmez. Başlangıç sprite'ı alfa 0 olarak kaydedilir; ilk karede opak parıltı oluşmaz. Yeniden etkinleşme hem süreyi hem açılma geçişini sıfırlar; duraklatma geçişi de durdurur. Isı yarıçapı ve hasar çarpanı alfa ile değişmez; ısı ömür boyunca etkin kalır.
+
+İki HapsirikKoz mevcut ortak duman prefabını kullandığından düşman prefablarına yeni bağlantı gerekmez. Yalnızca duman görselini yeniden bağlamak için **GameUp → Enemies → Rebuild HapsirikKoz Smoke Visual** kullanılabilir; dumanın mevcut ömür/hasar ayarlarını korur. **Rebuild HapsirikKoz Prefabs** ve genel üretici de görseli bağlar; bu genel menülerin varsayılan ayarlara yazma davranışı sürer.
+
+Bu ek için ayrı Unity `6000.5.0f1` projesinde **35 kontrol geçti (9 asset, 26 Play Mode/render)**: başlangıç alfa 0, açılma/tam görünürlük/kapanma, nefes döngüsünde alfa sıfırlanmaması, Inspector süreleri, kısa ömür, yeniden etkinleşme, duraklatma, geçişler boyunca ısı ve süre sonunda temizliği; iki gerçek prefabda tek emisyon, devriyeden bağımsız konum ve düşman kapanınca ömrü tamamlama. [Sonuç](verification/smoke-aura-result.txt), [kontroller](verification/smoke-aura-checks.txt), [önizleme](verification/smoke-aura-preview.png). Ana bölüm görünümü ve dış build testi bekliyor.
 
 ## Gövde teması ve knockback
 
@@ -109,7 +146,7 @@ Saw'ın duran türü de önceki davranış gibi sürekli döner; iki tür ortak 
 
 Önceki 128 piksel sette Saw idle/walk sheet'lerinin otomatik dilimlenmesinde ilk iki kare birleşmişti. İlk entegrasyonda Unity Sprite Editor veri sağlayıcısıyla sekiz adet 128×128 kareye düzeltildi; var olan GUID, spriteID ve fileID'ler korundu, eksik ikinci kare için `_01` adlı yeni dilim eklendi. O sette PPU 128 ve Point filtre tercihleri korunmuştu. Yeni görsellere geçişte eski sheet'ler değiştirilmedi; eski dilim onarımı yeni üreticiden kaldırıldı.
 
-`Assets/Editor/Enemies/EnemyPrefabBuilder.cs`, **GameUp → Enemies → Rebuild Enemy Prefabs** menüsünden aynı asset'leri yeniden üretebilir. Menü, altı düşman prefab'ının, duman prefab'ının, beş klibin ve dört controller'ın ayarlarını varsayılanlara yeniden yazar; hazır prefab'ları kullanmak için menüyü çalıştırmak gerekmez. HapsirikKoz menüsü de iki düşman prefabıyla duman prefab'ını birlikte üretir. Projeye yeni paket eklenmedi.
+`Assets/Editor/Enemies/EnemyPrefabBuilder.cs`, **GameUp → Enemies → Rebuild Enemy Prefabs** menüsünden aynı asset'leri yeniden üretebilir. Menü, altı düşman prefab'ının, duman prefab'ının, HeatAura dahil altı klibin ve beş controller'ın ayarlarını varsayılanlara yeniden yazar; hazır prefab'ları kullanmak için menüyü çalıştırmak gerekmez. HapsirikKoz menüsü de iki düşman prefabıyla duman prefab'ını birlikte üretir. Projeye yeni paket eklenmedi.
 
 Yalnızca Saw klibini güncellemek için **GameUp → Enemies → Rebuild Saw Animation** kullanılabilir; bu menü prefabları ve Slime kliplerini yeniden yazmaz. Ortak klip üreticisi artık çok satırlı sheet'lerde `Idle_00`/`Patrol_00` adlarına göre sayısal sırayla çalışır, beklenen kare sayısını doğrular ve ilk kareyi sonda tekrar eklemez. Slime'ın eski konum eğrilerini yeniden üretmez.
 
@@ -123,6 +160,10 @@ Yalnızca HapsirikKoz'u üretmek için **GameUp → Enemies → Rebuild Hapsirik
 - [ ] Asıl bölümde yerleşim, rota güvenliği, ısı yarıçapı ve çarpan dengesini elle oynayarak doğrula; dış build'i test et.
 
 ## Doğrulama
+
+31 Ekim 2026 görünmez Edge sınırı, Unity `6000.5.0f1`, ayrı `C:/Users/yhcan/AppData/Local/Temp/gameup-enemies-324e5073` projesi: güncel kod/prefab/katman ayarlarıyla **94 kontrol geçti (27 asset, 67 Play Mode)**. Önceki düşme, gerçek zemin/duvar çarpışması ve hasar kontrolleri tekrar geçti. Yeni senaryolarda SlimeFire/HapsirikKoz iki yöndeki uçurumdan önce Edge çizgisinde durdu, hedef taraf değiştirince çizgiden ayrılabildi, Edge kapatılınca normal düşüş sürdü. Uçan Saw takip sırasında çizgiden geçti; gerçek Player gövdesi fiziksel olarak çizgiyi engellenmeden ve hasarsız geçti. [Sonuç](verification/enemy-boundary-result.txt), [kontroller](verification/enemy-boundary-checks.txt).
+
+Doğrulanan dört yerdeki prefab mevcut GUID'leri korunarak, yeni sınır prefabı/meta'sı ve iki katmanın TagManager ayarlarıyla ana projeye aktarıldı. Aynı `EnemyTerrainVerification.Run` düzeneği kullanılır; test projesindeki çıktı adları `enemy-terrain-result.txt` / `enemy-terrain-checks.txt`, bu oturumun depodaki kopyaları yukarıdaki `enemy-boundary-*` dosyalarıdır. Ayrıntılı `enemy-boundary-verification.log` geçici projededir. Mevcut Player'ın her karedeki debug kayıtları yalnızca test logunda filtrelenir; üretim kodu değişmez. Başlangıç SearchDatabase indeksleme istisnası kaydedildi; C# derleme hatası veya başarısız davranış kontrolü yoktur. **Ana bölümde sınır yerleşimi, elle oynanış/denge ve dış build testi bekliyor.** Aşağıdaki sayılar önceki oturumların kayıtlarıdır.
 
 31 Ekim 2026 yerçekimi/duvar düzeltmesi, Unity `6000.5.0f1`, ayrı `C:/Users/yhcan/AppData/Local/Temp/gameup-enemies-324e5073` projesi: güncel oyuncu/düşman kodu, gerçek prefablar, animasyonlar, zemin layer'ları ve Physics2D ayarlarıyla **72 kontrol geçti (19 asset, 53 Play Mode)**. Üç zemin katmanında dört yerdeki türün düşüşü/inişi, motor kapalıyken yerçekimi, takipte duvarda kalma ve geri ayrılma, Saw'ın havada kalması ve taban/tavan çarpışması, kenardan devriye/takipte düşüş, düşüşte rotaya dönüşün eski yüksekliğe taşımaması, motor kapatma, yerdeki dikey offset'in yok sayılması ve ısı/gövde hasarı ayrımı doğrulandı. Doğrulanan altı prefab mevcut meta/GUID'leri korunarak ana projeye aktarıldı. [Sonuç](verification/enemy-terrain-result.txt), [kontroller](verification/enemy-terrain-checks.txt).
 

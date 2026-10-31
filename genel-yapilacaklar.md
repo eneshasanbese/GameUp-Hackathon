@@ -1,6 +1,16 @@
 # Su Damlası Oyunu — Genel Yapılacaklar
 
-31 Ekim 2026 hareketli düşman ek kapsamı: açık kullanıcı talebiyle Saw, Slime Fire ve HapsirikKoz'un devriye türleri, dış algılama alanına giren oyuncuyu alanı terk edene kadar takip eder, sonra normal devriyeye döner. Sonraki fizik düzeltmesinde Saw uçarak zemin/duvara çarpar; SlimeFire/HapsirikKoz duran ve devriye türleri yerçekimiyle düşer, motor yalnızca yatay hareketi yönetir. Hasar trigger'ları korunur. [Karar](docs/kararlar.md#hareketli-düşmanlar--algılama-alanında-oyuncuyu-takip), [fizik ayarları ve doğrulama](docs/enemies.md#yerçekimi-ve-zeminduvar-çarpışması).
+1 Kasım 2026 düşen taş tuzağı ek kapsamı (T30/T42, QA06–QA09): açık kullanıcı talebiyle `Trap_stoneSpike.prefab`, oyuncu altındaki alana yaklaşınca tek kez düşer; zeminin arkasından geçip 3 saniyede silinir. Kullanıcının ek onayıyla mevcut su kaybı/knockback/flash sistemi kullanılır. Özgün prefab kimlikleri ve Level_2 instance bağlantısı korunur. [Ayarlar ve doğrulama](docs/stone-spike-trap.md).
+
+31 Ekim 2026 Köz Ocağı HeatAura (T42/T43): kullanıcı talebiyle SlimeFire'daki mevcut ısı animasyonu sürekli oynayacak şekilde eklendi; etki alanına uyar ve rüzgârın arkasında görünür. Mevcut su/çekim davranışı korunur. [Ayarlar ve doğrulama](docs/koz-ocagi.md#sürekli-heataura--31-ekim-2026).
+
+31 Ekim 2026 Köz Ocağı görsel güncellemesi (T42/T43): kullanıcının hazır SuctionWind setiyle hafif sürekli Idle, menzilde içeri akan normal/güçlü döngü ve çıkışta alfa sönmesi eklendi. Mevcut çekim sistemi ve ayarlı menzil/su/çekim değerleri korundu. [Ayarlar ve bu oturumun doğrulaması](docs/koz-ocagi.md#suctionwind--31-ekim-2026).
+
+31 Ekim 2026 Köz Püskürten güncellemesi: sonraki açık kullanıcı talebiyle hazır 12 kareli Idle animasyonu ve diğer yerdeki düşmanlarla aynı yerçekimi eklendi. Atıcı yatayda sabit kalır, dikeyde düşüp zemine oturur; TerrainBody oyuncuyu itmez ve temas hasarı vermez. [Güncel ayarlar/doğrulama](docs/ember-spitter.md).
+
+31 Ekim 2026 Köz Püskürten ek kapsamı: kullanıcının sağladığı EmberPack ve ayrıntılı görev metniyle sabit EmberSpitter, tek düz EmberFireball, iki ayrı prefab ve bağımsız test alanı istendi. Yalnızca mermi sabit su puanı hasarı verir; mevcut dokunulmazlık/yeniden doğma kullanılır, gövde hasarı veya yeni saldırı sistemi eklenmez. T12/T19/T25–T26, T42 ve QA06–QA09/QA16 ile ilişkili bu ek çalışma genel kabul kutularını kapatmaz. [Kurulum ve test kaydı](docs/ember-spitter.md).
+
+31 Ekim 2026 hareketli düşman ek kapsamı: açık kullanıcı talebiyle Saw, Slime Fire ve HapsirikKoz'un devriye türleri, dış algılama alanına giren oyuncuyu alanı terk edene kadar takip eder, sonra normal devriyeye döner. Sonraki fizik düzeltmesinde Saw uçarak zemin/duvara çarpar; SlimeFire/HapsirikKoz duran ve devriye türleri yerçekimiyle düşer, motor yalnızca yatay hareketi yönetir. Hasar trigger'ları korunur. Sonraki kullanıcı talebiyle yerdeki düşmanları uçurumdan önce durdurmak için EdgeCollider2D ile çizilen görünmez sınır prefabı eklendi; oyuncu ve Saw bu sınırdan geçer. [Karar](docs/kararlar.md#hareketli-düşmanlar--algılama-alanında-oyuncuyu-takip), [görünmez sınır ayarları](docs/enemies.md#yerdeki-düşmanlar-için-görünmez-sınır).
 
 31 Ekim 2026 ek kapsamı: kullanıcının açık talebiyle Köz Ocağı sabit çevresel düşmanı, yalnızca yatay çekim ve normal tüketimden bağımsız puan/saniye su kaybıyla kapsama alındı (T09/T14–T16, ilgili QA01–QA09/QA16). Gövde temas hasarı/knockback eklenmez. Mevcut suya bağlı boyut/hız/zıplama kullanıcının netleştirmesiyle korunur. [Karar ve uygulama](docs/koz-ocagi.md).
 

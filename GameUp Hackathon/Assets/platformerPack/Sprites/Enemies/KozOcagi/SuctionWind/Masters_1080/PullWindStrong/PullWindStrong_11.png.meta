@@ -1,0 +1,351 @@
+fileFormatVersion: 2
+guid: a317c83e3ebbf1e4592ea4658835686a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5580501247414803459
+    second: PullWindStrong_11_0
+  - first:
+      213: -3530610714398366293
+    second: PullWindStrong_11_1
+  - first:
+      213: -1719082884505024305
+    second: PullWindStrong_11_2
+  - first:
+      213: -4872237804158794506
+    second: PullWindStrong_11_3
+  - first:
+      213: -2711704598437482700
+    second: PullWindStrong_11_4
+  - first:
+      213: -6066662714665531143
+    second: PullWindStrong_11_5
+  - first:
+      213: -8778020637418642622
+    second: PullWindStrong_11_6
+  - first:
+      213: -4844043455836719801
+    second: PullWindStrong_11_7
+  - first:
+      213: 4125259326195348354
+    second: PullWindStrong_11_8
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: PullWindStrong_11_0
+      rect:
+        serializedVersion: 2
+        x: 597
+        y: 661
+        width: 216
+        height: 98
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df36737aea31e82b0800000000000000
+      internalID: -5580501247414803459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PullWindStrong_11_1
+      rect:
+        serializedVersion: 2
+        x: 790
+        y: 642
+        width: 178
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba5e810e240c00fc0800000000000000
+      internalID: -3530610714398366293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PullWindStrong_11_2
+      rect:
+        serializedVersion: 2
+        x: 285
+        y: 576
+        width: 215
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc8cf9189379428e0800000000000000
+      internalID: -1719082884505024305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PullWindStrong_11_3
+      rect:
+        serializedVersion: 2
+        x: 478
+        y: 582
+        width: 215
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f4c2e50885526cb0800000000000000
+      internalID: -4872237804158794506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PullWindStrong_11_4
+      rect:
+        serializedVersion: 2
+        x: 165
+        y: 523
+        width: 216
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43f2752f8071e5ad0800000000000000
+      internalID: -2711704598437482700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PullWindStrong_11_5
+      rect:
+        serializedVersion: 2
+        x: 358
+        y: 452
+        width: 216
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f801405762eecba0800000000000000
+      internalID: -6066662714665531143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PullWindStrong_11_6
+      rect:
+        serializedVersion: 2
+        x: 671
+        y: 481
+        width: 216
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2432d9bfcb43e2680800000000000000
+      internalID: -8778020637418642622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PullWindStrong_11_7
+      rect:
+        serializedVersion: 2
+        x: 552
+        y: 311
+        width: 215
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 745fb4a442086ccb0800000000000000
+      internalID: -4844043455836719801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PullWindStrong_11_8
+      rect:
+        serializedVersion: 2
+        x: 862
+        y: 314
+        width: 107
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 283bd38208ddf3930800000000000000
+      internalID: 4125259326195348354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      PullWindStrong_11_0: -5580501247414803459
+      PullWindStrong_11_1: -3530610714398366293
+      PullWindStrong_11_2: -1719082884505024305
+      PullWindStrong_11_3: -4872237804158794506
+      PullWindStrong_11_4: -2711704598437482700
+      PullWindStrong_11_5: -6066662714665531143
+      PullWindStrong_11_6: -8778020637418642622
+      PullWindStrong_11_7: -4844043455836719801
+      PullWindStrong_11_8: 4125259326195348354
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

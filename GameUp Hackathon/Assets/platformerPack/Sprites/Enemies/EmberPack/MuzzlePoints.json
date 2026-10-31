@@ -1,0 +1,250 @@
+{
+  "release_frame_zero_based": 7,
+  "shoot_fps": 16,
+  "enemy_pivot": [
+    0.5,
+    0.16
+  ],
+  "frames": [
+    {
+      "frame": 0,
+      "pixel_top_left_1080": [
+        828,
+        382
+      ],
+      "normalized_bottom_left": [
+        0.7666666666666667,
+        0.6462962962962964
+      ],
+      "local_offset_world_for_canvas_width_1": [
+        0.2666666666666667,
+        0.48629629629629634
+      ]
+    },
+    {
+      "frame": 1,
+      "pixel_top_left_1080": [
+        825,
+        381
+      ],
+      "normalized_bottom_left": [
+        0.7638888888888888,
+        0.6472222222222221
+      ],
+      "local_offset_world_for_canvas_width_1": [
+        0.26388888888888884,
+        0.4872222222222221
+      ]
+    },
+    {
+      "frame": 2,
+      "pixel_top_left_1080": [
+        822,
+        381
+      ],
+      "normalized_bottom_left": [
+        0.7611111111111111,
+        0.6472222222222221
+      ],
+      "local_offset_world_for_canvas_width_1": [
+        0.26111111111111107,
+        0.4872222222222221
+      ]
+    },
+    {
+      "frame": 3,
+      "pixel_top_left_1080": [
+        817,
+        380
+      ],
+      "normalized_bottom_left": [
+        0.7564814814814815,
+        0.6481481481481481
+      ],
+      "local_offset_world_for_canvas_width_1": [
+        0.25648148148148153,
+        0.4881481481481481
+      ]
+    },
+    {
+      "frame": 4,
+      "pixel_top_left_1080": [
+        812,
+        379
+      ],
+      "normalized_bottom_left": [
+        0.7518518518518519,
+        0.6490740740740741
+      ],
+      "local_offset_world_for_canvas_width_1": [
+        0.2518518518518519,
+        0.4890740740740741
+      ]
+    },
+    {
+      "frame": 5,
+      "pixel_top_left_1080": [
+        807,
+        377
+      ],
+      "normalized_bottom_left": [
+        0.7472222222222222,
+        0.6509259259259259
+      ],
+      "local_offset_world_for_canvas_width_1": [
+        0.24722222222222223,
+        0.4909259259259259
+      ]
+    },
+    {
+      "frame": 6,
+      "pixel_top_left_1080": [
+        805,
+        377
+      ],
+      "normalized_bottom_left": [
+        0.7453703703703703,
+        0.6509259259259259
+      ],
+      "local_offset_world_for_canvas_width_1": [
+        0.24537037037037035,
+        0.4909259259259259
+      ]
+    },
+    {
+      "frame": 7,
+      "pixel_top_left_1080": [
+        805,
+        377
+      ],
+      "normalized_bottom_left": [
+        0.7453703703703703,
+        0.6509259259259259
+      ],
+      "local_offset_world_for_canvas_width_1": [
+        0.24537037037037035,
+        0.4909259259259259
+      ]
+    },
+    {
+      "frame": 8,
+      "pixel_top_left_1080": [
+        779,
+        389
+      ],
+      "normalized_bottom_left": [
+        0.7212962962962963,
+        0.6398148148148148
+      ],
+      "local_offset_world_for_canvas_width_1": [
+        0.22129629629629632,
+        0.4798148148148148
+      ]
+    },
+    {
+      "frame": 9,
+      "pixel_top_left_1080": [
+        796,
+        387
+      ],
+      "normalized_bottom_left": [
+        0.737037037037037,
+        0.6416666666666666
+      ],
+      "local_offset_world_for_canvas_width_1": [
+        0.23703703703703705,
+        0.4816666666666666
+      ]
+    },
+    {
+      "frame": 10,
+      "pixel_top_left_1080": [
+        813,
+        385
+      ],
+      "normalized_bottom_left": [
+        0.7527777777777778,
+        0.6435185185185186
+      ],
+      "local_offset_world_for_canvas_width_1": [
+        0.25277777777777777,
+        0.48351851851851857
+      ]
+    },
+    {
+      "frame": 11,
+      "pixel_top_left_1080": [
+        825,
+        383
+      ],
+      "normalized_bottom_left": [
+        0.7638888888888888,
+        0.6453703703703704
+      ],
+      "local_offset_world_for_canvas_width_1": [
+        0.26388888888888884,
+        0.48537037037037034
+      ]
+    },
+    {
+      "frame": 12,
+      "pixel_top_left_1080": [
+        833,
+        381
+      ],
+      "normalized_bottom_left": [
+        0.7712962962962963,
+        0.6472222222222221
+      ],
+      "local_offset_world_for_canvas_width_1": [
+        0.27129629629629626,
+        0.4872222222222221
+      ]
+    },
+    {
+      "frame": 13,
+      "pixel_top_left_1080": [
+        830,
+        382
+      ],
+      "normalized_bottom_left": [
+        0.7685185185185185,
+        0.6462962962962964
+      ],
+      "local_offset_world_for_canvas_width_1": [
+        0.2685185185185185,
+        0.48629629629629634
+      ]
+    },
+    {
+      "frame": 14,
+      "pixel_top_left_1080": [
+        828,
+        382
+      ],
+      "normalized_bottom_left": [
+        0.7666666666666667,
+        0.6462962962962964
+      ],
+      "local_offset_world_for_canvas_width_1": [
+        0.2666666666666667,
+        0.48629629629629634
+      ]
+    },
+    {
+      "frame": 15,
+      "pixel_top_left_1080": [
+        828,
+        382
+      ],
+      "normalized_bottom_left": [
+        0.7666666666666667,
+        0.6462962962962964
+      ],
+      "local_offset_world_for_canvas_width_1": [
+        0.2666666666666667,
+        0.48629629629629634
+      ]
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+Rebuilding keeps the enemy prefab GUID
+Both saved prefabs load without missing scripts
+Stationary body has no motor, contact damage, heat or physics push
+Projectile and Player/three ground masks are wired
+Enemy initial tuning is 5 units / 0.8 s / 2.5 s
+Projectile initial tuning is 4 units/s / 10 points / 4 s
+Projectile uses a gravity-free kinematic body and a small round core
+Both supplied sprite GUIDs and sprite fileIDs are preserved
+Used frames retain their measured crops at the player's 128 PPU
+Two single sprites run without Animator or additional frames
+Demo has one shooter and the real water HUD connected to its Player
+Saved demo includes cover, a thin platform, flat ground and restart controls
+No shots outside detection range
+Open line of sight starts a visible warning before spawning
+Windup affects only Visual; stationary root and detection geometry stay fixed
+Exactly one projectile appears after the 0.8-second windup
+Cooldown does not overlap another shot
+Second cycle produces one new shot after cooldown and a new windup
+Shooter stays fixed throughout both cycles
+A solid wall prevents starting windup
+Unrelated trigger on an obstacle layer does not block sight
+Hiding during windup cancels the pending shot
+Leaving detection range during windup cancels the shot
+Muzzle clearance blocks a thin wall at x=0,3 even with queriesStartInColliders disabled
+Muzzle clearance blocks a thin wall at x=0,64 even with queriesStartInColliders disabled
+Muzzle clearance blocks a thin wall at x=0 even with queriesStartInColliders disabled
+Left-facing shot exits the left mouth without rotating the body
+Right-facing shot exits the right mouth
+Projectile keeps its launch direction after target changes position; no homing or gravity
+Supplied +X sprite rotates to the actual Rigidbody centre, including the player's collider offset
+Visual rotates around the round core toward (0.00, 1.00)
+Visual rotates around the round core toward (0.00, -1.00)
+Visual rotates around the round core toward (-1.00, 0.00)
+Two simultaneous shots and multiple Player colliders lose exactly 10 fixed points from 60, consuming both shots
+Projectile uses the existing flash immunity and blocks a new body hit
+Projectile hitting an invulnerable player is still destroyed without damage
+Existing contact-hit path still accepts its first hit
+Body-hit immunity also rejects and consumes an incoming projectile
+300-unit/s shot stops at a 0.02-unit wall at fixed step 0,01
+300-unit/s shot stops at a 0.02-unit wall at fixed step 0,02
+300-unit/s shot stops at a 0.02-unit wall at fixed step 0,033333
+Vertical high-speed shot stops at the thin horizontal platform
+Unrelated trigger neither absorbs a shot nor blocks its damage
+A projectile with no collision is cleaned up by maxLifetime
+Nearest world hit wins over a Player hit in the same swept movement
+Respawn immediately disarms an old projectile and cancels windup through the Player stop event
+Respawn restores the existing water/control flow before any fresh full windup fires
+Even same-frame Player disable/enable invalidates old shots
+Repeated shooter disable/enable starts one fresh cycle without duplicate timers
+Disabling shooter cleans owned projectiles and resets the warning visual
+Level-exit control/physics freeze prevents new shots and damage and clears active shots
+Two lethal contacts clamp water at zero and enter exactly one existing death flow
+Lethal projectile respawn restores full water and controls without old shots
+Destroyed target references retire safely
+Existing positive idle consumption still works
+Real input still drives the original Player movement
+Real Space input still jumps and releases through the existing ability
+Escape trial begins with the default shot after its readable warning
+Escape input actually puts the Player above the incoming shot
+At 3 units, holding a normal jump after the warned default shot dodges its 4-unit/s flight; water=100
+Actual saved demo starts grounded outside range with normal water consumption
+Actual demo prefab fires and damages its actual Player through the water system
+Actual demo water bar reflects projectile damage immediately
+Actual demo R key returns to the start and clears previous-attempt shots
+Demo camera rendered a 1280x720 verification capture

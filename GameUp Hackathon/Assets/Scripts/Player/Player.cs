@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     public PlayerStates.State CurrentState => stateMachine.currentState;
     public bool IsGrounded => physicsControl.grounded;
     public bool FacingRight => bodyVisual == null || !bodyVisual.flipX;
+    public event System.Action GameplayStopped;
 
     private void Awake()
     {
@@ -35,6 +36,7 @@ public class Player : MonoBehaviour
 
     private void OnDisable()
     {
+        GameplayStopped?.Invoke();
         physicsControl.ClearExternalHorizontalSpeeds();
         gatherInput.DisablePlayerMap();
         stateMachine.ExitCurrentState();

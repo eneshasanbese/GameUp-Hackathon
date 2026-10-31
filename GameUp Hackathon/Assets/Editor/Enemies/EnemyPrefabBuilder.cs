@@ -33,6 +33,7 @@ public static class EnemyPrefabBuilder
 
     public static void ConfigureBody(GameObject root, bool flying, bool stationary)
     {
+        EnemyBoundaryBuilder.EnsureLayers();
         Rigidbody2D body = root.GetComponent<Rigidbody2D>();
         body.bodyType = flying && stationary ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic;
         body.gravityScale = flying ? 0f : 1f;
@@ -53,6 +54,7 @@ public static class EnemyPrefabBuilder
         Transform existing = root.transform.Find("TerrainBody");
         GameObject terrain = existing != null ? existing.gameObject : new GameObject("TerrainBody");
         terrain.transform.SetParent(root.transform, false);
+        terrain.layer = flying ? root.layer : LayerMask.NameToLayer(EnemyBoundaryBuilder.GroundEnemyLayer);
         Collider2D contact = root.GetComponent<Collider2D>();
         Collider2D solid;
         Vector2 offset = contact.offset;
@@ -80,8 +82,9 @@ public static class EnemyPrefabBuilder
         solid.isTrigger = false;
         int groundLayers = LayerMask.GetMask("Ground-Dry", "Ground-Wet", "Ground-Extra-Dry");
         if (groundLayers == 0) throw new InvalidOperationException("Enemy physics requires the ground layers.");
-        solid.includeLayers = groundLayers;
-        solid.excludeLayers = ~groundLayers;
+        int solidLayers = flying ? groundLayers : groundLayers | LayerMask.GetMask(EnemyBoundaryBuilder.BoundaryLayer);
+        solid.includeLayers = solidLayers;
+        solid.excludeLayers = ~solidLayers;
         solid.layerOverridePriority = 1;
         solid.sharedMaterial = AssetDatabase.LoadAssetAtPath<PhysicsMaterial2D>("Assets/platformerPack/Material/Slip.physicsMaterial2D");
         if (solid.sharedMaterial == null) throw new InvalidOperationException("Missing Slip physics material.");
@@ -96,6 +99,7 @@ public static class EnemyPrefabBuilder
         AnimatorController saw = CreateSawAnimation();
         AnimatorController idle = CreateAnimation("SlimeFireIdle", "FireSlime/Unity_256/Idle.png", 12, 0.9f);
         AnimatorController walk = CreateAnimation("SlimeFireWalk", "FireSlime/Unity_256/Patrol.png", 12, 0.7f);
+        SlimeFireHeatAuraBuilder.RebuildAnimation();
         CreatePrefab("Saw_Stationary", true, false, saw);
         CreatePrefab("Saw_Patrol", true, true, saw);
         CreatePrefab("SlimeFire_Stationary", false, false, idle);
@@ -249,6 +253,7 @@ public static class EnemyPrefabBuilder
                 area.radius = 1.75f;
                 area.offset = new Vector2(0f, 0.4f);
                 heat.AddComponent<EnemyHeatArea>();
+                SlimeFireHeatAuraBuilder.Configure(heat);
             }
             ConfigureBody(root, saw, !patrol);
             PrefabUtility.SaveAsPrefabAsset(root, PrefabFolder + "/" + name + ".prefab");

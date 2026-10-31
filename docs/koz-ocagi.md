@@ -10,17 +10,17 @@ Unity köküne göre `Assets/Prefabs/Enemies/KozOcagi_Stationary.prefab` sahneye
 
 `EffectArea` üzerindeki `EmberSuctionEnemy` referansları hazır bağlıdır:
 
-| Alan | Başlangıç ayarı |
+| Alan | Güncel prefab ayarı |
 |---|---|
-| Effect Radius / Inner Full Effect Radius | 3 / 0.75 dünya birimi |
+| Effect Radius / Inner Full Effect Radius | 6 / 1 dünya birimi |
 | Min / Max Water Loss Per Second | 1 / 6 su puanı/saniye |
-| Min / Max Pull Strength | 0.4 / 2.5 dünya birimi/saniye yatay motor hız katkısı |
+| Min / Max Pull Strength | 1 / 7.5 dünya birimi/saniye yatay motor hız katkısı |
 | Activation Ramp Duration | 0.35 saniye; yalnızca çekimin giriş rampası |
 | Horizontal Dead Zone | 0.08 dünya birimi; ağız çevresinde sıfır çekim |
 | Player Layer Mask | Player |
 | RangeOrigin / PullPoint | Köke göre `(0, 0.5)` / `(0, 0.38)` |
 
-Sayılar deneme ayarıdır. Yarıçap sırası, negatif ve sonlu olmayan değerler doğrulanır. İlgili min/max çiftini 0 yapmak o etkiyi kapatır. Dünya yarıçapı transform ölçeği değişse de korunur. Scene Gizmos dış/iç menzili ve ağzı gösterir.
+Sayılar deneme ayarıdır. Rüzgâr eklenmeden önce değiştirilmiş menzil/çekim değerleri korunmuştur. Tam prefab üreticisi ilk prototipin 3/0.75 menzil ve 0.4–2.5 çekim varsayılanlarını kullanır; yalnızca rüzgârı yenilemek için aşağıdaki ayrı menüyü kullanın. Yarıçap sırası, negatif ve sonlu olmayan değerler doğrulanır. İlgili min/max çiftini 0 yapmak o etkiyi kapatır. Dünya yarıçapı transform ölçeği değişse de korunur. Scene Gizmos dış/iç menzili ve ağzı gösterir.
 
 Menzil `RangeOrigin` ile oyuncunun `Rigidbody2D.worldCenterOfMass` noktası arasındaki **2D mesafedir**. Merkez dışarıdaysa collider kenarı trigger'a değse bile etki yoktur. Yakınlık dış sınırdan iç yarıçapa doğrusal 0–1 artar. Her fizik adımında bir kez `WaterMeter.Consume(Lerp(min, max, yakınlık) * Time.fixedDeltaTime)` çağrılır. Bu **mutlak puandır**, kalan su yüzdesi veya normal tüketim çarpanı değildir. 6 puan/saniye yarım saniyede yaklaşık 3 puandır. Dururken ve gövde darbesi flash'ında da sürer. Çekim nedeniyle gerçek hareket oluşursa normal zemin tüketimi ayrıca devam eder.
 
@@ -36,7 +36,36 @@ Birden çok Köz Ocağı su kayıplarını ve yatay katkılarını toplar; biri 
 
 ## Görsel ve demo
 
-Verilen `KozOcagi/Unity_128/Idle.png` sheet'inin `Idle_00` sprite'ı kullanılır. Tek kare 128×128; alfa >10 içerik sınırı üstten ölçümle `(11,24)–(116,108)`, 9.443 piksel şeffaf/çok saydamdır. Mevcut PPU 128 ve ayak pivotu `(0.5, 0.15833333)` korunur. Yaklaşık 0.83 birim görünür genişlik, 1 birim çaplı Player ile karşılaştırılıp yalnızca `Visual` 1.5 ölçeklendi. Kaynak importları/GUID'ler değiştirilmedi. Tek idle sprite kullanılır; animasyon/FX eklenmedi.
+Gövde için verilen `KozOcagi/Unity_128/Idle.png` sheet'inin `Idle_00` sprite'ı kullanılır. Tek kare 128×128; alfa >10 içerik sınırı üstten ölçümle `(11,24)–(116,108)`, 9.443 piksel şeffaf/çok saydamdır. Mevcut PPU 128 ve ayak pivotu `(0.5, 0.15833333)` korunur. Yaklaşık 0.83 birim görünür genişlik, 1 birim çaplı Player ile karşılaştırılıp yalnızca `Visual` 1.5 ölçeklendi. Gövdenin kaynak importları/GUID'leri değiştirilmedi.
+
+### Sürekli HeatAura — 31 Ekim 2026
+
+Kullanıcı SlimeFire_Patrol'daki ısı animasyonunu Köz Ocağı'nda da istedi (T42/T43). `EffectArea/HeatAura`, SlimeFire'ın mevcut sprite'ını ve `SlimeFireHeatAura` controller/klibini paylaşır: 24 kare, 12 FPS, 2 saniyelik sürekli döngü. Oyuncu menzil dışında da oynar. Geniş 6 birimlik alanda çevre/rüzgâr okunabilsin diye SpriteRenderer alfası 0.35'tir; `Level` sorting order -1 ile rüzgârın (0) ve gövdenin (1) arkasındadır.
+
+Ortak `EnemyHeatAuraVisual`, `EnemyHeatArea` yanında mevcut `EmberSuctionEnemy` kaynağını da destekler. Köz Ocağı'ndaki kaynak/collider referansları hazırdır; görsel merkez ve çapını mevcut çekim collider'ından alır. Kaynak veya trigger kapanınca gizlenir. Yeni ısı çarpanı, collider veya hasar yolu eklenmedi; ocağın bağımsız su kaybı ve çekimi korunur. SlimeFire'ın eski `EnemyHeatArea` yolu aynı davranışı sürdürür.
+
+Ek Inspector/sahne bağlantısı gerekmez. Yalnızca bu görseli yenilemek için **GameUp → Enemies → Rebuild Koz Ocagi Heat Aura** menüsü kullanılabilir; mevcut menzil/çekim/su/rüzgâr ayarlarını korur. Tam prefab üreticisi de artık ısı görselini bağlar. SlimeFire prefabı ve paylaşılan klip/controller/sheet dosyaları değiştirilmez.
+
+Bu ekleme bu oturumda, açık ana editörden ayrı `C:/Users/yhcan/AppData/Local/Temp/gameup-suction-heat-0jiiaf01` projesinde Unity **6000.5.0f1 ile 58 kontrolden geçti (17 asset, 41 Play Mode/render)**. Gerçek güncel Player/kod/prefab/input ve paylaşılan SlimeFire asset'leri kullanıldı; rüzgâr regresyonları da yeniden koşuldu. Isının oyuncu uzaktayken döngüsü, collider merkez/çap/ölçek uyumu, kaynak/trigger kapatma-açma, SlimeFire'ın eski yolunun korunması, ısı görünümü kapalıyken aynı su kaybı ve ısı+rüzgârın birlikte görünümü doğrulandı. Test edilen prefab aktarıldı; SlimeFire kaynak prefabının değişmediği hash ile kontrol edildi.
+
+Test girişi: ayrı batch projede `-executeMethod EmberSuctionWindVerification.GenerateHeatAuraAndRun`. [Sonuç](verification/koz-ocagi-heat-aura-result.txt), [kontroller](verification/koz-ocagi-heat-aura-checks.txt), [sürekli ısı alanı](verification/koz-ocagi-heat-aura.png), [ısı ve rüzgâr birlikte](verification/koz-ocagi-heat-and-wind.png). Kamera çıktıları 1280×720; testte Player materyali yalnızca test nesnesinde ışıksız yapıldı. Logda Unity SearchDatabase başlangıç indeksleme hatası vardı; C# derleme hatası veya başarısız son kontrol yoktu. Ana bölüm okunabilirliği/oynanışı ve dış build testi bekliyor; genel QA kutuları kapatılmadı.
+
+### SuctionWind — 31 Ekim 2026
+
+Kullanıcının hazır verdiği `KozOcagi/SuctionWind/Unity_256` seti, `OKU.txt` doğrultusunda eklendi (T42/T43). Üç sheet'in 24'er karesi 256 PPU, ortak `(0.14, 0.5)` ağız pivotu, Full Rect, Bilinear, mipmap kapalı ve sıkıştırmasız kullanılır. Sprite kimlikleri korundu; diğer boyutlar ve master görseller değiştirilmedi.
+
+`SuctionWind` çocuğunun SpriteRenderer/Animator ve `EmberSuctionWindVisual` bağlantıları hazırdır. Kaynak mevcut `EffectArea/EmberSuctionEnemy` bileşenidir; yeni algılama veya hasar yolu yoktur. Efekt `Level` katmanında gövdenin bir sıra arkasındadır.
+
+- Menzil dışında küçük `IdleWind`: 24 kare / 12 FPS / 2 saniye, ölçek 1.5, alfa 0.35.
+- Gerçek çekim hedefinde `PullWind`: 24 kare / 16 FPS / 1.5 saniye. Yakınlık 0.7'de `PullWindStrong` başlar (24 kare / 24 FPS / 1 saniye); dönüş eşiği 0.6'dır. Klip geçişi fazı korur. Yakınlık hızı 0.85–1.15, alfayı 0.5–0.9 aralığında değiştirir; giriş mevcut çekim rampasını izler.
+- Rüzgâr oyuncunun tarafından ağıza doğru akar. Ortak pivotta 0°/180° dönüş ve `.758` kaynak-hedef referansıyla yatay uzunluk ayarlanır. Ağızdaki yatay ölü bölgede Idle görünür.
+- Çıkışta mevcut döngü/faz 0.25 saniyede alfa ile söner, ardından küçük Idle'a döner. `FadeOut` sheet'i faz sıçramasını önlemek için kullanılmaz. Kaynak/trigger kapanışı efekti gizler; Player/fizik kapanışı, teleport ve respawn eski aktif hedefi bırakır. Pause animasyon/geçişi dondurur.
+
+Inspector: `Idle Scale`, `Idle Alpha`, `Wind Width`, `Fade Duration`. Ek sahne bağlantısı gerekmez. **GameUp → Enemies → Rebuild Koz Ocagi Suction Wind** görseli, üç klibi/controller'ı ve importlarını yenilerken mevcut su/çekim/menzil ayarlarını korur. Tam prefab üreticisi de efekti ekler.
+
+Bu oturumda açık editörden ayrı `C:/Users/yhcan/AppData/Local/Temp/gameup-suction-wind-44c58db9` projesinde Unity **6000.5.0f1 ile 37 kontrol geçti (11 asset, 26 Play Mode/render)**. Güncel gerçek Player/kod/prefab/input ve üç sheet kullanıldı; test edilen asset'ler aynı GUID'lerle aktarıldı. Yeniden koşma: ayrı batch projede `-executeMethod EmberSuctionWindVerification.GenerateAndRun`. [Sonuç](verification/koz-ocagi-suction-wind-result.txt), [kontroller](verification/koz-ocagi-suction-wind-checks.txt), [sağ normal akış](verification/koz-ocagi-suction-wind-right.png), [sol güçlü akış](verification/koz-ocagi-suction-wind-left-strong.png).
+
+Kapsam: mevcut ayar/GUID'lerin korunması, tam klip süreleri ve döngü, sağ/sol/ağız/ölçek hizası, yakınlık, sönme/geri giriş, ölü bölge, kapatma-açma, pause ve görsel kapalıyken aynı su kaybı. İki 1280×720 çıktı incelendi; yalnızca testte Player'ın materyali ışıksız yapıldı. Logda Unity SearchDatabase başlangıç indeksleme hatası vardır; C# derleme hatası veya başarısız davranış kontrolü yoktur. Ana bölüm görünümü/oynanışı ve dış build testi bekliyor; genel QA kutuları kapatılmadı.
 
 `Assets/Scenes/KozOcagiDemo.unity`: düz kuru zemin, menzil dışında başlayan Player, tek düşman ve mevcut `Canvas`/`WaterBarUI`. A/D veya oklar yürütür, Space zıplatır; **R** veya ekrandaki düğme başlangıca tam suyla döndürür. Ana bölüm sahneleri, Player prefab ayarları ve build sahne listesi korunur.
 

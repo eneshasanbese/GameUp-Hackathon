@@ -15,6 +15,7 @@ public static class EmberSuctionPrefabBuilder
     [MenuItem("GameUp/Enemies/Rebuild Koz Ocagi Prefab")]
     public static void RebuildPrefab()
     {
+        EmberSuctionWindBuilder.RebuildAnimations();
         Sprite idle = AssetDatabase.LoadAllAssetsAtPath(SpritePath).OfType<Sprite>().Single(sprite => sprite.name == "Idle_00");
         var root = new GameObject("KozOcagi_Stationary");
         try
@@ -39,6 +40,8 @@ public static class EmberSuctionPrefabBuilder
             settings.FindProperty("pullPoint").objectReferenceValue = mouth;
             settings.FindProperty("playerLayerMask").intValue = LayerMask.GetMask("Player");
             settings.ApplyModifiedPropertiesWithoutUndo();
+            EmberSuctionWindBuilder.Configure(root);
+            EmberSuctionHeatAuraBuilder.Configure(root);
             PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
             AssetDatabase.SaveAssets();
         }

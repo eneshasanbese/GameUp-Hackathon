@@ -295,7 +295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c91de554a2aeb7745a2382b126c7175a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPatrol
-  endOffset: {x: 3, y: 0}
+  endOffset: {x: -3, y: 0}
   speed: 1.5
   bodyVisual: {fileID: 7505799262325991345}
   faceMovement: 0

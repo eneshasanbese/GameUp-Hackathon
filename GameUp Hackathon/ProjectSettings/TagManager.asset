@@ -16,8 +16,8 @@ TagManager:
   - Player
   - CameraBounds
   - Ground-Extra-Dry
-  - 
-  - 
+  - EnemyBoundary
+  - GroundEnemy
   - 
   - 
   - 

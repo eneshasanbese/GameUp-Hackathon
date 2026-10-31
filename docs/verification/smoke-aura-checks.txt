@@ -1,0 +1,35 @@
+Smoke prefab serializes its aura reference and starts at alpha zero
+Default lifetime is 3s with 0.25s fade-in and 0.5s fade-out
+Smoke shares the unlit alpha-blended HeatAura design behind enemy bodies
+Smoke reuses the existing 24-frame breathing animation and collider alignment
+Aura visible diameter and centre match the smoke circle
+Smoke retains its original independent body, single heat trigger, radius, offset, and 2x multiplier
+Stationary: existing sneeze reference points to the updated shared smoke prefab
+Patrol: existing sneeze reference points to the updated shared smoke prefab
+Shared breathing clip does not animate alpha or restart the cloud lifetime fade
+Newly instantiated cloud has zero alpha before its first update
+Alpha rises gradually during the opening fade
+Existing heat multiplier applies during fade-in
+Cloud reaches full opacity after fade-in
+Breathing frames advance while cloud remains fully visible
+Pause freezes both the fade envelope and remaining lifetime
+Two-second breathing loop does not repeat the opening fade
+Alpha fades gradually from one during the final half-second
+Heat remains active through fade-out without changing the damage circle
+Closing alpha keeps decreasing toward zero
+At lifetime end cloud is destroyed and its heat multiplier is cleared
+Custom Inspector fade durations are used
+Disabling cloud immediately resets its alpha to zero
+Re-enabling cloud restarts its opening fade at zero
+Re-enable resets the complete lifetime rather than retaining the old timer
+Lifetime shorter than combined fade durations still opens smoothly
+Short lifetime compresses both fades and still closes smoothly
+Short cloud expires on its configured lifetime
+Neither actual enemy emits smoke during sneeze preparation frames
+Stationary and patrol each emit one cloud starting inside its opening fade
+Both real sneeze emissions reach full opacity
+Patrol moves on while emitted auras stay at their independent heat positions
+Both real HapsirikKoz emissions render into a 960x540 preview
+Full sneeze animation emits no duplicate smoke clouds
+Disabling emitting enemies leaves existing smoke lifetimes independent
+Smoke from both real enemies fades out and expires

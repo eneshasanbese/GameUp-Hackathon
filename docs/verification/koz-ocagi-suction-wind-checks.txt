@@ -1,0 +1,37 @@
+Wind integration preserves the existing prefab GUID, trigger radius and all tuned gameplay values
+Repeated wind rebuild keeps asset identity and one wind child
+Saved prefab has no missing scripts or added physics bodies/colliders
+Saved visual references the existing suction source
+Wind is sorted behind the furnace mouth and the Player
+IdleWind imports all 24 full-size frames at the shared mouth pivot without compression or mipmaps
+IdleWind has the authored FPS and full loop duration, including the last frame
+PullWind imports all 24 full-size frames at the shared mouth pivot without compression or mipmaps
+PullWind has the authored FPS and full loop duration, including the last frame
+PullWindStrong imports all 24 full-size frames at the shared mouth pivot without compression or mipmaps
+PullWindStrong has the authored FPS and full loop duration, including the last frame
+Outside range only the small ambient wind loops
+Ambient wind causes no water loss outside suction range
+Real suction activation starts the normal wind loop and fades it in
+Right-side flow spans the horizontal mouth-to-player distance with its pivot fixed inside the mouth
+Animator advances the supplied sprite frames during suction
+Wind continues across a full loop while the player stays in range
+Rendered the real prefab and Player at 1280x720: suction-wind-right.png
+Close range uses the denser, faster strong wind with the same mouth alignment
+Strong-wind hysteresis avoids flicker around the proximity threshold
+Crossing the furnace reverses inward flow about the mouth without moving the pivot
+Rendered the real prefab and Player at 1280x720: suction-wind-left-strong.png
+All wind scaling and rotation leave the stationary furnace root unchanged
+Wind still spans world-space distance when the furnace is scaled
+The horizontal no-pull zone does not display a false full-strength wind beam
+Range exit fades the running loop from its current phase instead of jumping to FadeOut_00
+Re-entry during fade immediately reconnects the current wind to the player
+Completed exit fade returns to a small ambient effect without leaving a stretched beam
+Disabling the suction trigger hides all wind
+Re-enabling the trigger restores wind from actual suction state
+Disabling the source hides wind and clears old targets
+Disabled player releases the active wind and leaves only ambient motion
+Suspending player physics does not leave stale active wind
+Pause freezes both animation phase and wind opacity
+Disabling only the visual leaves the independent water loss and real suction target active
+Disabling the furnace leaves no visible wind
+Reactivated furnace starts a fresh wind cycle without stale fade state

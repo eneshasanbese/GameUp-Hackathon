@@ -48,16 +48,34 @@ public sealed class KnockbackAbility : BaseAbility
         if (!linkedStateMachine.ChangeState(thisAbilityState))
             return false;
 
+        BeginFlash();
+        // A lethal hit enters the existing respawn flow, which cancels the pending impulse/flash.
+        if (water != null)
+            water.Consume(contactWaterLoss);
+        return true;
+    }
+
+    // Projectiles share contact-hit immunity and flashing without adding a second knockback impulse.
+    public bool TryWaterHit(float waterPoints)
+    {
+        if (waterPoints <= 0f || float.IsNaN(waterPoints) || float.IsInfinity(waterPoints) ||
+            player == null || !isActiveAndEnabled || !isPermitted || !player.isActiveAndEnabled ||
+            !linkedPhysicsControl.rb.simulated || IsFlashing || player.CurrentState == thisAbilityState ||
+            water == null || !water.isActiveAndEnabled || water.IsEmpty || water.IsRespawning)
+            return false;
+        BeginFlash();
+        water.Consume(waterPoints);
+        return true;
+    }
+
+    private void BeginFlash()
+    {
         flashRemaining = flashDuration;
         if (IsFlashing && bodyVisual != null)
         {
             originalVisibility = bodyVisual.enabled;
             ownsVisibility = true;
         }
-        // A lethal hit enters the existing respawn flow, which cancels the pending impulse/flash.
-        if (water != null)
-            water.Consume(contactWaterLoss);
-        return true;
     }
 
     public override void EnterAbility()

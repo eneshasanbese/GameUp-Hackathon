@@ -1,0 +1,1 @@
+PASS: Unity 6000.5.0f1; 37 checks (11 asset, 26 Play Mode/render). Current real Player, suction prefab and wind sheets in an isolated batch project. Main levels and exported build not tested.

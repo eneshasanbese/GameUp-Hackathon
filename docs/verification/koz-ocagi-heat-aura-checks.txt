@@ -1,0 +1,58 @@
+Heat integration preserves the tuned suction/water values, collider radius and existing prefab GUID
+Repeated heat rebuild adds one visual without introducing another heat damage source
+Furnace reuses SlimeFire's exact existing HeatAura controller, clip and sprite
+Continuous heat visual is wired to the original suction component and trigger
+Heat is sorted below the wind and furnace body
+Shared heat animation remains the original 12 FPS, two-second continuous loop
+Wind integration preserves the existing prefab GUID, trigger radius and all tuned gameplay values
+Repeated wind rebuild keeps asset identity and one wind child
+Saved prefab has no missing scripts or added physics bodies/colliders
+Saved visual references the existing suction source
+Wind is sorted behind the furnace mouth and the Player
+IdleWind imports all 24 full-size frames at the shared mouth pivot without compression or mipmaps
+IdleWind has the authored FPS and full loop duration, including the last frame
+PullWind imports all 24 full-size frames at the shared mouth pivot without compression or mipmaps
+PullWind has the authored FPS and full loop duration, including the last frame
+PullWindStrong imports all 24 full-size frames at the shared mouth pivot without compression or mipmaps
+PullWindStrong has the authored FPS and full loop duration, including the last frame
+Outside range only the small ambient wind loops
+Ambient wind causes no water loss outside suction range
+Heat remains continuously visible while the Player is outside suction range
+Continuous heat advances the existing sprite animation with no nearby target
+Heat loops continuously across its full two-second duration outside the player activation range
+Rendered the real prefab and Player at 1280x720: suction-heat-aura.png
+Heat visible diameter follows the actual configured suction range
+Scaling the furnace preserves the heat source's configured world-space radius
+Heat centre follows the actual range-origin offset
+Disabling the suction trigger also hides its heat visual
+Disabling the source hides heat even if its trigger still exists
+Re-enabling the source restores continuous heat without needing a Player in range
+The shared visual still displays SlimeFire's original heat-source path
+SlimeFire's heat-source disable still hides its aura after the shared-component extension
+SlimeFire's original aura restores correctly when its heat source is enabled again
+Continuous heat and directional suction wind run together in range
+Adding or hiding the heat visual leaves the original absolute water-loss rate unchanged
+Real suction activation starts the normal wind loop and fades it in
+Right-side flow spans the horizontal mouth-to-player distance with its pivot fixed inside the mouth
+Animator advances the supplied sprite frames during suction
+Wind continues across a full loop while the player stays in range
+Rendered the real prefab and Player at 1280x720: suction-wind-right.png
+Close range uses the denser, faster strong wind with the same mouth alignment
+Strong-wind hysteresis avoids flicker around the proximity threshold
+Crossing the furnace reverses inward flow about the mouth without moving the pivot
+Rendered the real prefab and Player at 1280x720: suction-wind-left-strong.png
+All wind scaling and rotation leave the stationary furnace root unchanged
+Wind still spans world-space distance when the furnace is scaled
+The horizontal no-pull zone does not display a false full-strength wind beam
+Range exit fades the running loop from its current phase instead of jumping to FadeOut_00
+Re-entry during fade immediately reconnects the current wind and resumes the source activation ramp
+Completed exit fade returns to a small ambient effect without leaving a stretched beam
+Disabling the suction trigger hides all wind
+Re-enabling the trigger restores wind from actual suction state
+Disabling the source hides wind and clears old targets
+Disabled player releases the active wind and leaves only ambient motion
+Suspending player physics does not leave stale active wind
+Pause freezes both animation phase and wind opacity
+Disabling only the visual leaves the independent water loss and real suction target active
+Disabling the furnace leaves no visible wind
+Reactivated furnace starts a fresh wind cycle without stale fade state

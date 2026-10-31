@@ -22,7 +22,7 @@ public static class EnemyTerrainVerification
             if (!Application.isBatchMode)
                 throw new InvalidOperationException("Use an isolated batch project; this runner replaces the test scene.");
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-            EnemyPrefabBuilder.ConfigureTerrainPhysics();
+            EnemyBoundaryBuilder.Configure();
             int ground = LayerMask.GetMask("Ground-Dry", "Ground-Wet", "Ground-Extra-Dry");
             foreach (string name in new[] { "Saw", "SlimeFire", "HapsirikKoz" })
             {
@@ -34,9 +34,12 @@ public static class EnemyTerrainVerification
                         body.bodyType == (name == "Saw" && variant == "Stationary" ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic),
                         prefab.name + " saves its flying/ground body settings");
                     Collider2D solid = prefab.transform.Find("TerrainBody").GetComponent<Collider2D>();
-                    Check(!solid.isTrigger && solid.includeLayers == ground && solid.excludeLayers == ~ground &&
+                    int terrainLayers = name == "Saw" ? ground : ground | LayerMask.GetMask(EnemyBoundaryBuilder.BoundaryLayer);
+                    Check(!solid.isTrigger && solid.includeLayers == terrainLayers && solid.excludeLayers == ~terrainLayers &&
                         solid.sharedMaterial != null && solid.sharedMaterial.friction == 0f,
                         prefab.name + " blocks all three ground layers with a separate frictionless shape");
+                    Check(name == "Saw" || solid.gameObject.layer == LayerMask.NameToLayer(EnemyBoundaryBuilder.GroundEnemyLayer),
+                        prefab.name + " saves the appropriate terrain collision layer");
                     Check(prefab.GetComponent<Collider2D>().isTrigger && prefab.GetComponent<EnemyContactKnockback>() != null,
                         prefab.name + " preserves the original body damage trigger");
                 }
@@ -44,6 +47,14 @@ public static class EnemyTerrainVerification
             Check(Load("HapsirikKoz_Smoke").GetComponent<Rigidbody2D>().gravityScale == 0f &&
                 Load("KozOcagi_Stationary").GetComponent<Rigidbody2D>() == null,
                 "Smoke and anchored Koz Ocagi keep their environmental behaviour");
+            GameObject boundary = Load("GroundEnemyBoundary");
+            EdgeCollider2D edge = boundary.GetComponent<EdgeCollider2D>();
+            Check(edge != null && !edge.isTrigger && boundary.GetComponent<Renderer>() == null && edge.points.Length == 2,
+                "Invisible boundary prefab has an editable solid edge and no renderer");
+            int walking = LayerMask.GetMask(EnemyBoundaryBuilder.GroundEnemyLayer);
+            Check(boundary.layer == LayerMask.NameToLayer(EnemyBoundaryBuilder.BoundaryLayer) &&
+                edge.includeLayers == walking && edge.excludeLayers == ~walking && edge.layerOverridePriority == 2,
+                "Boundary collides only with ground enemy physics bodies");
             assetChecks = passed.Count;
             EditorSettings.enterPlayModeOptionsEnabled = true;
             EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.DisableDomainReload | EnterPlayModeOptions.DisableSceneReload;
@@ -59,6 +70,7 @@ public static class EnemyTerrainVerification
         EditorApplication.playModeStateChanged -= EnteredPlay;
         try
         {
+            Debug.unityLogger.filterLogType = LogType.Warning;
             foreach (string ground in new[] { "Ground-Dry", "Ground-Wet", "Ground-Extra-Dry" })
             {
                 foreach (string name in new[] { "SlimeFire_Stationary", "SlimeFire_Patrol", "HapsirikKoz_Stationary", "HapsirikKoz_Patrol" })
@@ -77,6 +89,7 @@ public static class EnemyTerrainVerification
             }
             await WallsAndFlight();
             await FallingAndRecovery();
+            await EnemyBoundaries();
             await ContactAndHeat();
             Finish(null);
         }
@@ -164,6 +177,66 @@ public static class EnemyTerrainVerification
                 name + " ignores vertical patrol offsets and does not suspend gravity");
             Clear();
         }
+    }
+
+    private static async Task EnemyBoundaries()
+    {
+        foreach (string name in new[] { "SlimeFire_Patrol", "HapsirikKoz_Patrol" })
+        {
+            foreach (float direction in new[] { -1f, 1f })
+            {
+                Terrain(new Vector2(0f, -0.5f), new Vector2(2f, 1f));
+                EdgeCollider2D edge = Boundary(new Vector2(direction * 0.8f, 0f));
+                Rigidbody2D body = Spawn(name, Vector2.zero);
+                Player target = SpawnPlayer(new Vector2(direction * 2.7f, 0.35f));
+                await Delay(1.4f);
+                Check(body.GetComponent<EnemyPatrol>().IsChasing && direction * body.position.x > 0.15f &&
+                    direction * body.position.x < 0.6f && Mathf.Abs(body.position.y) < 0.04f,
+                    name + " stops before the " + (direction < 0f ? "left" : "right") + " cliff while chasing");
+                Teleport(target, new Vector2(-direction * 2f, 0.35f));
+                float x = body.position.x;
+                await Delay(0.2f);
+                Check(direction * (body.position.x - x) < -0.1f,
+                    name + " can walk away from the enemy-only boundary");
+                Teleport(target, new Vector2(direction * 2.7f, 0.35f));
+                edge.enabled = false;
+                await Delay(1.5f);
+                Check(direction * body.position.x > 1.5f && body.position.y < -0.2f,
+                    name + " can cross and fall after its boundary is disabled");
+                Clear();
+            }
+        }
+
+        Terrain(new Vector2(0f, -0.5f), new Vector2(2f, 1f));
+        Boundary(new Vector2(0.8f, 0f));
+        Rigidbody2D saw = Spawn("Saw_Patrol", new Vector2(0f, 0.7f));
+        SpawnPlayer(new Vector2(2.7f, 0.7f));
+        await Delay(1f);
+        Check(saw.position.x > 1.1f && Mathf.Abs(saw.position.y - 0.7f) < 0.02f,
+            "Flying Saw passes through ground enemy boundaries while continuing its chase");
+        Clear();
+
+        Boundary(Vector2.zero);
+        Player player = SpawnPlayer(new Vector2(-1f, 0.35f));
+        player.enabled = false;
+        player.GetComponent<JumpAbility>().enabled = false;
+        Rigidbody2D playerBody = player.GetComponent<Rigidbody2D>();
+        playerBody.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionY;
+        playerBody.gravityScale = 0f;
+        playerBody.linearVelocity = new Vector2(2f, 0f);
+        await Delay(1.2f);
+        Check(playerBody.position.x > 1f && player.GetComponent<WaterMeter>().CurrentWater == 100f &&
+            !player.GetComponent<KnockbackAbility>().IsFlashing,
+            "Real player body crosses the invisible boundary without blocking or damage");
+        Clear();
+    }
+
+    private static EdgeCollider2D Boundary(Vector2 position)
+    {
+        GameObject root = Object.Instantiate(Load("GroundEnemyBoundary"), position, Quaternion.identity);
+        objects.Add(root);
+        Physics2D.SyncTransforms();
+        return root.GetComponent<EdgeCollider2D>();
     }
 
     private static async Task ContactAndHeat()
@@ -261,6 +334,7 @@ public static class EnemyTerrainVerification
 
     private static void Finish(Exception error)
     {
+        Debug.unityLogger.filterLogType = LogType.Log;
         string result = error == null ? "PASS: Unity " + Application.unityVersion + "; " + passed.Count + " checks (" + assetChecks + " asset, " + (passed.Count - assetChecks) + " Play Mode). Isolated project; main levels and exported build not tested."
             : "FAIL after " + passed.Count + " checks: " + error;
         File.WriteAllText("enemy-terrain-result.txt", result);
