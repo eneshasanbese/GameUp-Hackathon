@@ -1,6 +1,6 @@
 # Su Damlası — Yapılacaklar Takibi
 
-**Son kontrol:** 31 Ekim 2026, 19:22 (diskteki dosyalara ve koda göre; `Level_2` sahne dosyası okunarak incelendi, oynanmadı)
+**Son kontrol:** 31 Ekim 2026, 20:18 (diskteki dosyalara ve koda göre; `Level_1`/`Level_2` sahne dosyaları okunarak incelendi, oynanmadı)
 **Ana belge:** [genel-yapilacaklar.md](genel-yapilacaklar.md). T numaraları oradaki görevlerle aynıdır.
 **Kural:** Kurulum maddeleri diskteki dosyalarla doğrulanınca işaretlenir. Oynanış maddeleri (T/QA) ancak asıl sahnede (`Level1`) oynanarak denendikten sonra işaretlenir. Kodu yazılmış ama oyunda denenmemiş maddeler **Uygulandı; test bekliyor** olarak not edilir. Kaydedilmemiş değişiklikler sayılmaz.
 
@@ -70,20 +70,19 @@
 **Level2** (31 Ekim 2026'da kullanıcı ikinci bölümü yapmaya karar verdi, bkz. [kararlar](docs/kararlar.md))
 
 - [x] `Level2` sahnesi oluşturuldu: diskte `Scenes/Level_2.unity` (sahne `Level1` de `Level_1` olarak yeniden adlandırıldı). 31 Ekim 2026, 18:49 kaydında bölüm x≈53'e kadar çizili: başlangıç ve üç kum bulutu (iki `HapsirikKoz`), üç taş bulut (`Ground-Extra-Dry`, üç `Saw_Patrol`), kum blok + `HapsirikKoz`, `KozOcagi_Stationary`, alt mağarada birikinti ve sağda 5 birimlik duvar. Dekor `Decor-Desert` ile yapıldı. Oynanarak denenmedi.
-- [ ] `Level2` build listesinde `Level1`'in hemen altında (sıra: 0 `Level1`, 1 `Level2`). **Şu an listede yalnızca `Level_1` var.**
+- [x] `Level_2` build listesinde `Level_1`'in hemen altında (sıra: 0 `Level_1`, 1 `Level_2`); diskte doğrulandı.
 - [ ] `Level2`'de Player başlangıç konumu, su kaynakları ve `CameraBounds` noktaları yeni bölüme göre ayarlandı (sonra **Invalidate Bounding Shape Cache**). Player ayarlı (−10.8, −0.3). Tek `WaterSource` (50, −3) mağarada; başlangıçtan oraya kadar ≈60 birim boyunca checkpoint yok. `CameraBounds` hâlâ `Level1` değerlerinde (x −13…55); sol duvar (x −14) görüş dışında.
-- [ ] **Mağara çıkışı yok:** Level_2'de Player `jumpForce` sahne override'ı 7 (prefab ve Level_1: 10), tepe ≈ 2,5 birim. Mağara girişindeki çukurdan (yüzey −3) çıkıntılara (yüzey 0) 3 birim var; birikinti checkpoint olduğu için ölünce de mağarada doğuluyor. Çukur tabanını doldur + duvar dibine 1 basamak koy ya da zıplamayı 10'a döndür.
-- [ ] `jumpForce` kararı: 7 bilerek ise prefab'a uygulanmalı ve Level_1 bu değerle yeniden denenmeli; iki bölüm farklı zıplamamalı.
+- [ ] **Mağaradaki birikinti = bölüm sonu** (20:03 kullanıcı kararı: bölüm sonu su birikintisidir). Mağaradan çıkış olmaması bu durumda sorun değil; birikintiye ulaşınca bölüm biter. Ama `Level_2` son bölüm olduğu için bu birikintide sıradaki sahne yok: fidan/kazanma (T27) burada nasıl kurulacak, karar bekliyor.
+- [ ] `jumpForce` 7 artık iki sahnede de sahne override'ı (prefab'da hâlâ 10). Alana sağ tıklayıp **Apply to Prefab** ile prefab'a taşınmalı; `Level_1` bu değerle oynanarak denenmeli.
 - [ ] Bulut düşmanları: 4 karelik bulutlarda 3 birim devriye + 1,75 duman; iniş yeri neredeyse hep dolu, itilince çukura düşülüyor. Taş bulutlarda da aynı durum: x 22'deki testere 3 karelik bulutun dışına taşıyor, x 28–34'teki iki testere iç içe geçiyor. Devriye mesafesini kısalt, düşmanı sabitle ya da bulutu genişlet.
-- [ ] Final: x≈53'te 5 birimlik duvar var, fidan/bitiş nesnesi yok. Bölüm bitecekse fidanı koy; devam edecekse 2 birimlik basamaklar ekle ve `CameraBounds` sağ ucunu uzat.
+- [ ] Final: x≈53'te 5 birimlik duvar var; bölüm sonu mağaradaki birikinti. Fidan/kazanma nesnesi henüz yok (bkz. üstteki madde ve T27).
 - [ ] Küçük: x 34–35 arasında 1 karelik delik (küçük damla düşebilir). Birikintinin altında (49–50, −4) hem kum hem çimen tile'ı üst üste duruyor; kum olanları sil.
 - [ ] Zorluk geçişi: `Level_1`'de hiç düşman yok, `Level_2`'de 9 düşman var (4 `HapsirikKoz`, 3 `Saw_Patrol`, 1 `KozOcagi`). Oyuncu her düşmanı ilk kez zor bir yerde görüyor; 1–2 düşmanı tek başına ve geniş zeminde `Level_1`'e koymak ya da `Level_2`'de sayıyı azaltmak önerildi.
 - [ ] Nemli zemin `Level_2`'de yalnızca 2 tile (mağaradaki birikintinin altında); bölümün geri kalanı kuru ve çok kuru. Uzun yürüme yerlerine (başlangıç zemini, x 35–41 blok) birkaç nemli parça dinlenme alanı olabilir.
 - [ ] Küçük: (53, −1)'deki `ground_dry_floor_up_short_base` eğim tile'ı duvarın içinde kalmış; köşesinde ufak bir çentik görünür. Normal `block_center` ile değiştir.
 - [ ] `Level_2`'nin üç zemin tilemap'ine `GroundSurface` ekle (`Level_1`'deki gibi: `Ground-Dry` → Sand, `Ground-Wet` → Grass, `Ground-Extra-Dry` → BlackStone). Şu an malzeme çarpanlarının hepsi 1 olduğu için fark yok; çarpanlar değişirse `Level_2` zemini çarpansız kalır.
-- [ ] `Level1` sonunda `Level2`'ye geçiş noktası. **Script yazılmadı.**
-- [ ] Karar: `Level2`'ye su dolu mu başlıyor, yoksa `Level1`'den kalan su mu taşınıyor? (öneri: dolu başlasın)
-
+- [ ] `Level_1` sonunda `Level_2`'ye geçiş noktası. Script yazıldı: `Assets/Scripts/Level/LevelExit.cs` (su varken tek seferlik geçiş, yeni bölüm dolu suyla başlar). Bölüm sonu su birikintisi olduğu için bileşen `Level_1`'in son `WaterSource` örneğine (x≈44) eklenir; prefab'a uygulanmaz. Kullanıcı sahneye ekleyip geçişi denedi ve geçişte donma fark etti. Diskte doğrulandı: `Level_1`'de birikintiye `LevelExit` (Next Scene Name `Level_2`) eklenmiş, build listesi `Level_1`, `Level_2` (kaydedilmiş, commit edilmemiş). 20:18: kararma/açılma geçişi eklendi (`SceneFader.cs`, varsayılan 0.5 sn siyah; sahne kurulumu gerekmez). **Fade geçişi uygulandı; Unity'de test bekliyor.**
+- [ ] Karar: `Level2`'ye su dolu mu başlıyor, yoksa `Level1`'den kalan su mu taşınıyor? Şu an `LevelExit` ile dolu başlıyor (öneri buydu); taşınması istenirse ek kod gerekir.
 ## 4. Oyuncu
 
 - [ ] T08 — Player prefab'ı: kökte Rigidbody 2D + Circle Collider 2D (su azaldıkça küçülür, bkz. [K03](docs/kararlar.md)), animasyonlu sprite `Visual` alt objesinde, layer `Player`. **Uygulandı; Level1'de test bekliyor.**
@@ -166,5 +165,7 @@ Ayrıntılar [genel-yapilacaklar.md](genel-yapilacaklar.md) içinde.
 31 Ekim 2026, düşük su hareket eki: kullanıcı talebiyle MoveAbility/JumpAbility Inspector'ına bağımsız yürüme, hava hızı ve kalkış hızı çarpanları eklendi (1.4/1.4/1.1). Aynı su değeri kullanılıyor; 1 katsayısı artışı kapatıyor. Dolu/yarım/az su ölçümleri, Inspector ayarı, havada dolum, yeniden doğma ve hızlı küçük oyuncuyla rampa regresyonu dahil 48 Play Mode doğrulaması ayrı Unity projesinde geçti. Asıl sahne/build oynanışı bekliyor; [kapsam](docs/player-state-machine.md#doğrulama).
 
 - [ ] T49–T55 — Arayüz, ses, kaynak/lisans listesi, final sunumu
+  - Ses durumu (31 Ekim 2026): projede `platformerPack/Sounds` altında 10 Kenney efekti var (CC0, `platformerPack/License.txt`); hiçbir sahne/prefab'da `AudioSource` yok. Efekt bağlanacak hazır olaylar: `WaterMeter.RefilledFromSource`, `WaterMeter.Depleted`.
+  - Müzik adayı (T53 kaydı için): "Chill Chiptunes (Collection)", Holizna, CC0, https://opengameart.org/content/chill-chiptunes-collection, `chill_chiptunes.zip` 75,8 MB. **Henüz indirilmedi/projeye eklenmedi.** Projeye yalnızca seçilen parçalar konacak; indirme tarihi ve parça adları eklenince yazılmalı.
 - [ ] QA01–QA20 — Son test listesi
 - [ ] D01–D09 — Teslim listesi
