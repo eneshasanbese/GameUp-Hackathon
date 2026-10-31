@@ -1,8 +1,8 @@
 # Su Damlası — Yapılacaklar Takibi
 
-**Son kontrol:** 31 Ekim 2026, 02:05 (diskteki dosyalara göre)
+**Son kontrol:** 31 Ekim 2026, 17:16 (diskteki dosyalara ve koda göre)
 **Ana belge:** [genel-yapilacaklar.md](genel-yapilacaklar.md). T numaraları oradaki görevlerle aynıdır.
-**Kural:** Bir madde ancak Unity'de denenip çalıştığı görüldükten sonra işaretlenir. Kaydedilmemiş değişiklikler sayılmaz.
+**Kural:** Kurulum maddeleri diskteki dosyalarla doğrulanınca işaretlenir. Oynanış maddeleri (T/QA) ancak asıl sahnede (`Level1`) oynanarak denendikten sonra işaretlenir. Kodu yazılmış ama oyunda denenmemiş maddeler **Uygulandı; test bekliyor** olarak not edilir. Kaydedilmemiş değişiklikler sayılmaz.
 
 ## 1. Proje kurulumu
 
@@ -14,8 +14,8 @@
 - [x] `.gitignore` eklendi; `Library`, `Temp`, `Logs`, `UserSettings` depo dışında (T05)
 - [x] Unity git ayarları doğru: Force Text, Visible Meta Files
 - [x] GitHub deposu bağlandı, ilk commit gönderildi
-- [ ] Son değişiklikler commit edildi (paket, paletler, sahne, layer'lar, `genel-yapilacaklar.md`)
-- [ ] T01 — Etkinlik kuralları `docs/kararlar.md` dosyasına yazıldı
+- [x] Paket, paletler (`Ground-Dry`, `Ground-Wet`, `Decor`, `Ground-Extra-Dry`), sahne ve layer'lar commit edildi
+- [ ] T01 — Etkinlik kuralları `docs/kararlar.md` dosyasına yazıldı (dosya var, etkinlik kuralları henüz yok)
 - [ ] T04 — İki kişi de projeyi aynı Unity sürümüyle açtı
 - [ ] T06 — Dosya sahipliği belirlendi (ana sahneyi kim düzenliyor?)
 - [ ] T07 — Boş/test build alındı ve başka bilgisayarda açıldı
@@ -25,27 +25,39 @@
 - [x] Kenney Platformer Pack eklendi (`Assets/platformerPack`)
 - [x] `Tiles/Double` import ayarları: Single, PPU 128, Full Rect, Bilinear, mip map kapalı, sıkıştırma yok (314 dosya)
 - [x] `Backgrounds/Double` import ayarları aynı şekilde yapıldı (14 dosya)
-- [x] Tile paletleri oluşturuldu: `Ground-Dry` (kum), `Ground-Wet` (çim)
+- [x] Tile paletleri oluşturuldu: `Ground-Dry` (kum), `Ground-Wet` (çim), `Decor` (314 tile), `Ground-Extra-Dry`
 - [ ] K02 kararı `docs/kararlar.md` dosyasına yazıldı: Kenney Platformer Pack, `Double` klasörü, PPU 128. Ana belgedeki T42 ve T44 maddeleri (18 PPU, Point filtre, Pixel Perfect Camera) bu paket için geçerli değil.
 - [ ] Nemli zeminin görseli kesinleşti (şu an çim; "son fidan" hikâyesiyle çelişebilir, bkz. QA19)
+- [ ] `Decor-Desert` paleti: Kenney stilinde 9 cansız dekor tile'ı (kum: `dry_grass`, `dry_bush`, `tumbleweed`, `dry_cactus`, `sand_pebbles`; taş: `stone_pebbles`, `stone_pile`, `stone_spike`, `stone_dry_shrub`). PPU 128, collider yok, `Decor-Front`'a boyanır. **Dosyalar eklendi; Unity içe aktarımı ve palet görünümü kontrol bekliyor.**
+- [ ] QA19 — `Level1`'deki yeşil `cactus` dekorları yaşayan bitki gibi duruyor; istenirse `dry_cactus` ile değiştirilecek.
 
-## 3. Sahne ve test zemini
+## 3. Sahne ve bölüm (`Level1`)
 
-- [x] `Grid` ve altında `Ground-Dry`, `Ground-Wet` tilemap'leri var
-- [x] Grid tam sayı koordinatta, tile'lar hizalı
-- [x] Fizik layer'ları: `Ground-Dry`, `Ground-Wet`, `Player`; tilemap'ler kendi layer'larında
+- [x] `SampleScene` → `Level1` olarak yeniden adlandırıldı (sahne GUID'i korundu); build listesindeki tek sahne `Level1`
+- [x] `Grid` ve altında `Ground-Dry`, `Ground-Wet`, `Ground-Extra-Dry`, `Decor-Front` tilemap'leri var; tile'lar tam sayı koordinatlara oturuyor
+- [x] Fizik layer'ları: `Ground-Dry` (6), `Ground-Wet` (7), `Player` (8), `CameraBounds` (9), `Ground-Extra-Dry` (10); zemin tilemap'leri kendi layer'larında
 - [x] Sorting layer'lar: Background, Level, Default, Player; tilemap'ler `Level` katmanında
-- [x] Test zemini çizildi (rampa dahil)
-- [x] Collider'lar: Tilemap Collider 2D (Merge) + Composite Collider 2D (Polygons) + Static Rigidbody 2D
+- [x] Zemin collider'ları: Tilemap Collider 2D (Merge) + Composite Collider 2D (Polygons) + Static Rigidbody 2D
+- [x] `Decor-Front`: layer `Default`, sorting `Level` / Order 1, collider yok (zeminin önünde, damlanın arkasında)
+- [x] Bölüm çizildi: başlangıç, atlama taşları, ilk kaynak (X≈11), yukarıda kuru / aşağıda nemli iki yol, ikinci kaynak (X≈44)
 
-> Collision matrix'te şimdilik değişiklik gerekmiyor. Tek istisna 5. bölümdeki `CameraBounds` layer'ı.
+> Collision matrix: `CameraBounds` hiçbir şeyle çarpışmıyor. `CameraBounds` × `Ground-Extra-Dry` kutusu hâlâ işaretli; ikisi de hareketsiz olduğu için etkisi yok.
+
+**Level2** (31 Ekim 2026'da kullanıcı ikinci bölümü yapmaya karar verdi, bkz. [kararlar](docs/kararlar.md))
+
+- [ ] `Level2` sahnesi `Level1` kopyalanarak oluşturuldu, tile'lar temizlendi. **Başlanmadı.**
+- [ ] `Level2` build listesinde `Level1`'in hemen altında (sıra: 0 `Level1`, 1 `Level2`)
+- [ ] `Level2`'de Player başlangıç konumu, su kaynakları ve `CameraBounds` noktaları yeni bölüme göre ayarlandı (sonra **Invalidate Bounding Shape Cache**)
+- [ ] `Level1` sonunda `Level2`'ye geçiş noktası. **Script yazılmadı.**
+- [ ] Karar: `Level2`'ye su dolu mu başlıyor, yoksa `Level1`'den kalan su mu taşınıyor? (öneri: dolu başlasın)
 
 ## 4. Oyuncu
 
-- [ ] T08 — Oyuncu prefab'ı: kökte Rigidbody 2D + Capsule Collider 2D, `Visual` alt objesinde geçici sprite; layer `Player`, sorting layer `Player`
-- [ ] T09 — Yürüme, zıplama ve yere basma kontrolü (`Ground-Dry` ve `Ground-Wet` layer'ları birlikte)
-- [ ] T09 — Rampada dururken aşağı kaymıyor
-- [ ] T11 — Boşluğa düşünce yeniden deneme başlıyor
+- [ ] T08 — Player prefab'ı: kökte Rigidbody 2D + Circle Collider 2D (su azaldıkça küçülür, bkz. [K03](docs/kararlar.md)), animasyonlu sprite `Visual` alt objesinde, layer `Player`. **Uygulandı; Level1'de test bekliyor.**
+- [ ] T09 — Yürüme, zıplama ve yere basma kontrolü (`Ground-Dry`, `Ground-Wet`, `Ground-Extra-Dry`). **Uygulandı; Level1'de test bekliyor.**
+- [ ] T09 — Rampada dururken aşağı kaymıyor (kodda eğim telafisi var). **Uygulandı; Level1'deki rampalarda test bekliyor.**
+- [ ] T11 — Boşluğa düşünce yeniden deneme başlıyor (Fall Limit Y = -12). **Uygulandı; test bekliyor.**
+- [ ] Prefab'a taşınacak ayarlar: `Extra Dry Ground Layer`, Interpolate ve `Slip` malzemesi şu an sadece `Level1`'de sahne override'ı. Prefab'a uygulanmazsa `Components` / `Level 5` sahnelerinde çok kuru zemin "yer" sayılmaz (Console'da uyarı çıkar).
 
 ## 5. Kamera ve arka plan (Cinemachine + parallax)
 
@@ -53,58 +65,64 @@ Cinemachine kamerayı oyuncunun peşinden götürür. Arka plan kameranın altı
 
 **Arka plan kurulumu**
 
-- [ ] `Background` objesi Main Camera'nın altında, Position `0, 0, 10`
-- [ ] `background_solid_sky` ve `background_fade_hills` silindi (kamera rengi gökyüzü dolgusunun yerini tutuyor)
-- [ ] `background_fade_desert` X 0, Y -1 ve `background_clouds` X 0, Y 3; ikisinde de Draw Mode Tiled, Width 28, Height 4 (parallax kaydırmasına pay kalsın diye 24 yerine 28)
-- [ ] Main Camera'nın arka plan rengi gökyüzü rengi yapıldı (`C3E3FF`)
+- [x] `Background` objesi Main Camera'nın altında, Position `0, 0, 10`
+- [x] `background_solid_sky` ve `background_fade_hills` silindi (kamera rengi gökyüzü dolgusunun yerini tutuyor)
+- [x] `background_fade_desert` (0, -1, 0) ve `background_clouds` (0, 3, 0); Draw Mode Tiled, Width 34.25, Height 4 (en az 28 olması yeterli)
+- [x] Main Camera'nın arka plan rengi gökyüzü rengi yapıldı (`C3E3FF`)
 
 **Cinemachine (T10)**
 
-- [ ] Cinemachine paketi kuruldu (Package Manager → Unity Registry → Cinemachine); karar `docs/kararlar.md` dosyasına yazıldı
-- [ ] Main Camera'da Cinemachine Brain var
-- [ ] Cinemachine Camera oyuncuyu takip ediyor (Position Composer); Lens → Orthographic Size 5
-- [ ] Kamera bölümün dışını göstermiyor: Confiner 2D + bölümü çevreleyen bir Polygon Collider 2D
-- [ ] Sınır collider'ı Is Trigger ve ayrı bir `CameraBounds` layer'ında; collision matrix'te bu layer hiçbir şeyle çarpışmıyor (oyuncuya trigger olayı göndermesin)
+- [x] Cinemachine 3.1.7 kuruldu
+- [ ] Cinemachine kararı `docs/kararlar.md` dosyasına yazıldı
+- [x] Main Camera'da Cinemachine Brain var (Update Method: Late Update)
+- [x] `PlayerCamera` Player'ı takip ediyor: Orthographic Size 5, Damping 0.5 / 0.5, Lookahead 0.2 sn (Ignore Y)
+- [x] Confiner 2D + `CameraBounds` Polygon Collider 2D: (-13, -4) – (55, 8). Bölüm büyüyünce noktaları güncelle ve **Invalidate Bounding Shape Cache**'e bas.
+- [x] Sınır collider'ı Is Trigger ve `CameraBounds` layer'ında; collision matrix'te oyuncu ve zeminlerle çarpışmıyor
+- [x] Player → Rigidbody 2D → Interpolate açık (`Level1` override'ı)
+- [ ] T10 — Kamera oyuncuyu takip ediyor, iniş yerleri görünüyor, bölüm dışı görünmüyor. **Uygulandı; Game görünümünde test bekliyor.**
 
 **Parallax**
 
-- [ ] Parallax script'i: tepeler kameradan biraz yavaş, bulutlar daha da yavaş kayıyor; katmanlar her 4 birimde başa sarılıp sonsuz tekrar ediyor
-- [ ] Parallax, Cinemachine kamerayı hareket ettirdikten sonra çalışıyor (arka planda titreme yok)
-- [ ] Game görünümünde kamera sağa-sola ve yukarı-aşağı giderken arka planda boşluk ya da kesik yok
+- [x] `ParallaxLayer` script'i (`Assets/Scripts/Camera`) derlendi ve iki katmana eklendi: tepeler 0.7, bulutlar 0.8 (öneri 0.9)
+- [ ] Arka planda titreme yok (konum, çizimden hemen önce hesaplanıyor). **Uygulandı; test bekliyor.**
+- [ ] Game görünümünde kamera sağa-sola ve yukarı-aşağı giderken arka planda boşluk ya da kesik yok. **Test bekliyor.**
 
 > Zaman sıkışırsa ilk ertelenecek iş parallax olur (ana belgedeki kapsam kesme sırası). Kamera takibi ve arka plan kurulumu korunur.
 
 ## 6. Su sistemi
 
-- [ ] T12 — Su değerini tek bir bileşen (`WaterMeter`) yönetiyor
-- [ ] T13 — Su 0–100 arasında kalıyor
-- [ ] T14 — Durum önceliği: oyun aktif değilken tüketim yok, kaynakta dolum, havada normal, yerde dururken sıfır, yerde hareket ederken zemin katsayılı
-- [ ] T15 — Kuru ve nemli zemin ayırt ediliyor; bilinmeyen zemin normal sayılıyor
-- [ ] T16 — Tüketim kare hızından bağımsız (geçen süreye göre hesaplanıyor)
-- [ ] T17 — Fizik titreşimi ve duvara doğru yürümek hareket sayılmıyor
-- [ ] T18 — Zıplama ve düşmede normal tüketim; nemli zeminin katsayısı havaya taşınmıyor
-- [ ] T19 — Su çubuğu (UI) suyun azalıp dolmasını gösteriyor
-- [ ] T20 — Normal tüketim, nemli zemin katsayısı ve kapasite Inspector'dan değiştirilebiliyor
+Su değerinin tamamı `WaterMeter`'da; ayrıntılar [su belgesinde](docs/water-player.md).
+
+- [ ] T12 — Su değerini tek bir bileşen (`WaterMeter`) yönetiyor; UI kendi sayacını tutmuyor. **Uygulandı; test bekliyor.**
+- [ ] T13 — Su 0–100 arasında kalıyor (kodda sınırlandırılıyor). **Uygulandı; test bekliyor.**
+- [ ] T14 — Durum önceliği: oyun aktif değilken tüketim yok, kaynakta dolum, havada normal, yerde dururken sıfır, yerde hareket ederken zemin katsayılı. **Uygulandı; test bekliyor.**
+- [ ] T15 — Kuru, nemli ve çok kuru zemin ayırt ediliyor; bilinmeyen zemin kuru (normal) sayılıyor. **Uygulandı; test bekliyor.**
+- [ ] T16 — Tüketim kare hızından bağımsız (geçen süreye göre hesaplanıyor). **Uygulandı; test bekliyor.**
+- [ ] T17 — Fizik titreşimi ve duvara doğru yürümek hareket sayılmıyor. **Uygulandı; test bekliyor.**
+- [ ] T18 — Zıplama ve düşmede normal tüketim; zeminin katsayısı havaya taşınmıyor. **Uygulandı; test bekliyor.**
+- [ ] T19 — Su çubuğu: `WaterBarUI` + `Assets/Prefabs/Canvas.prefab` (portre, siyah çerçeve, mavi dolgu) `Level1`'e yerleştirildi, Fill ve Portrait bağlı. Low Water Portrait henüz atanmadı (isteğe bağlı). **Uygulandı; test bekliyor.**
+- [ ] T20 — Tüketim oranları (kuru 3, nemli 1, çok kuru 6) Inspector'da. **Eksik:** kapasite hâlâ kodda sabit (`Capacity = 100`).
+- [ ] Çok kuru zemin (`Ground-Extra-Dry`, 6 birim/sn) ve Slime Fire ısı çarpanı birlikte çalışıyor (ör. 6 × 2 = 12 birim/sn). **Uygulandı; test bekliyor.**
 
 ## 7. Su birikintisi, yeniden doğma, final
 
-- [ ] T21 — Su birikintisi prefab'ı
-- [ ] T22 — Birikintiye girince su tamamen doluyor
-- [ ] T23 — Birikinti checkpoint oluyor; ilk birikintiden önce bölüm başına dönülüyor
-- [ ] T24 — Birikintiye art arda girip çıkmak hata veya kilitlenme yaratmıyor
-- [ ] T25 — Su bitince tek seferlik ölüm başlıyor
-- [ ] T26 — Yeniden doğmada konum, hız, su, kontrol ve UI sıfırlanıyor
-- [ ] T27 — Final fidanı: kazanma mesajı çıkıyor, tüketim ve kontrol kapanıyor
-- [ ] T28 — Tekrar oyna bölümü baştan başlatıyor
-- [ ] T29 — Baştan sona ilk build alındı ve denendi
+- [ ] T21 — Su birikintisi prefab'ı (`WaterSource`: görsel + Water layer'ında trigger + `RespawnPoint`); `Level1`'de 2 adet. **Uygulandı; test bekliyor.**
+- [ ] T22 — Birikintiye girince su tamamen doluyor. **Uygulandı; test bekliyor.**
+- [ ] T23 — Birikinti checkpoint oluyor; ilk birikintiden önce bölüm başına dönülüyor. **Uygulandı; test bekliyor.**
+- [ ] T24 — Birikintiye art arda girip çıkmak hata veya kilitlenme yaratmıyor. **Uygulandı; test bekliyor.**
+- [ ] T25 — Su bitince tek seferlik ölüm başlıyor. **Uygulandı; test bekliyor.**
+- [ ] T26 — Yeniden doğmada konum, hız, su, kontrol ve UI sıfırlanıyor. **Uygulandı (UI bar dahil); test bekliyor.**
+- [ ] T27 — Final fidanı: kazanma mesajı çıkıyor, tüketim ve kontrol kapanıyor. **Başlanmadı.** Görseller hazır: `platformerPack/Sprites/Sapling/sapling_thirsty.png` (oyun boyunca) ve `sapling_green.png` (kazanınca, T54). 128×192 px, PPU 128, alt-orta pivot; nesne zemin yüzeyine konur. Fidan yalnızca son bölümde (`Level2`) olacak; `Level1` geçiş noktasıyla biter.
+- [ ] T28 — Tekrar oyna bölümü baştan başlatıyor. **Başlanmadı.**
+- [ ] T29 — Baştan sona ilk build alındı ve denendi. **Başlanmadı.**
 
-**Bugünün hedefi:** 4.–7. bölümler bitince oyun çirkin olsa da başlanıp kaybedilip kazanılabiliyor olmalı.
+**Bugünün hedefi:** 4.–7. bölümler bitince oyun çirkin olsa da başlanıp kaybedilip kazanılabiliyor olmalı. En büyük eksik: T27–T28 (oyun henüz kazanılamıyor).
 
 ## 8. Sonraki aşamalar
 
 Ayrıntılar [genel-yapilacaklar.md](genel-yapilacaklar.md) içinde.
 
-- [ ] T30–T38 — Bölüm tasarımı ve oynanış dengesi
+- [ ] T30–T38 — Bölüm tasarımı ve oynanış dengesi. Level1 ön incelemesi (hesap, test edilmedi): bölüm suya göre kısa, başlangıç suyuyla kaynaklara uğramadan bitirilebiliyor (T35); zeminin çoğu nemli olduğu için kuru/nemli farkı hissedilmiyor; iniş yerlerinin çoğu 1 tile genişliğinde (T32–T33).
 - [ ] T39–T48 — Görsel karar, damla görseli, küçülme, su izi
 
 31 Ekim 2026, T09/T45–T48 güncellemesi: kullanıcı suya bağlı collider küçülmesini onayladı ([K03](docs/kararlar.md)). Tek CircleCollider2D görselle birlikte küçülüyor; `Player → WaterMeter → Water Size → Minimum Scale` deneme değeri 0.45. Temas/şekil taraması ve eğime göre hareket uygulandı. Gerçek Player prefab'ının kopyasıyla ayrı Unity projesinde 47 Play Mode doğrulaması geçti; asıl Components/Level 5 sahnelerinde oynanış ve build kontrolü bekliyor. Bu sonuç tüm T39–T48 veya genel QA listesinin tamamlandığı anlamına gelmez.

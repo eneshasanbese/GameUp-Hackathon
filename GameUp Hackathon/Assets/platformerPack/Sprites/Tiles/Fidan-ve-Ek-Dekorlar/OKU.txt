@@ -1,0 +1,21 @@
+GameUp — dekor ve fidan görselleri
+==================================
+
+128px-oyun/    Oyuna hazır sürüm. platformerPack "Double" tile'larıyla aynı ölçek.
+512px-yuksek/  Aynı çizimler 4 kat büyük (yüksek çözünürlüklü kaynak).
+
+Klasörler
+  kum/                 Kum zemin üstü: kuru ot, kuru çalı, çalı topu, kurumuş kaktüs, kum taşları
+  tas/                 Üstü koyu taş zemin üstü: çakıllar, taş yığını, sivri kaya, taşta kuru çalı
+  fidan/               Final fidanı, 128×128: susuz (oyun boyunca) ve yeşermiş (kazanınca)
+  fidan-uzun-128x192/  Aynı fidanın daha uzun hâli; projede şu an bu sürüm var
+                       (512px-yuksek içinde adı fidan-uzun-512x768/)
+
+Unity içe aktarma (projedeki ayarlarla aynı)
+  Texture Type: Sprite (2D and UI), Sprite Mode: Single
+  Pixels Per Unit: 128  (512px-yuksek kullanırsan 512 yap; oyunda aynı boyutta görünür)
+  Filter Mode: Bilinear, Generate Mip Maps: kapalı, Alpha Is Transparency: açık
+  Dekorlar: Pivot Center. Tile olarak Decor-Front tilemap'ine boya, collider koyma.
+  Fidan:    Pivot Bottom. Nesneyi zemin yüzeyine yerleştir.
+
+Not: Dekordaki bitkiler bilerek kuru/cansızdır; oyunda yaşayan tek bitki finaldeki fidandır.

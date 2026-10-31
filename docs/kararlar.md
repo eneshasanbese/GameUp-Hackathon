@@ -35,3 +35,11 @@
 **Isı alanıyla birlikte:** Slime Fire ısı alanının `DrainMultiplier` değeri, o an geçerli zemin oranını çarpar. Çok kuru zeminde ısı alanındaki hareket deneme değerleriyle 6 × 2 = 12 birim/saniye tüketir; bu birleşim dengelenirken birlikte test edilmelidir.
 
 **Deneme ayarı:** `Extra Dry Drain Per Second = 6` (kuru oranın iki katı). Oynanışla dengelenecek başlangıç değeridir. Görsel olarak yalnızca renkle değil doku/şekil ile de ayrılması gerekir (T43).
+
+## K04 (kısmi) — İkinci bölüm
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı: “Ben şimdi Level 2yi yapmak istiyorum.” Genel plandaki “ek bölüm eklenmez” varsayılanı ve T38'deki “ikinci bölüm şart değil” notu bu talimatla aşılmıştır.
+
+**Karar:** Oyun `Level1` ve `Level2` olmak üzere iki bölümden oluşur. Her bölüm ayrı sahnedir. Yaşayan tek fidan yalnızca son bölümdedir; `Level1` bir geçiş noktasıyla biter, ara fidan eklenmez.
+
+**Açık kalanlar:** Bir sonraki bölüme su taşınıp taşınmayacağı (öneri: her bölüm dolu suyla başlar; sahne yüklenince bu kendiliğinden olur), bölüm uzunlukları ve kaynak sayıları (T38, ilk oynanış testinden sonra), “Tekrar oyna”nın `Level1`'den mi son bölümün başından mı başlayacağı.
