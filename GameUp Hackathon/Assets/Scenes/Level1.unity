@@ -216,6 +216,7 @@ GameObject:
   - component: {fileID: 328655623}
   - component: {fileID: 328655622}
   - component: {fileID: 328655621}
+  - component: {fileID: 328655624}
   m_Layer: 6
   m_Name: Ground-Dry
   m_TagString: Untagged
@@ -223,6 +224,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &328655624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328655617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc3a015eb4f96544b9f473a6b3d50a5a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::GroundSurface
+  surfaceMaterial: 1
 --- !u!4 &328655618
 Transform:
   m_ObjectHideFlags: 0
@@ -2598,6 +2612,7 @@ GameObject:
   - component: {fileID: 1116324935}
   - component: {fileID: 1116324934}
   - component: {fileID: 1116324933}
+  - component: {fileID: 1116324936}
   m_Layer: 7
   m_Name: Ground-Wet
   m_TagString: Untagged
@@ -2605,6 +2620,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1116324936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1116324929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc3a015eb4f96544b9f473a6b3d50a5a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::GroundSurface
+  surfaceMaterial: 2
 --- !u!4 &1116324930
 Transform:
   m_ObjectHideFlags: 0
@@ -3551,6 +3579,7 @@ GameObject:
   - component: {fileID: 1597068851}
   - component: {fileID: 1597068850}
   - component: {fileID: 1597068849}
+  - component: {fileID: 1597068854}
   m_Layer: 10
   m_Name: Ground-Extra-Dry
   m_TagString: Untagged
@@ -3558,6 +3587,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1597068854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597068847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc3a015eb4f96544b9f473a6b3d50a5a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::GroundSurface
+  surfaceMaterial: 3
 --- !u!4 &1597068848
 Transform:
   m_ObjectHideFlags: 0

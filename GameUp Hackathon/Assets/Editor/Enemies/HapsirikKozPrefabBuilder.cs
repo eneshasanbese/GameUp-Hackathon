@@ -9,7 +9,7 @@ public static class HapsirikKozPrefabBuilder
 {
     private const string AnimationFolder = "Assets/Animations/Enemies";
     private const string PrefabFolder = "Assets/Prefabs/Enemies";
-    private const string SpriteFolder = "Assets/platformerPack/Sprites/Enemies/HapsirikKoz/";
+    private const string SpriteFolder = "Assets/platformerPack/Sprites/Enemies/HapsirikKoz 1/Unity_256/";
 
     [MenuItem("GameUp/Enemies/Rebuild HapsirikKoz Prefabs")]
     public static void Rebuild()

@@ -28,8 +28,8 @@
 |---|---|
 | Hikâye | Dünyada kalan son fidanı yeşertmek için yolculuk eden su damlası |
 | Tür | Platform odaklı oyun; ateş etme/dövüş sistemi yok |
-| Ana kaynak | Hareketle tüketilen su; oyuncunun hayatta kalmasını ve küçülme hissini temsil eder |
-| Durma | Yerde dururken su kaybı yok |
+| Ana kaynak | Hareket ve bekleme sırasında tüketilen su; oyuncunun hayatta kalmasını ve küçülme hissini temsil eder |
+| Durma — 31 Ekim son karar | Her zeminde pozitif kayıp; nemli bekleme < kuru bekleme < nemli yürüme < ekstra kuru bekleme < kuru yürüme < ekstra kuru yürüme. Malzeme (kum/çimen/siyah taş) kuruluk durumundan bağımsızdır ([karar](docs/kararlar.md)) |
 | Havada olma | Normal su kaybı; yatay giriş verilmese de zıplama/düşme sırasında geçerli |
 | Zeminde hareket | Tüketim, zemin türüne göre değişir |
 | Ara duraklar | Su birikintileri; yaşayan ara fidan/ağaç checkpoint’leri yok |
@@ -113,20 +113,20 @@ Gri kutu prototip, nihai resim beklemeden basit şekillerle oyunun tamamlanabile
 
 - [ ] **T12 — Tek su kaynağı oluştur.** Su değerini tek bileşen yönetsin. UI ve görseller bu değeri okusun; farklı script’lerde birbirinden bağımsız su değerleri tutulmasın.
 - [ ] **T13 — Su aralığını sınırla.** Önerilen normalizasyon 0–100’dür; değer negatife veya üst sınırın üzerine çıkmasın.
-- [ ] **T14 — Durum önceliğini uygula.** Oyun aktif değilse tüketim yok; kaynak işlemi sırasında su doldurulur; havada normal tüketim; ısı/duman dışında yerde dururken sıfır; yerde hareket ederken zemin katsayılı tüketim. Slime Fire'ın etkin ısı alanında veya HapsirikKoz'un geçici dumanında hareket şartı olmadan zemin tüketimi ısı çarpanıyla uygulanır.
-- [ ] **T15 — Kuru/normal ve nemli zemini ayırt et.** Bilinmeyen zeminin nemli kabul edilip bedava yol oluşturmaması için açık bir varsayılan tanımla. Teknik öneri: bilinmeyen zeminde normal tüketim.
-- [ ] **T16 — Tüketimi kare hızından bağımsız yap.** Tüketimi “her karede sabit miktar” yerine geçen süre üzerinden hesapla. Bu prototipte önerilen model, aktif hareket veya Slime Fire/HapsirikKoz ısı-duman etkisi süresine bağlı tüketimdir; kat edilen mesafeye dayalı ayrı bir model ekleme.
+- [ ] **T14 — Durum önceliğini uygula.** Oyun aktif değilse tüketim yok; kaynakta dolum; havada normal tüketim; yerde bekleme ve yürüme için ayrı pozitif kuruluk oranları. Sıra eşit malzeme/ısı çarpanında nemli bekleme < kuru bekleme < nemli yürüme < ekstra kuru bekleme < kuru yürüme < ekstra kuru yürüme. Isı/duman seçili oranı çarpar.
+- [ ] **T15 — Kuru/normal, nemli ve ekstra kuru zemini ayırt et.** Kum/çimen/siyah taş malzemesini kuruluk layer'ından bağımsız seç; malzeme belirtilmeyen destekte çarpan 1 olsun. Bilinmeyen destek için normal/kuru tüketim kullan.
+- [ ] **T16 — Tüketimi kare hızından bağımsız yap.** Tüketimi “her karede sabit miktar” yerine geçen süre üzerinden hesapla. Bekleme ve hareket ayrı oranları seçer; malzeme/ısı çarpanlarını uygula, kat edilen mesafeye dayalı ayrı bir model ekleme.
 - [ ] **T17 — Hareket algısını test et.** Düz zemindeki fizik titreşimi durmayı hareket saymasın; duvara doğru basılı tutmakla gerçekten ilerlemek arasındaki davranışı kontrol et. Teknik öneri: yerde gerçek yatay ilerleme ve küçük bir tolerans kullan.
 - [ ] **T18 — Havada tüketimi doğrula.** Dikey zıplama, yatay giriş bırakma ve serbest düşüş normal tüketim üretmeli. Havada nemli zeminin önceki katsayısı taşınmamalı.
 - [ ] **T19 — Su göstergesini bağla.** Su azalması ve dolması anında görünür olsun; prototip bu göstergeyle oynanabilsin.
-- [ ] **T20 — Ayarları erişilebilir tut.** Normal tüketim, nemli zemin katsayısı ve su kapasitesi Inspector’dan değiştirilebilsin. Yalnızca bunun için ScriptableObject altyapısı kurmak zorunlu değil.
+- [ ] **T20 — Ayarları erişilebilir tut.** Nemli/kuru/ekstra kuru bekleme-yürüme oranları, bağımsız kum/çimen/siyah taş çarpanları ve su kapasitesi Inspector’dan değiştirilebilsin. Yalnızca bunun için ScriptableObject altyapısı kurmak zorunlu değil.
 
 ### Su durum tablosu
 
 | Durum | Beklenen davranış |
 |---|---|
-| Yerde, hareketsiz ve ısı dışında | Su değişmez |
-| Slime Fire ısısı / HapsirikKoz dumanında, yerde dururken veya hareket ederken | Zemin tüketimi × etkin ısı çarpanı |
+| Yerde hareketsiz | Kuruluğa göre pozitif bekleme oranı × bağımsız malzeme çarpanı |
+| Slime Fire ısısı / HapsirikKoz dumanında, yerde dururken veya hareket ederken | Seçili bekleme/yürüme oranı × malzeme çarpanı × etkin ısı çarpanı |
 | Normal/kuru zeminde ilerleme | Normal tüketim |
 | Nemli zeminde ilerleme | Normalden düşük tüketim; kesin oran testle belirlenir |
 | Zıplama veya düşme | Normal tüketim |
@@ -134,7 +134,7 @@ Gri kutu prototip, nihai resim beklemeden basit şekillerle oyunun tamamlanabile
 | Yeniden doğma | Önerilen prototip davranışı: dolu su ve sıfırlanmış hız |
 | Kazanma/ölüm geçişi | Ek tüketim yok |
 
-Nemli zeminin tamamen bedelsiz mi yoksa az tüketimli mi olduğu bir denge ayarıdır. İlk denemede düşük ama pozitif tüketim önerilir; oranı test etmeden kesin değer diye belgeleme. Sıcak bölge ilk sürüm için zorunlu üçüncü zemin değildir.
+Son kullanıcı kararıyla nemli zeminde de bekleme ve yürüme tüketimi pozitiftir. Başlangıç oranları nemli `0.25/1`, kuru `0.5/3`, ekstra kuru `2/6` su/saniyedir. Malzeme çarpanları başlangıçta `1×`'dir. Bunlar kesin bölüm dengesi değildir; oynanışta ayarla.
 
 ### Kaynak ve yeniden deneme
 
@@ -154,12 +154,12 @@ Nemli zeminin tamamen bedelsiz mi yoksa az tüketimli mi olduğu bir denge ayar�
 
 - [ ] **T30 — Kısa rota taslağını çiz.** Başlangıç, öğretici düz alan, ilk zıplama, nemli zemin, su birikintisi, son platform alanı ve fidanı sıraya koy. Yeni sistem eklemeden mevcut kurallarla alan çeşitlendir.
 - [ ] **T31 — Mekanikleri sırayla öğret.** Önce yürüme/zıplama, sonra su kaybı, sonra zemin farkı, ardından kaynak. İlk su birikintisine ulaşmak deneyimli oyuncu refleksi gerektirmesin.
-- [ ] **T32 — Güvenli durma alanları bırak.** Durmak ücretsiz olduğuna göre oyuncu platform üzerinde düşünmek için durabilmeli. İniş alanları dar ve görünmez olmasın.
+- [ ] **T32 — Güvenli durma alanları bırak.** Bekleme de su tükettiğinden düşünme alanlarında düşük bekleme oranını ve kaynaklara erişimi gözet. İniş alanları dar ve görünmez olmasın.
 - [ ] **T33 — Kaynaklar arası bölümleri test et.** Dolu suyla başlayan oyuncu makul hatalarla bir sonraki durağa ulaşabilsin. Kesin sıçrama ve tek kusursuz rota zorunluluğundan kaçın.
 - [ ] **T34 — Tüketim kuralının anlamlılığını dene.** Sürekli zıplamanın zeminden kaçıp oyunu gereksiz biçimde kolaylaştırıp kolaylaştırmadığını kontrol et. Normal hava tüketimi nedeniyle çok kuru zemini zıplayarak geçmek avantajlıysa bunun kabul edilir olup olmadığını not et; kuralları sessizce değiştirme.
 - [ ] **T35 — Kaynağı gerçekten gerekli kıl.** Bütün yol başlangıç suyuyla rahatça geçiliyorsa ana döngü görünmez kalabilir; tüketim veya mesafeyi testle düzenle. İlk öğretici alanı bu nedenle sertleştirme.
 - [ ] **T36 — Düşme ve yeniden deneme mesafelerini ayarla.** Kaybetmek bütün oyunu uzun süre tekrar oynatmasın. Kaynak konumlarını buna göre düzenle.
-- [ ] **T37 — Dışarıdan bir oyuncuyla test et.** Önce açıklama yapmadan izle: hedefi anlıyor mu, durunca kayıp olmadığını fark ediyor mu, su birikintisini tanıyor mu, finali buluyor mu? Takıldığı yerleri yaz.
+- [ ] **T37 — Dışarıdan bir oyuncuyla test et.** Önce açıklama yapmadan izle: hedefi anlıyor mu, beklerken de su kaybettiğini ve zemin farkını fark ediyor mu, su birikintisini tanıyor mu, finali buluyor mu? Takıldığı yerleri yaz.
 - [ ] **T38 — K04’ü kapat.** Teste göre bölüm uzunluğu ve kaynak sayısını sabitle. İkinci bölüm veya dallanan rota eklemek temel sürümün şartı değildir.
 
 **Denge yöntemi:** Bir defada tek büyük değişken değiştir; örneğin önce normal tüketimi, sonra nemli zemin oranını. Bu dokümanda verilmemiş sayıları doğrulanmış denge değeri sanma.
@@ -245,7 +245,7 @@ Bu liste uygulama talimatı değildir. Her ek fikir tamamlanma süresini ve test
 | Basit göz kırpma, zıplama ve iniş kareleri | Karakter hissi | Düşük-orta; nihai tarzdan sonra |
 | Kalan su yüzdesini sonuç ekranında gösterme | Yeniden oynama hedefi | Düşük; yeni başarısızlık şartı yaratmasın |
 | Kalan suya göre üç fidan görünümü | Kaynak yönetimine görsel ödül | Orta; final eşiği ve gerekli kareler ayrıca onaylanmalı |
-| Özel sıcak/kuru alan ve buhar efekti | Daha güçlü çevresel anlatım | Orta; yerde durunca yine su azalmayacağı kuralıyla tutarlı olmalı |
+| Özel sıcak/kuru alan ve buhar efekti | Daha güçlü çevresel anlatım | Orta; pozitif bekleme/yürüme tüketimi ve bağımsız malzeme/ısı çarpanlarıyla tutarlı olmalı |
 | Küçük su pickup’ları | Bölüm içinde ek hedef | Orta; kaynak/checkpoint dengesini değiştirebilir |
 | Kolay tüketim ayarı | Daha erişilebilir deneme | Orta; temel denge oturduktan sonra |
 | Geçici yeşil görsel iz | Umut/hayat teması | Hikâye onayı gerekir; başka canlı bitki üretip “son fidan” fikrini çeliştirmesin |
@@ -254,7 +254,7 @@ Bu liste uygulama talimatı değildir. Her ek fikir tamamlanma süresini ve test
 
 ## Son test kontrol listesi
 
-- [ ] **QA01:** Isı/duman, Köz Ocağı ve düşman gövde teması dışında yerde hiç hareket etmeden bekleyince su aynı kalıyor; Slime Fire'ın etkin ısı alanı veya HapsirikKoz dumanında dururken su azalıyor. Köz Ocağı ayrıca mesafeye bağlı mutlak puan/saniye tüketir. Alan çıkışı/kapanışı veya dumanın ömrünün bitişi yalnızca ilgili etkiyi kaldırır. Gövde darbesi tek su kaybı üretir; flash yeni gövde darbelerini engeller, çevresel tüketimi engellemez.
+- [ ] **QA01:** Bütün zeminlerde hareketsizken pozitif su kaybı var; eşit malzeme/ısı çarpanında nemli bekleme < kuru bekleme < nemli yürüme < ekstra kuru bekleme < kuru yürüme < ekstra kuru yürüme. Kum/çimen/siyah taş üç kuruluk durumuyla bağımsız çalışıyor. Isı/duman seçili oranı çarpar; çıkışta normal bekleme kaybı sürer. Köz Ocağı bağımsız mutlak kayıp verir. Gövde darbesi tek su kaybı üretir; flash yeni gövde darbelerini engeller, çevresel tüketimi engellemez.
 - [ ] **QA02:** Normal zeminde yürüyüşte tüketim var; nemli zeminde daha düşük.
 - [ ] **QA03:** Yalnızca dikey zıplarken ve düşerken normal tüketim var.
 - [ ] **QA04:** Zeminden ayrılınca nemli zemin katsayısı havaya taşınmıyor.
@@ -293,11 +293,11 @@ Bu liste uygulama talimatı değildir. Her ek fikir tamamlanma süresini ve test
 - Tek seferde küçük bir görev al; hangi T/QA/D maddesine çalıştığını belirt.
 - Mevcut dosyaları ve Unity sürümünü incelemeden var olmayan script/API veya kurulu paket varsayma.
 - Onay gerektiren görsel kararları kendin verme. Dört boy sprite, 30 karelik sheet veya Kenney kullanımı otomatik şart değildir.
-- Bitki checkpoint’i veya ısı/duman dışında yerde dururken tüketim ekleme. Slime Fire ısısı/HapsirikKoz dumanında hareketsiz su kaybı, suya bağlı collider değişikliği ve ayarlanabilir hareket/zıplama artışı onaylıdır; yeni bir su sayacı oluşturma veya zıplama itişini havada tekrarlama.
+- Bitki checkpoint’i ekleme. Son 31 Ekim kararıyla tüm zeminlerde pozitif bekleme tüketimi, kuruluk ile bağımsız malzeme çarpanları onaylıdır. Suya bağlı collider değişikliği ve ayarlanabilir hareket/zıplama artışı korunur; yeni bir su sayacı oluşturma veya zıplama itişini havada tekrarlama.
 - Çalışan kodu gereksiz yeniden düzenleme; yeni bağımlılık ve paket eklemeden gerekçe/onay iste.
 - Sahne, prefab ve `.meta` dosyalarını körlemesine yeniden üretme. Takım arkadaşının sahip olduğu dosyayı habersiz değiştirme.
 - Kodun yazılmış olmasını testin geçmesiyle karıştırma. Unity’de çalıştıramadıysan “uygulandı; editör/build testi bekliyor” olarak raporla.
 - Görev kapanışında değişen dosyaları, Inspector bağlantılarını, yapılan testi, kalan riski ve tamamlanma durumunu yaz.
 - Bir test yapılmadıysa kutusunu işaretleme. Kurallar veya lisans doğrulanmadıysa uygunluk garantisi verme.
 
-**İlk uygulanacak iş paketi:** T01–T07. Ardından T08–T20. İlk hedef güzel bir damla çizmek değil; hareketin su tükettiği, durmanın güvenli olduğu ve zemin farkının görüldüğü çalışan test sahnesidir.
+**İlk uygulanacak iş paketi:** T01–T07. Ardından T08–T20. İlk hedef hareket/bekleme tüketimi ve zemin farkının görüldüğü çalışan test sahnesidir.

@@ -1,0 +1,1 @@
+PASS: Unity 6000.5.0f1; 79 checks using current copied Player prefab and scripts in an isolated project. Main scene gameplay/build not tested.

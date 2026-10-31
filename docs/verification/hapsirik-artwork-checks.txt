@@ -1,0 +1,34 @@
+Idle retains frame count, FPS, duration and loop setting
+Idle retains numeric order and equal frame holds
+Idle resolves every new 256-pixel slice at 256 PPU and the shared foot pivot
+Idle imports uncompressed with Bilinear filtering and no mipmaps
+Idle texture is not downscaled at import
+Idle animates only the sprite, preserving transforms and physics
+Sneeze retains frame count, FPS, duration and loop setting
+Sneeze retains numeric order and equal frame holds
+Sneeze resolves every new 256-pixel slice at 256 PPU and the shared foot pivot
+Sneeze imports uncompressed with Bilinear filtering and no mipmaps
+Sneeze texture is not downscaled at import
+Sneeze animates only the sprite, preserving transforms and physics
+Stationary wires the new preview sprite and existing shared controller
+Stationary preserves body collider, contact hits, root scale and visual foot placement
+Stationary preserves smoke references and wait/cooldown values
+Patrol wires the new preview sprite and existing shared controller
+Patrol preserves body collider, contact hits, root scale and visual foot placement
+Patrol preserves smoke references and wait/cooldown values
+Patrol and chase Inspector values survive the artwork migration
+Stationary plays every new Idle sprite in order over two runtime Animator loops
+Stationary creates no smoke before frame 05
+Stationary emits one smoke cloud at frame 05 at the enemy position
+Stationary plays all twelve new Sneeze sprites without duplicate smoke
+Stationary returns to Idle and respects cooldown
+Stationary animation does not move the root, foot or collider
+Patrol plays every new Idle sprite in order over two runtime Animator loops
+Patrol creates no smoke before frame 05
+Patrol emits one smoke cloud at frame 05 at the enemy position
+Patrol plays all twelve new Sneeze sprites without duplicate smoke
+Patrol returns to Idle and respects cooldown
+Patrol animation does not move the root, foot or collider
+Actual patrol motion continues while displaying the new artwork
+Idle renders both real prefabs with visible new artwork
+Sneeze renders both real prefabs with visible new artwork

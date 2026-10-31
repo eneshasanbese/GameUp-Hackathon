@@ -6,6 +6,8 @@
 
 ## 1. Proje kurulumu
 
+31 Ekim 2026 HapsirikKoz görsel geçişi (T42 ek kapsamı): kullanıcının talebiyle duran/devriye prefabları ve mevcut Idle/Sneeze klipleri `HapsirikKoz 1/Unity_256` sheet'lerine bağlandı; üretici yolu güncellendi. 256×256 kare, 256 PPU, Bilinear, mipmap kapalı ve Compression None; mevcut zamanlama, duman, collider, devriye ve takip ayarları korundu. Bu geçişte ayrı Unity `6000.5.0f1` projesinde **34 kontrol geçti (19 asset, 15 Play Mode/görüntü)**; iki gerçek prefabın Idle/Sneeze render'ı ve 05. karede tek duman çıkışı doğrulandı. Asıl bölüm görünümü ve dış build testi bekliyor ([ayarlar ve kayıt](docs/enemies.md#görseller-ve-yeniden-üretim)).
+
 31 Ekim 2026 hareketli düşman takip alanı (kullanıcı ek kapsamı): Saw, Slime Fire ve HapsirikKoz devriye prefablarına ayarlanabilir dış algılama çemberi eklendi. Oyuncu içerideyken takip, çıkışta ayrıldığı noktaya dönüş ve aynı devriyeyi sürdürme uygulanır; duran türler değişmez. Ayrı Unity `6000.5.0f1` projesinde bu oturumda **52 kontrol geçti (9 asset, 43 Play Mode)**; giriş/çıkış, takip eksenleri, rotaya dönüş, yaşam döngüsü ve algılama/ısı/gövde hasarı ayrımı doğrulandı. Ana Level1 oynanışı ve dış build testi bekliyor ([ayarlar ve test kaydı](docs/enemies.md#hareketli-düşmanların-takip-alanı)).
 
 31 Ekim 2026 ek kapsam: Saw ve Slime Fire için duran/git-gel prefabları ve Slime yakınlık erime çarpanı uygulandı. Unity 6000.5.0f1 ile ayrı geçici projede 20 asset ve 31 Play Mode kontrolü geçti; ayarlar ve doğrulama kaydı [düşman belgesinde](docs/enemies.md). Asıl sahnelere yerleşim ve build testi yapılmadı.
@@ -71,7 +73,7 @@
 - [ ] T09 — Yürüme, zıplama ve yere basma kontrolü (`Ground-Dry`, `Ground-Wet`, `Ground-Extra-Dry`). **Uygulandı; Level1'de test bekliyor.**
 - [ ] T09 — Rampada dururken aşağı kaymıyor (kodda eğim telafisi var). **Uygulandı; Level1'deki rampalarda test bekliyor.**
 - [ ] T11 — Boşluğa düşünce yeniden deneme başlıyor (Fall Limit Y = -12). **Uygulandı; test bekliyor.**
-- [ ] Prefab'a taşınacak ayarlar: `Extra Dry Ground Layer`, Interpolate ve `Slip` malzemesi şu an sadece `Level1`'de sahne override'ı. Prefab'a uygulanmazsa `Components` / `Level 5` sahnelerinde çok kuru zemin "yer" sayılmaz (Console'da uyarı çıkar).
+- [ ] Prefab'a taşınacak ayarlar: Interpolate ve `Slip` malzemesi şu an sadece `Level1`'de sahne override'ı. `Extra Dry Ground Layer`, son bekleme tüketimi güncellemesinde prefab'a bağlandı (`1024`); çok kuru desteğin sahne override'ına bağımlılığı kaldırıldı.
 
 ## 5. Kamera ve arka plan (Cinemachine + parallax)
 
@@ -109,14 +111,16 @@ Su değerinin tamamı `WaterMeter`'da; ayrıntılar [su belgesinde](docs/water-p
 
 - [ ] T12 — Su değerini tek bir bileşen (`WaterMeter`) yönetiyor; UI kendi sayacını tutmuyor. **Uygulandı; test bekliyor.**
 - [ ] T13 — Su 0–100 arasında kalıyor (kodda sınırlandırılıyor). **Uygulandı; test bekliyor.**
-- [ ] T14 — Durum önceliği: oyun aktif değilken tüketim yok, kaynakta dolum, havada normal, ısı/duman dışında yerde dururken sıfır, yerde hareket ederken veya etkin Slime Fire ısısı/HapsirikKoz dumanında dururken zemin ve ısı katsayılı. **Uygulandı; test bekliyor.**
-- [ ] T15 — Kuru, nemli ve çok kuru zemin ayırt ediliyor; bilinmeyen zemin kuru (normal) sayılıyor. **Uygulandı; test bekliyor.**
+- [ ] T14 — Durum önceliği: oyun aktif değilken tüketim yok, kaynakta dolum, havada normal; yerde bekleme ve yürüme için ayrı pozitif kuruluk oranları × malzeme × ısı çarpanı. **Uygulandı; Level1 oynanış testi bekliyor.**
+- [ ] T15 — Kuru, nemli ve çok kuru zemin ayırt ediliyor; kum/çimen/siyah taş malzemesi bağımsız `GroundSurface` ile seçiliyor. **Uygulandı; Level1 oynanış testi bekliyor.**
 - [ ] T16 — Tüketim kare hızından bağımsız (geçen süreye göre hesaplanıyor). **Uygulandı; test bekliyor.**
 - [ ] T17 — Fizik titreşimi ve duvara doğru yürümek hareket sayılmıyor. **Uygulandı; test bekliyor.**
 - [ ] T18 — Zıplama ve düşmede normal tüketim; zeminin katsayısı havaya taşınmıyor. **Uygulandı; test bekliyor.**
 - [ ] T19 — Su çubuğu: `WaterBarUI` + `Assets/Prefabs/Canvas.prefab` (portre, siyah çerçeve, mavi dolgu) `Level1`'e yerleştirildi, Fill ve Portrait bağlı. Low Water Portrait henüz atanmadı (isteğe bağlı). **Uygulandı; test bekliyor.**
-- [ ] T20 — Tüketim oranları (kuru 3, nemli 1, çok kuru 6) Inspector'da. **Eksik:** kapasite hâlâ kodda sabit (`Capacity = 100`).
-- [ ] Çok kuru zemin (`Ground-Extra-Dry`, 6 birim/sn) ve Slime Fire ısı çarpanı birlikte çalışıyor (ör. 6 × 2 = 12 birim/sn). **Uygulandı; test bekliyor.**
+- [ ] T20 — Bekleme/yürüme oranları (nemli 0.25/1, kuru 0.5/3, çok kuru 2/6) ve üç bağımsız malzeme çarpanı (başlangıçta 1×) Inspector'da. **Eksik:** kapasite hâlâ kodda sabit (`Capacity = 100`).
+- [ ] Çok kuru zemin ve Slime Fire ısı çarpanı birlikte çalışıyor (nötr malzemede 2× ısı ile bekleme 4, yürüme 12 birim/sn). **Uygulandı; Level1 oynanış testi bekliyor.**
+
+31 Ekim 2026 son bekleme tüketimi talebi (T14–T18/T20, QA01–QA05/QA07–QA10/QA16): eski ücretsiz duruş kuralı kaldırıldı. Gerçek Player prefab'ı ve güncel kodla ayrı Unity 6000.5.0f1 projesinde **79 kontrol geçti**; istenen altılı sıra, 9 malzeme/kuruluk birleşiminin bekleme-yürümesi, duvar/eğim, dikey zıplama/düşüş, ısı örtüşmesi/temizliği, kontrol/fizik kapanışı, iki fizik adımı, kaynakta tek Heal ve sıradan beklemeden ölüm/yeniden doğma doğrulandı. Level1'in üç zemin tilemap'ine mevcut görsellerine göre Sand/Grass/BlackStone işaretleri eklendi; kuruluk layer'ları bağımsız kaldı. [Sonuç](docs/verification/water-drain-result.txt), [kontroller](docs/verification/water-drain-checks.txt), [ayarlar ve kapsam](docs/water-player.md). Asıl Level1 oynanışı ve build testi bekliyor; önceki ısı dışı sıfır tüketim kayıtları tarihsel sonuçlardır.
 
 ## 7. Su birikintisi, yeniden doğma, final
 

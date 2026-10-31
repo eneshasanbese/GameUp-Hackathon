@@ -1,5 +1,19 @@
 # Kararlar
 
+## Her zeminde bekleme tüketimi ve bağımsız malzeme
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı Player ve Player prefab'ı için dururken de su/can kaybı istedi. Açık sıra: çimde bekleme < kuruda bekleme < çimde yürüme < ekstra kuruda bekleme < kuruda yürüme < ekstra kuruda yürüme. Devam sorusuna “Evet, malzeme ve kuruluk bağımsız olsun” yanıtını verdi; kum, çimen ve siyah taş tek bir kuruluk durumuna sabitlenmez.
+
+**Uygulama:** Mevcut `Ground-Wet` nemli tabandır; bekleme/yürüme oranları nemli `0.25/1`, kuru `0.5/3`, ekstra kuru `2/6` su/saniyedir. Bunlar oynanışla ayarlanacak başlangıç değerleridir. Malzeme `GroundSurface` üzerinden, kuruluk mevcut collider layer'ından okunur. Malzeme çarpanları WaterMeter Inspector'ında ayrı ayrı ayarlanır; aralarında bir sıralama istenmediğinden başlangıçta hepsi `1×` değerindedir. Böylece örneğin nemli kum veya ekstra kuru çimen mümkündür. Malzeme belirtilmeyen destek `1×` kullanır.
+
+Isı/duman, artık seçilen bekleme veya yürüme tabanını malzeme çarpanından sonra çarpar. Eski “ısı dışında durmak ücretsiz” kuralı ve önceki duruş hasarı sayıları bu kararla geçersizdir. Havada önceki zeminin kuruluğu/malzemesi taşınmaz; normal `3` su/saniye ve varsa ısı çarpanı uygulanır. Köz Ocağı'nın bağımsız kaybı, tek su sayacı, kontrol kapalı/respawn tüketim koruması ve kaynak dolumu korunur. [Ayarlar ve test kaydı](water-player.md).
+
+## HapsirikKoz — 256 piksel görsel setine geçiş
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı HapsirikKoz'un iki prefabını mevcut `HapsirikKoz` setinden daha yüksek çözünürlüklü `HapsirikKoz 1` setine geçirmek istedi; `Unity_256` üzerinden geçiş önerisinin ardından “Bu değişimi senin yapmanı istiyorum” talimatını verdi.
+
+**Uygulama:** `Unity_256/Idle.png` ve `Sneeze.png`; 256×256 kareler, 256 PPU, ortak pivot `(0.5, 0.07407407)`, Bilinear, mipmap kapalı ve sıkıştırmasız import. Mevcut 8 kare/8 FPS Idle döngüsü ve 12 kare/12 FPS tek hapşırma korunur. Duman yine 05 numaralı karede çıkar. İki prefabın başlangıç sprite'ı, mevcut kliplerin sprite referansları ve üreticinin kaynak yolu değişir; hareket/takip, collider ve duman ayarları korunur. Bu, diğer görsellerin K02 kararını değiştirmez. [Bağlantılar ve doğrulama](enemies.md#görseller-ve-yeniden-üretim).
+
 ## Hareketli düşmanlar — algılama alanında oyuncuyu takip
 
 **Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı `Assets/Prefabs/Enemies/` altındaki hareket edebilen düşmanlar için dış bölge istedi: karakter bölgeye girince normal hareket şemasını bırakıp, bölgeden çıkana kadar karakteri takip edecekler.
