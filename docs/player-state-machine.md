@@ -12,7 +12,7 @@ Player üzerindeki component ayarları:
 - **MoveAbility → Speed / Acceleration:** yerdeki yatay hız ve hedef hıza ulaşma ivmesi.
 - **IdleAbility → Deceleration:** tuş bırakıldıktan sonraki kısa duruşun yavaşlama değeri.
 - **JumpAbility → Airspeed / Air Acceleration / Jump Force:** havadaki yatay hız, yatay ivme ve zıplamanın başlangıç dikey hızı. Yerçekimini Rigidbody2D yönetir.
-- **PhysicsControl → Dry Ground Layer / Wet Ground Layer:** Ground-Dry ve Ground-Wet katmanlarındaki destek temaslarını ve aşağı collider taramasını filtreler.
+- **PhysicsControl → Dry Ground Layer / Wet Ground Layer / Extra Dry Ground Layer:** Ground-Dry, Ground-Wet ve Ground-Extra-Dry katmanlarındaki destek temaslarını ve aşağı collider taramasını filtreler.
 - **PhysicsControl → Ground Check Distance / Maximum Ground Angle:** Güncel collider boyutuna göre tarama mesafesi ve üzerinde durulabilecek en dik yüzey açısı. Prefab değerleri 0.15 ve 60 derecedir.
 - **WaterMeter → Water Size → Minimum Scale:** Su sıfıra yaklaşırken görsel ve collider'ın minimum boyutu; prefab'da 0.45. Daha küçük değer daha fazla küçültür.
 - **MoveAbility → Low Water Boost → Low Water Speed Multiplier:** Düşük suda yürüme hızı çarpanı; prefab'da 1.4.

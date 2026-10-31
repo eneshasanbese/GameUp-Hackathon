@@ -13,6 +13,7 @@ public sealed class WaterMeter : MonoBehaviour
     [SerializeField, Range(0f, Capacity)] private float currentWater = Capacity;
     [SerializeField, Min(0f)] private float dryDrainPerSecond = 3f;
     [SerializeField, Min(0f)] private float wetDrainPerSecond = 1f;
+    [SerializeField, Min(0f)] private float extraDryDrainPerSecond = 6f;
     [SerializeField, Min(0f)] private float minimumGroundSpeed = 0.05f;
 
     [Header("Visual")]
@@ -121,7 +122,10 @@ public sealed class WaterMeter : MonoBehaviour
         if (physics.grounded && speed <= minimumGroundSpeed)
             return;
 
-        float rate = physics.wetGrounded ? wetDrainPerSecond : dryDrainPerSecond;
+        // In the air no ground flag is set, so the normal dry rate applies.
+        float rate = physics.wetGrounded ? wetDrainPerSecond
+            : physics.extraDryGrounded ? extraDryDrainPerSecond
+            : dryDrainPerSecond;
         Consume(rate * Time.fixedDeltaTime);
     }
 

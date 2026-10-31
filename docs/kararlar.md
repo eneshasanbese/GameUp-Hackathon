@@ -19,3 +19,11 @@
 **Uygulama:** `1 - WaterMeter.NormalizedWater` değeriyle tam sudaki 1.0 katsayısından düşük su için seçilen en büyük katsayıya doğrusal geçilir. MoveAbility yürüme, JumpAbility hava hızı ve zıplama için ayrı ayarlar taşır. Yürüme/hava katsayıları güncel suyu izler; zıplama katsayısı yalnızca kalkışta alınır, havada yeniden itiş uygulanmaz. Temel hız/kuvvet, ivme ve fren değerleri ezilmez. WaterMeter bulunmayan oyuncu temel değerlerle çalışır.
 
 **Inspector deneme değerleri:** MoveAbility Low Water Speed Multiplier=1.4; JumpAbility Low Water Air Speed Multiplier=1.4 ve Low Water Jump Multiplier=1.1. Her ayarda 1.0 artışı kapatır. Jump çarpanını 1.0 tutup hava hızını artırmak, tam zıplama yüksekliğini artırmadan yatay mesafeyi uzatır. Su dolunca sonraki hareket ve zıplama temel değerlere döner; halen devam eden zıplamanın dikey hızı yeniden yazılmaz. Bu ayarlar oynanışla dengelenecek başlangıç değerleridir.
+
+## Üçüncü zemin: çok kuru (Ground-Extra-Dry)
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı bölüme "extra dry" zemin ekledi, `Ground-Extra-Dry` fizik layer'ını (10) oluşturdu ve kodun bu layer'ı algılamasını istedi. Genel plandaki "sıcak bölge ilk sürüm için zorunlu değil" notu ve P2 "özel sıcak/kuru alan" fikri bu talimatla kapsama alınmıştır.
+
+**Uygulama:** `PhysicsControl` üçüncü bir LayerMask (`Extra Dry Ground Layer`) taşır ve `extraDryGrounded` bilgisini verir; bu zemin de `grounded` sayılır, böylece yürüme ve zıplama normal çalışır. `WaterMeter`, çok kuru zeminde gerçek yatay ilerlemede `Extra Dry Drain Per Second` oranını kullanır. Yerde dururken tüketim yine yoktur; havada kuru oran geçerlidir, çok kuru katsayı havaya taşınmaz.
+
+**Deneme ayarı:** `Extra Dry Drain Per Second = 6` (kuru oranın iki katı). Oynanışla dengelenecek başlangıç değeridir. Görsel olarak yalnızca renkle değil doku/şekil ile de ayrılması gerekir (T43).

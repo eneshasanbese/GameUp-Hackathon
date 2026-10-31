@@ -8,10 +8,11 @@ PhysicsControl, güncel CircleCollider2D'nin gerçek temaslarını ve aşağı d
 
 - **Dry Ground Layer:** `Ground-Dry` (layer 6).
 - **Wet Ground Layer:** `Ground-Wet` (layer 7).
+- **Extra Dry Ground Layer:** `Ground-Extra-Dry` (layer 10). Atanmazsa Play başında uyarı verilir; bu zemin yer sayılmaz.
 - **Ground Check Distance:** Tam boyda en fazla `0.15`; oyuncu küçüldükçe tarama mesafesi aynı oranda kısalır.
 - **Maximum Ground Angle:** `60` derece; dik duvar ve tavan destek sayılmaz.
 
-`dryGrounded` ve `wetGrounded` destek collider'ının zemin türünü, `grounded` ise ikisinin birleşimini verir. Yakın destek seçilir ve yüzey normali `GroundNormal` üzerinden okunabilir. Eğimde hız bu yüzeyin teğetini izler; tuş bırakıldığında eğimden kalan yukarı hız da durur. Yerdeyken yerçekimi kuvveti dengelenerek rampada boşta kayma önlenir. Gerçek zıplamada zemine yapışma devre dışıdır; kenardan çıkıldığında normal düşüş sürer. Seçili Player'ın güncel collider'ı ve tarama alanı Scene görünümünde çizilir. Eski sabit ray başlangıcı artık kullanılmaz; `groundRayDistance` verisi `groundCheckDistance` alanına taşınır.
+`dryGrounded`, `wetGrounded` ve `extraDryGrounded` destek collider'ının zemin türünü, `grounded` ise üçünün birleşimini verir. Aynı anda yalnızca biri doğrudur; nemli maske önceliklidir, hiçbir maskeye uymayan destek kuru sayılır. Yakın destek seçilir ve yüzey normali `GroundNormal` üzerinden okunabilir. Eğimde hız bu yüzeyin teğetini izler; tuş bırakıldığında eğimden kalan yukarı hız da durur. Yerdeyken yerçekimi kuvveti dengelenerek rampada boşta kayma önlenir. Gerçek zıplamada zemine yapışma devre dışıdır; kenardan çıkıldığında normal düşüş sürer. Seçili Player'ın güncel collider'ı ve tarama alanı Scene görünümünde çizilir. Eski sabit ray başlangıcı artık kullanılmaz; `groundRayDistance` verisi `groundCheckDistance` alanına taşınır.
 
 Sahnedeki Player `Player`, ana platform `Ground-Dry`, nemli şerit `Ground-Wet` layer'ındadır. Zeminlerde ayrıca script bulunmaz.
 
@@ -24,7 +25,8 @@ WaterMeter tek bir 0–100 su değeri tutar:
 | Yerde hareketsiz | 0 |
 | Kuru zeminde gerçek yatay ilerleme | 3 birim/saniye |
 | Islak zeminde gerçek yatay ilerleme | 1 birim/saniye |
-| Havada | 3 birim/saniye |
+| Çok kuru zeminde gerçek yatay ilerleme | 6 birim/saniye (`Extra Dry Drain Per Second`) |
+| Havada | 3 birim/saniye (kuru oran; zeminin katsayısı havaya taşınmaz) |
 | Kaynağa temas | 100'e dolum |
 
 Kuru zeminde su daha hızlı azalır ve damla daha hızlı küçülür; ıslak zeminde ikisi de yavaştır. 31 Ekim kullanıcı kararlarına göre görsel ve collider kalan suya göre birlikte 1–0.45 aralığında küçülür; yürüme/hava hızı ve zıplama kalkış hızı mevcut ability'lerin Inspector çarpanlarıyla artar. Kök obje ölçeği değişmez. Duvara basılı tutmak yerine gerçek yatay ilerleme ölçülür. Önceki sabit collider/hız/zıplama kurallarının yerini [güncel kararlar](kararlar.md) almıştır.
