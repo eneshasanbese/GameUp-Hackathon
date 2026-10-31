@@ -1,0 +1,32 @@
+KÖZ PÜSKÜRTEN / EMBER SPITTER + ATEŞ TOPU
+
+Düşman için yüklenen 1080 x 1080 JPG kullanıldı. Arka plan kaldırılıp gövde ve başa bölgesel deformasyon ve sıcaklık renk düzenlemesi uygulandı. Bu düşman animasyonu her karesi sıfırdan yeniden çizilmiş cel animasyonu değildir. Kaynak JPG izleri kalabilir.
+Ateş topu ayrı geometrik eğrilerle yüksek çözünürlükte çizildi. Düşman karelerine gömülmedi. Sağa bakar; yuvarlak çekirdek sağda, kısa kuyruk solda.
+
+KLİPLER
+EmberSpitter/Idle: 12 kare, 12 FPS, Loop açık; nefes.
+EmberSpitter/Shoot: 16 kare, 16 FPS, Loop kapalı; başı geriye alarak hazırlık, közlerin parlaması, ani geri tepme ve toparlanma.
+EmberFireball/Fly: 12 kare, 12 FPS, Loop açık; kuyruk salınımı. Mermi yerinde oynar; uçuş hareketi kodla verilmelidir.
+Atış tetikleme: sıfır tabanlı Shoot_07 (8. kare), 16 FPS'de klip başlangıcından 0.4375 saniye sonra. Ardından Shoot_08'de geri tepme başlar. Projectile spawn ve hasar kodu dahil değildir.
+
+BOYUTLAR
+1080 x 1080 PNG ana kareler.
+256 x 256 PNG kareler + 4 sütunlu sheetler; 256 PPU.
+128 x 128 PNG kareler + 4 sütunlu sheetler; 128 PPU.
+İki Unity sürümünün tuvali 1 dünya birimi genişliğindedir. 256 sürümü 128 PPU yaparsanız boyut ikiye katlanır.
+
+UNITY
+İstenen Unity_128 veya Unity_256 klasörünü .meta dosyalarıyla Assets'e taşıyın. Sheetleri genişletip kareleri numara sırasıyla kliplere ekleyin.
+Meta tanınmazsa: Sprite (2D and UI), Multiple, hücre seçilen boyut, Filter Bilinear, Compression None, MipMaps kapalı.
+Düşman pivot: (0.5,0.16). Ateş topu pivot: (0.625,0.5), yuvarlak çekirdeğe yakın.
+Ateş topu için CircleCollider2D başlangıç önerisi: tuval dünya genişliği 1 iken yarıçap yaklaşık 0.14; görselle sahnede kontrol edin. Kuyruğu collider'a katmayın.
+
+AĞIZ ÇIKIŞ NOKTASI
+Shoot_07 karesinde 1080 tuvalde üst-sol başlangıçlı yaklaşık piksel: (805,377).
+Normalized alt-sol: (0.745370,0.650926).
+Düşman pivotuna göre, tuval genişliği 1 world unit ve ölçek 1 iken local offset: (0.245370,0.490926).
+MuzzlePoints.json tüm Shoot kareleri için tahmini koordinatları içerir. Noktalar deformasyon alanından hesaplandı; Unity içinde görsel hizalama kontrol edilmelidir. Yatay flip kullanırken çıkış noktasının X ofsetini de ters çevirin.
+
+SINIRLAR
+Hazır .anim, Animator Controller, prefab, collider veya hareket/atış scripti yoktur. .meta dosyaları yalnızca sheetler içindir. Unity içinde test edilmedi.
+GIF'ler yalnızca önizlemedir; oyunda kayıpsız şeffaf PNG'leri kullanın.

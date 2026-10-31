@@ -1,5 +1,25 @@
 # Kararlar
 
+## Köz Ocağı — sürekli HeatAura
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı SlimeFire_Patrol prefabındaki sürekli ısı animasyonunun Köz Ocağı'nda da kullanılmasını istedi.
+
+**Uygulama:** Aynı HeatAura klibi/controller'ı oyuncu uzaktayken de döner. Görsel mevcut etki alanına uyar; geniş alanda rüzgâr/çevre okunabilirliği için alfa 0.35'tir. Ocağın mevcut su kaybı ve yatay çekimi korunur; ek ısı çarpanı veya hasar alanı oluşturulmaz. [Bağlantılar ve doğrulama](koz-ocagi.md#sürekli-heataura--31-ekim-2026).
+
+## Köz Ocağı — menzile bağlı emiş rüzgârı
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı önerilen emiş yaklaşımından sonra hazır `KozOcagi/SuctionWind/` setini vererek eklenmesini istedi.
+
+**Uygulama:** Hafif Idle sürekli; ana emiş yalnızca gerçek çekim hedefi varken döner, yakınlaşınca güçlü klibe geçer. Akış oyuncunun bulunduğu taraftan ağıza doğrudur ve yatay çekimi gösterir. Çıkışta mevcut faz alfa ile söner. Mevcut ayarlı menzil/çekim/su değerleri korunur. [Bağlantılar, ayarlar ve doğrulama](koz-ocagi.md#suctionwind--31-ekim-2026).
+
+## Köz Püskürten — sabit atıcı ve tek ateş topu
+
+**Sonraki açık kullanıcı kararı — 31 Ekim 2026:** Idle'ın hareket etmediğinin kontrolü ve diğer yerdeki düşmanlar gibi yerçekimi istendi. Önceki tek kare/Animator'sız gövde yerine hazır 12 karelik Idle döngüsü bağlanır. Atıcı Dynamic Rigidbody2D ile düşer; X ve dönüş kilitlidir. Ayrı TerrainBody yalnızca zemin/sınırlarla çarpışır, gövde hasarı/oyuncuyu itme eklenmez. Bu karar önceki tamamen yerinde sabit ve fizik gövdesiz uygulamayı bu kapsamda değiştirir.
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı EmberPack/EmberSpitter/EmberFireball klasörlerini ve ayrıntılı davranış/kabul metnini verdi; iki prefab ve kontrollü test alanının uygulanmasını istedi. Bu açık talep ilgili dar düşman kapsamını onaylar.
+
+**Karar:** Atıcı hareket etmez; 360° görüş/menzil kontrolü, okunabilir hazırlık, fırlatma anındaki oyuncu merkezine tek düz mermi ve sabit cooldown kullanır. Hasar yalnızca mermiden sabit su puanı olarak gelir; mevcut WaterMeter ve flash dokunulmazlığı kullanılır. Gövde teması, çekim/ısı, düşman canı, oyuncu saldırısı ve güdümlü/alan etkili mermi eklenmez. Verilen iki tek kareyle çalışır; yeni paket veya Animator zorunluluğu yoktur. [Dosyalar, ayarlar ve doğrulama](ember-spitter.md).
+
 ## HapsirikKoz — duman HeatAura ve alfa geçişi
 
 **Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı duran/devriye HapsirikKoz'un ortak `HapsirikKoz_Smoke` prefabına Slime ile aynı HeatAura tasarımını, oluşurken 0→1 ve biterken 1→0 alfa geçişiyle eklemeyi istedi.

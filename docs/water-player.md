@@ -22,6 +22,8 @@ Sahnedeki Player `Player`, ana platform `Ground-Dry`, nemli şerit `Ground-Wet` 
 
 WaterMeter tek bir 0–100 su değeri tutar:
 
+31 Ekim 2026 Köz Püskürten mermisi, mevcut `KnockbackAbility.TryWaterHit` dokunulmazlık kontrolünün ardından bu sayaca tek `Consume(damageWaterPoints)` uygular. Başlangıç hasarı 10 **sabit su puanıdır**; yüzde, saniyelik kayıp veya ısı çarpanı değildir. Ölüm/yeniden doğma yine WaterMeter içindedir; ikinci sayaç yoktur. [Atıcı ve kabul testleri](ember-spitter.md).
+
 | Durum | İlk deneme değeri |
 |---|---|
 | Nemli zeminde hareketsiz | 0.25 birim/saniye |

@@ -42,6 +42,43 @@ public sealed class EmberSuctionEnemy : MonoBehaviour
     private Vector2 Origin => rangeOrigin != null ? (Vector2)rangeOrigin.position : (Vector2)transform.position;
     private Vector2 Mouth => pullPoint != null ? (Vector2)pullPoint.position : Origin;
 
+    public Vector2 MouthPosition => Mouth;
+    public bool IsWindEnabled => isActiveAndEnabled && area != null && area.enabled;
+
+    // Visuals read the real suction targets; they never run a second detection or damage path.
+    public bool TryGetWindTarget(out Vector2 position, out float proximity, out float ramp)
+    {
+        position = Mouth;
+        proximity = ramp = 0f;
+        if (!IsWindEnabled || maxPullStrength <= 0f)
+            return false;
+
+        float nearest = effectRadius;
+        bool found = false;
+        foreach (var entry in targets)
+        {
+            Rigidbody2D body = entry.Key;
+            Target target = entry.Value;
+            if (!target.active || !IsPlayable(body, target))
+                continue;
+            Vector2 centre = body.worldCenterOfMass;
+            float distance = Vector2.Distance(Origin, centre);
+            if (distance >= nearest || Mathf.Abs(Mouth.x - centre.x) <= horizontalDeadZone)
+                continue;
+            nearest = distance;
+            position = centre;
+            proximity = Mathf.Clamp01((effectRadius - distance) / (effectRadius - innerFullEffectRadius));
+            ramp = activationRampDuration > 0f ? Mathf.Clamp01(target.elapsed / activationRampDuration) : 1f;
+            found = true;
+        }
+        return found;
+    }
+
+    private static bool IsPlayable(Rigidbody2D body, Target target)
+        => body != null && body.simulated && target.player != null && target.player.isActiveAndEnabled &&
+            target.physics != null && target.physics.isActiveAndEnabled && target.water != null &&
+            target.water.isActiveAndEnabled && !target.water.IsEmpty && !target.water.IsRespawning;
+
     private void Awake()
     {
         area = GetComponent<CircleCollider2D>();
@@ -121,9 +158,7 @@ public sealed class EmberSuctionEnemy : MonoBehaviour
             Rigidbody2D body = entry.Key;
             Target target = entry.Value;
             float distance = body != null ? Vector2.Distance(Origin, body.worldCenterOfMass) : float.PositiveInfinity;
-            bool playable = body != null && body.simulated && target.player != null && target.player.isActiveAndEnabled &&
-                target.physics != null && target.physics.isActiveAndEnabled && target.water != null &&
-                target.water.isActiveAndEnabled && !target.water.IsEmpty && !target.water.IsRespawning && Time.timeScale > 0f;
+            bool playable = IsPlayable(body, target) && Time.timeScale > 0f;
             if (!overlappingBodies.Contains(body) || !playable || distance >= effectRadius)
             {
                 RemoveEffect(target);

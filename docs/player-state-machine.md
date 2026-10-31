@@ -25,6 +25,8 @@ Player üzerindeki component ayarları:
 
 ## Knockback ve temas hasarı
 
+31 Ekim 2026 Köz Püskürten eki: `KnockbackAbility.TryWaterHit(float waterPoints)` aynı flash dokunulmazlığını kullanarak sabit mermi hasarını `WaterMeter.Consume` ile bir kez uygular; itiş veya yeni fizik state'i başlatmaz. Mermi/gövde isabetleri aynı korumayı paylaşır. `Player.GameplayStopped`, Player kapanışında hazırlık hedeflerini ve eski mermileri anında iptal etmek için yayımlanır. [Prefab ve test ayrıntıları](ember-spitter.md).
+
 31 Ekim 2026 kullanıcı talebiyle `KnockbackAbility : BaseAbility` ve `PlayerStates.State.Knockback = 3` eklendi. Referans alınan diğer proje dosyasından ayrı knockback durumu, kontrol kilidi ve kübik toparlanma yaklaşımı uyarlandı; bu projede yeni input veya can sistemi kurulmadı. Hasar, kullanıcının devam onayıyla mevcut `WaterMeter.Consume` üzerinden tek seferlik su kaybıdır.
 
 `Assets/Prefabs/Player.prefab` kökündeki **KnockbackAbility** ayarları:

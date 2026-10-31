@@ -41,7 +41,7 @@ Build alırken `ProjectSettings/EditorBuildSettings.asset` ve varsa seçili Buil
 - 31 Ekim 2026 kullanıcı kararlarıyla su azalınca görsel ve `CircleCollider2D` birlikte küçülür; yürüme/hava hızı ve zıplama kalkış hızı Inspector çarpanlarıyla artar. Kök ölçek değişmez. Esneme yalnızca `Visual` üzerindedir; fiziksel boyutu `PhysicsControl`, suya bağlı boyut isteğini `WaterMeter`, hareket çarpanlarını mevcut ability'ler yönetir. Önceki sabit collider/hız/zıplama yönergeleri bu kararlar için geçersizdir; [karar kaydını](docs/kararlar.md) esas al. Zıplama artışı yalnızca kalkışta uygulanır.
 - Su izi geçici görseldir; yeni zemin, bitki, geri toplanabilir su veya yeni kaynak oluşturmaz.
 - Ölüm/yeniden doğma ve kazanma tek kez başlatılır. Kazanınca kontrol ve tüketim durur. Yeniden oyna, son checkpoint yerine bölüm başlangıcını ve tüm oyun durumunu sıfırlar.
-- Düşman, silah, ek bölüm ve diğer kapsam dışı sistemleri göreve ekleme. Suya bağlı collider küçülmesi son kullanıcı kararıyla kapsam içindedir.
+- Düşman, silah, ek bölüm ve diğer kapsam dışı sistemleri göreve ekleme. 31 Ekim 2026 açık kullanıcı talebiyle sabit EmberSpitter ve tek düz ateş topu bu kuralın dar istisnasıdır; gövde hasarı, düşman canı ve oyuncu saldırısı eklenmez ([uygulama](docs/ember-spitter.md)). Suya bağlı collider küçülmesi son kullanıcı kararıyla kapsam içindedir.
 
 ## Mevcut kodla çalışma
 

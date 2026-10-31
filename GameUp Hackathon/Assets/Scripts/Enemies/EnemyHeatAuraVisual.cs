@@ -7,6 +7,7 @@ public sealed class EnemyHeatAuraVisual : MonoBehaviour
 {
     [SerializeField] private CircleCollider2D heatCollider;
     [SerializeField] private EnemyHeatArea heatArea;
+    [SerializeField] private EmberSuctionEnemy suctionSource;
     [Tooltip("Visible diameter of Heat_00 in world units before scaling; excludes its transparent margin.")]
     [SerializeField, Min(0.001f)] private float referenceSpriteDiameter = 202f / 256f;
 
@@ -24,11 +25,15 @@ public sealed class EnemyHeatAuraVisual : MonoBehaviour
             heatCollider = GetComponentInParent<CircleCollider2D>();
         if (heatArea == null)
             heatArea = GetComponentInParent<EnemyHeatArea>();
+        if (suctionSource == null)
+            suctionSource = GetComponentInParent<EmberSuctionEnemy>();
         if (auraRenderer == null)
             return;
 
-        auraRenderer.enabled = heatCollider != null && heatCollider.enabled && heatCollider.isTrigger &&
-            heatArea != null && heatArea.enabled;
+        // The furnace has its own absolute water loss; its aura only follows that source's area.
+        bool sourceEnabled = heatArea != null ? heatArea.isActiveAndEnabled :
+            suctionSource != null && suctionSource.isActiveAndEnabled;
+        auraRenderer.enabled = heatCollider != null && heatCollider.enabled && heatCollider.isTrigger && sourceEnabled;
         if (heatCollider == null || transform.parent != heatCollider.transform)
             return;
 
