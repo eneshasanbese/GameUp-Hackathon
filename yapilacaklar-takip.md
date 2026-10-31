@@ -204,6 +204,6 @@ Ayrıntılar [genel-yapilacaklar.md](genel-yapilacaklar.md) içinde.
 
 - [ ] T49–T55 — Arayüz, ses, kaynak/lisans listesi, final sunumu
   - Ses durumu (31 Ekim 2026): projede `platformerPack/Sounds` altında 10 Kenney efekti var (CC0, `platformerPack/License.txt`); hiçbir sahne/prefab'da `AudioSource` yok. Efekt bağlanacak hazır olaylar: `WaterMeter.RefilledFromSource`, `WaterMeter.Depleted`.
-  - Müzik (T53 kaydı için): "Chill Chiptunes (Collection)", Holizna, CC0, https://opengameart.org/content/chill-chiptunes-collection, `chill_chiptunes.zip` 75,8 MB, **31 Ekim 2026'da indirildi** (zip içinde 8 parça, her biri MP3 + OGG; OGG kullanılacak). Level 1 ve Level 2 için parça seçildi; **projeye henüz eklenmedi.** Eklenince kullanılan parçaların tam dosya adları buraya yazılmalı.
+  - Müzik (T53 kaydı için): "Chill Chiptunes (Collection)", Holizna, CC0, https://opengameart.org/content/chill-chiptunes-collection, `chill_chiptunes.zip` 75,8 MB, **31 Ekim 2026'da indirildi** (zip içinde 8 parça, her biri MP3 + OGG; OGG kullanılacak). Projede `Assets/Audio/Music/`: `music_level_1.ogg` = "01 HoliznaCC0 - Asteroids.ogg", `music_level_2.ogg` = "04 HoliznaCC0 - Level 2.ogg" (zip CRC ile eşleştirildi). İçe aktarma: Streaming, Vorbis, kalite 0.7. `Prefabs/Music.prefab` (Audio Source, Loop, Play On Awake, Volume 0.4; Audio Generator = `music_level_1`). `Level_1`'de Music örneği kayıtlı; `Level_2`'de 1 Kasım 2026 02:21 itibarıyla diskte yok. Oyunda dinlenerek denenmedi.
 - [ ] QA01–QA20 — Son test listesi
 - [ ] D01–D09 — Teslim listesi
