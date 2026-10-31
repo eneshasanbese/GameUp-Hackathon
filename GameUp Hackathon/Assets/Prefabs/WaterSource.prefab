@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5018716521033065577}
   - component: {fileID: 8812795817533960325}
+  - component: {fileID: 1674192052057357061}
   m_Layer: 4
   m_Name: WaterSource
   m_TagString: Untagged
@@ -80,6 +81,21 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.5, y: 0.6}
   m_EdgeRadius: 0
+--- !u!114 &1674192052057357061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3613046458439338343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a264a648d5170b2449f8839f2213d73b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelExit
+  nextSceneName: Level_2
+  fadeDuration: 0.5
+  fadeColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &3657527054987453317
 GameObject:
   m_ObjectHideFlags: 0

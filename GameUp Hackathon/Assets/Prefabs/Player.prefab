@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2766696406659660912}
   - component: {fileID: 916759671138770455}
-  - component: {fileID: 4493359612615557341}
-  - component: {fileID: 6824126062808513584}
+  - component: {fileID: 68561366388920961}
+  - component: {fileID: 6006046248505467192}
   m_Layer: 8
   m_Name: Visual
   m_TagString: Untagged
@@ -94,7 +94,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
---- !u!95 &4493359612615557341
+--- !u!95 &68561366388920961
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
@@ -116,7 +116,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6824126062808513584
+--- !u!114 &6006046248505467192
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

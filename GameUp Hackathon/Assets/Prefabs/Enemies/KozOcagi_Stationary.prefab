@@ -90,9 +90,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   minWaterLossPerSecond: 1
-  maxWaterLossPerSecond: 6
+  maxWaterLossPerSecond: 5
   minPullStrength: 1
-  maxPullStrength: 7.5
+  maxPullStrength: 4
   activationRampDuration: 0.35
   horizontalDeadZone: 0.08
 --- !u!1 &1184158303257667073
@@ -237,7 +237,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage:
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -252,7 +252,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e0cf94d0f30b10246a8cde9b98f8645d, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EmberSuctionWindVisual
   suction: {fileID: 5609342409336308269}
   idleScale: 1.5
@@ -407,7 +407,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage:
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -422,7 +422,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7cddf27b315c72c46841e3521ca66908, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHeatAuraVisual
   heatCollider: {fileID: 253610803097203588}
   heatArea: {fileID: 0}

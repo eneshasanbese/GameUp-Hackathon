@@ -808,14 +808,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: KozOcagi_Stationary
       objectReference: {fileID: 0}
-    - target: {fileID: 5609342409336308269, guid: 57d3e64006607854082b4a1a9cf906e0, type: 3}
-      propertyPath: maxPullStrength
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5609342409336308269, guid: 57d3e64006607854082b4a1a9cf906e0, type: 3}
-      propertyPath: maxWaterLossPerSecond
-      value: 5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1271,7 +1263,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5018716521033065577, guid: d053f8d8484a45747bb6c83fad885d1e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5
+      value: -3.61
       objectReference: {fileID: 0}
     - target: {fileID: 5018716521033065577, guid: d053f8d8484a45747bb6c83fad885d1e, type: 3}
       propertyPath: m_LocalPosition.y
