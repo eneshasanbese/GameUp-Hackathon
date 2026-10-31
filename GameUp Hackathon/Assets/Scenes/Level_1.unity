@@ -3757,6 +3757,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GroundSurface
   surfaceMaterial: 1
+--- !u!1 &1034656362 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3613046458439338343, guid: d053f8d8484a45747bb6c83fad885d1e, type: 3}
+  m_PrefabInstance: {fileID: 464968615}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1034656365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1034656362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a264a648d5170b2449f8839f2213d73b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelExit
+  nextSceneName: Level_2
+  fadeDuration: 0.5
+  fadeColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1001 &464968615
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3812,7 +3832,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3613046458439338343, guid: d053f8d8484a45747bb6c83fad885d1e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1034656365}
   m_SourcePrefab: {fileID: 100100000, guid: d053f8d8484a45747bb6c83fad885d1e, type: 3}
 --- !u!1 &519420028
 GameObject:
