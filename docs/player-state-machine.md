@@ -8,6 +8,8 @@ T09 kapsamı: sağ/sol hareket, tek zıplama, yere temas ve düşüş. Yapı, pa
 
 `Assets/Scenes/Components.unity` sahnesini açıp Play'e bas. A/D veya sol/sağ ok hareket ettirir; Space zıplatır. Yükselirken Space bırakılırsa Y hızı sıfırlanır ve yerçekimiyle düşüş başlar. Havada yön değiştirilebilir. Space basılı tutulduğunda inişte otomatik tekrar zıplanmaz; havada ikinci zıplama yoktur.
 
+`Player.Flip()` yatay girdiye göre `Visual` üzerindeki `SpriteRenderer.flipX` değerini ayarlar: sola giderken çevrilir, sağa giderken düzelir. Yerde ve havada çalışır; girdi sıfırken son yön korunur, Knockback sırasında yön güncellenmez. `Player.FacingRight` güncel görsel yönünü bildirir. SpriteRenderer alt objelerden otomatik bulunur; yeni Inspector bağlantısı gerekmez. Kök dönüşü/ölçeği, collider ve WaterMeter'ın küçülme/esneme değerleri değiştirilmez.
+
 Player üzerindeki component ayarları:
 
 - **GatherInput → Input Actions:** `Assets/PlayerInput.inputactions` bağlıdır. Asset içinde `Player/Move` (Vector2) ve `Player/Jump` (Button) bulunmalı.
@@ -76,7 +78,7 @@ Klipler yalnızca sprite değiştirir; Visual ölçeği/konumu WaterMeter'da kal
 
 ## Kodun düzeni
 
-- `Player`: referansları toplar, `GetComponents<BaseAbility>()` ile aynı objenin ability'lerini bulur ve aktif durumu Update/FixedUpdate üzerinden çalıştırır. Somut ability oluşturmaz; hız, input okuma veya fizik uygulama kodu içermez.
+- `Player`: referansları toplar, `GetComponents<BaseAbility>()` ile aynı objenin ability'lerini bulur ve aktif durumu Update/FixedUpdate üzerinden çalıştırır. GatherInput'ın yatay girdisine göre sprite yönünü günceller. Somut ability oluşturmaz; hız, doğrudan input okuma veya fizik uygulama kodu içermez.
 - `StateMachine`: örnekteki `arrayOfAbilities`, `currentState` ve `previousState` yapısını kullanır. İzin verilen component'ler arasında `ExitAbility` / `EnterAbility` geçişi yapar. Aynı duruma geçiş yeniden çalıştırılmaz.
 - `BaseAbility`: Player tarafından Awake içinde başlatılan ortak component tabanı; input/state/physics referanslarını ve varsa aynı objenin WaterMeter'ını bulur. Ortak düşük su katsayısını tek su değerinden hesaplar.
 - `IdleAbility`: durma, hareket girişini algılama ve boşluğa düşme geçişi.
@@ -92,6 +94,8 @@ Durum davranışları örnekteki gibi Update içinde, fizik işlemleri FixedUpda
 Diğer sistemler `Player.CurrentState` ve `Player.IsGrounded` üzerinden oyuncunun durumunu okuyabilir. Yeni bir durum için BaseAbility türevi bir component oluşturup enum'a ekle ve Circle'a tak. Player component'i ability'yi otomatik bulur.
 
 ## Doğrulama
+
+31 Ekim 2026 yön çevirme düzeltmesi (T09): güncel Player prefab'ı ve oyuncu/su koduyla ayrı Unity 6000.5.0f1 projesinde 19 Play Mode kontrolü geçti. Gerçek Input System klavye olaylarıyla sağ/sol yürüyüş, Move klibinin çevrilmiş hâlde ilerlemesi, Idle ve havada son yönün korunması, havada yön değiştirme/iniş, düşük suda görsel/collider küçülmesi, kök ölçek/dönüşünün korunması, Knockback kilidi/toparlanması, Player kapatıp açma ve yeniden doğma doğrulandı. Asıl sahnede görüntü/oynanış ve build testi yapılmadı.
 
 Component yapısı için Unity 6000.5.0f1 üzerinde 13 Play Mode testi geçti: hareket/zıplama regresyonları, component ayarlarının davranışa etkisi, aynı duruma tekrar geçiş ve ability geçiş izinleri doğrulandı. `Components.unity` Unity Editor ile açılarak altı component, Player referansları, GatherInput'taki input asset'i, Rigidbody2D ve collider bağlantıları da doğrulandı.
 

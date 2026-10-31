@@ -1,0 +1,18 @@
+All sixteen Saw sprites remain in numeric order with a final same-sprite duration anchor
+User's Samples 90 setting and looping are retained
+Every visible sprite change remains at the authored 1/12-second interval
+Native clip length gives the last sprite 83.333ms, matching the other fifteen sprites; native=1,333333
+No transform, physics or additional animation track is introduced
+Repeated dedicated rebuild preserves the correction and the existing clip GUID
+Dedicated Saw rebuild leaves every Slime and Hapsirik animation untouched
+Original failure fixture retains the measured 20.833ms final hold
+Original Animator traverses the numeric sprite sequence without skips
+Saw_Stationary reproduces the original unequal final-frame hold in the real Animator
+Corrected Animator traverses the numeric sprite sequence without skips
+Every complete sprite hold across ten continuous loops is 83.333ms within one measurement tick; ticks=80..81
+Saw_Stationary retains root, visual alignment and collider
+Original Animator traverses the numeric sprite sequence without skips
+Saw_Patrol reproduces the original unequal final-frame hold in the real Animator
+Corrected Animator traverses the numeric sprite sequence without skips
+Every complete sprite hold across ten continuous loops is 83.333ms within one measurement tick; ticks=80..81
+Saw_Patrol retains root, visual alignment and collider

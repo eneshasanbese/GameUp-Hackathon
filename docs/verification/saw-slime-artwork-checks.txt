@@ -1,0 +1,64 @@
+All four prefab and three existing clip GUIDs are preserved
+SawSpin has all new frames while preserving the original loop duration
+SawSpin follows numeric multi-row order with equal frame holds and no closing duplicate
+SawSpin resolves the new 256-pixel sprites at 256 PPU with their prepared pivots
+SawSpin imports at full resolution, uncompressed, Bilinear and without mipmaps
+SawSpin animates only the sprite with no obsolete position curve
+SlimeFireIdle has all new frames while preserving the original loop duration
+SlimeFireIdle follows numeric multi-row order with equal frame holds and no closing duplicate
+SlimeFireIdle resolves the new 256-pixel sprites at 256 PPU with their prepared pivots
+SlimeFireIdle imports at full resolution, uncompressed, Bilinear and without mipmaps
+SlimeFireIdle animates only the sprite with no obsolete position curve
+SlimeFireWalk has all new frames while preserving the original loop duration
+SlimeFireWalk follows numeric multi-row order with equal frame holds and no closing duplicate
+SlimeFireWalk resolves the new 256-pixel sprites at 256 PPU with their prepared pivots
+SlimeFireWalk imports at full resolution, uncompressed, Bilinear and without mipmaps
+SlimeFireWalk animates only the sprite with no obsolete position curve
+Saw_Stationary wires its new preview sprite and existing controller
+Saw_Stationary keeps the saw centred or slime foot anchored without root scaling
+Saw_Stationary preserves the kinematic trigger body and contact hit component
+Saw_Stationary preserves body collider dimensions
+Saw_Stationary preserves stationary or moving behaviour
+Saw_Patrol wires its new preview sprite and existing controller
+Saw_Patrol keeps the saw centred or slime foot anchored without root scaling
+Saw_Patrol preserves the kinematic trigger body and contact hit component
+Saw_Patrol preserves body collider dimensions
+Saw_Patrol preserves stationary or moving behaviour
+Saw_Patrol preserves patrol and chase settings
+SlimeFire_Stationary wires its new preview sprite and existing controller
+SlimeFire_Stationary keeps the saw centred or slime foot anchored without root scaling
+SlimeFire_Stationary preserves the kinematic trigger body and contact hit component
+SlimeFire_Stationary preserves body collider dimensions
+SlimeFire_Stationary preserves its independent heat area and multiplier
+SlimeFire_Stationary preserves stationary or moving behaviour
+SlimeFire_Patrol wires its new preview sprite and existing controller
+SlimeFire_Patrol keeps the saw centred or slime foot anchored without root scaling
+SlimeFire_Patrol preserves the kinematic trigger body and contact hit component
+SlimeFire_Patrol preserves body collider dimensions
+SlimeFire_Patrol preserves its independent heat area and multiplier
+SlimeFire_Patrol preserves stationary or moving behaviour
+SlimeFire_Patrol preserves patrol and chase settings
+Saw_Stationary plays all new frames in order over three real Animator loops
+Saw_Stationary keeps visual alignment, root and physics stable throughout the animation
+Saw_Patrol plays all new frames in order over three real Animator loops
+Saw_Patrol keeps visual alignment, root and physics stable throughout the animation
+SlimeFire_Stationary plays all new frames in order over three real Animator loops
+SlimeFire_Stationary keeps visual alignment, root and physics stable throughout the animation
+SlimeFire_Patrol plays all new frames in order over three real Animator loops
+SlimeFire_Patrol keeps visual alignment, root and physics stable throughout the animation
+Saw follows its patrol with the player outside
+Saw interrupts patrol and chases the actual Player using the new artwork
+Saw returns to its original route after the player leaves
+Saw stationary variant remains stationary while animating
+SlimeFire follows its patrol with the player outside
+SlimeFire interrupts patrol and chases the actual Player using the new artwork
+SlimeFire returns to its original route after the player leaves
+SlimeFire stationary variant remains stationary while animating
+New slime visual alone creates no heat or body hit outside the original areas
+New slime retains its separate heat trigger without a body hit
+Original slime body still gives one 10-water hit and flash
+Leaving the new slime clears the original heat effect
+Saw_Stationary renders visibly with the new artwork
+Saw_Patrol renders visibly with the new artwork
+SlimeFire_Stationary renders visibly with the new artwork
+SlimeFire_Patrol renders visibly with the new artwork

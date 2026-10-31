@@ -1,5 +1,17 @@
 # Kararlar
 
+## Saw — Samples 90 ve eşit döngü birleşimi
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı Saw'ın fazla hızlı döndüğünü ve döngü sonunda takıldığını bildirdi; devam yanıtıyla 15'ten 90'a çıkardığı ayarın Animation penceresindeki **Samples** olduğunu netleştirdi.
+
+**Ölçüm ve düzeltme:** Diskteki klipte 16 sprite anahtarı 1/12 saniye aralıklı, Samples 48, son anahtar 1.25 sn ve bitiş 1.2708334 sn idi. Son sprite yaklaşık 20.833 ms görünürken diğerleri 83.333 ms görünüyordu. Samples 90 korunarak görünür değişimler 12 kare/sn ve toplam süre 16/12 sn yapılır. Native Unity bitişini sabitlemek için aynı son sprite'a bir tutma anahtarı eklenir; ilk sprite yinelenmez. Her iki Saw prefabı ve özel/genel üretici aynı klibi kullanır. Önceki 1/3 sn Saw varsayılanı bu düzeltmeyle aşılmıştır; Slime/HapsirikKoz zamanlamaları değişmez. [Ayarlar ve test kaydı](enemies.md#görseller-ve-yeniden-üretim).
+
+## Saw ve Slime Fire — yeni 256 piksel görseller
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı HapsirikKoz'daki görsel geçişinin iki Saw ve iki SlimeFire prefabına da uygulanmasını istedi. Dosyalar hazır olana kadar inceleme yapıp bekleme talimatının ardından `Saw 1` ve `FireSlime` klasörlerini vererek “başlayabilirsin” dedi.
+
+**Uygulama:** `Saw 1/Unity_256/Patrol.png` ile iki Saw'ın sürekli dönüşü; `FireSlime/Unity_256/Idle.png` ve `Patrol.png` ile Slime'ın duran/yürüyen görselleri. 256×256 kare, 256 PPU, Bilinear, mipmap kapalı, sıkıştırmasız import. Saw'ın yeni 16, Slime'ın yeni 12'şer karesi mevcut 1⁄3, 0.9 ve 0.7 saniyelik döngü sürelerini koruyacak FPS ile oynatılır. Saw'ın ayak pivot'u yalnızca Visual'ın -0.425 Y konumuyla merkez collider'a hizalanır. Slime'ın yeni ortak ayak pivot'uyla Visual sıfırlanır ve eski Y animasyon eğrileri kaldırılır. Hareket/takip, ısı/temas ayarları, kök ölçeği ve mevcut asset GUID'leri korunur. Yeni üretim çok satırlı sheet'lerde ad sırasını kullanır. [Ayarlar ve doğrulama](enemies.md#görseller-ve-yeniden-üretim).
+
 ## Her zeminde bekleme tüketimi ve bağımsız malzeme
 
 **Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı Player ve Player prefab'ı için dururken de su/can kaybı istedi. Açık sıra: çimde bekleme < kuruda bekleme < çimde yürüme < ekstra kuruda bekleme < kuruda yürüme < ekstra kuruda yürüme. Devam sorusuna “Evet, malzeme ve kuruluk bağımsız olsun” yanıtını verdi; kum, çimen ve siyah taş tek bir kuruluk durumuna sabitlenmez.

@@ -103,7 +103,7 @@ Gri kutu prototip, nihai resim beklemeden basit şekillerle oyunun tamamlanabile
 ### Hareket ve kamera
 
 - [ ] **T08 — Oyuncu prefab’ını kur.** Fizik bileşenlerini kök objede, `SpriteRenderer` bileşenini `Visual` alt objesinde tut. İlk prototipte çarpışma kutusu sabit olsun.
-- [ ] **T09 — Yürüme ve zıplamayı çalıştır.** Sağ-sol, yere basma kontrolü, zıplama ve düşme test edilsin. Mevcut çalışan kodu sırf farklı mimari uğruna yeniden yazma.
+- [ ] **T09 — Yürüme ve zıplamayı çalıştır.** Sağ-sol, yere basma kontrolü, zıplama ve düşme test edilsin. Sprite yatay girdiye göre yerde/havada çevrilsin; girdi yokken son yön korunsun. Mevcut çalışan kodu sırf farklı mimari uğruna yeniden yazma.
 - [ ] **T10 — Kamerayı ayarla.** İlerideki iniş platformu görülsün; karakter ekran dışında kaybolmasın. İlk testte sabit kamera da yeterli olabilir.
 - [ ] **T11 — Yere düşme sınırı koy.** Boşluğa düşen oyuncu sonsuza kadar düşmesin; yeniden deneme akışına girsin.
 

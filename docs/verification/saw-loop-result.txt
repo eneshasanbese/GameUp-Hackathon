@@ -1,0 +1,1 @@
+PASS: Unity 6000.5.0f1; 18 checks (8 asset, 10 Play Mode). Original timing defect reproduced; both real prefabs sampled through ten corrected loops at 960 samples/sec. Main scenes and exported build not tested.
