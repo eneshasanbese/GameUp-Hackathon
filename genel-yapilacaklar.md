@@ -246,11 +246,11 @@ Bu liste uygulama talimatı değildir. Her ek fikir tamamlanma süresini ve test
 | Kolay tüketim ayarı | Daha erişilebilir deneme | Orta; temel denge oturduktan sonra |
 | Geçici yeşil görsel iz | Umut/hayat teması | Hikâye onayı gerekir; başka canlı bitki üretip “son fidan” fikrini çeliştirmesin |
 
-**Şimdilik dışarıda:** İkinci bölüm, hareket eden platformlar, ayrıca tasarlanmış dar geçit/puzzle mekaniği, dinamik gölge sistemi, diğer düşmanlar, silah, karmaşık su fiziği, envanter, kayıt/yükleme ve çok oyunculu mod. Suya bağlı collider küçülmesi ve hareket/zıplama çarpanları 31 Ekim kullanıcı kararlarıyla kapsam içindedir. Aynı günkü açık kullanıcı talepleriyle Saw, Slime Fire ve HapsirikKoz'un duran/git-gel türleri, Slime yakınlık erime çarpanı, HapsirikKoz'un rastgele bekleme/cooldown ile hapşırması ve birkaç saniyelik hasarlı duman alanı kapsama alındı. Duman görseli/animasyonu bekliyor; doğrudan temas, ileride Player knockback eklenecek TODO'dur ([karar](docs/kararlar.md), [prefab ayarları](docs/enemies.md)).
+**Şimdilik dışarıda:** İkinci bölüm, hareket eden platformlar, ayrıca tasarlanmış dar geçit/puzzle mekaniği, dinamik gölge sistemi, diğer düşmanlar, silah, karmaşık su fiziği, envanter, kayıt/yükleme ve çok oyunculu mod. Suya bağlı collider küçülmesi ve hareket/zıplama çarpanları 31 Ekim kullanıcı kararlarıyla kapsam içindedir. Aynı günkü açık kullanıcı talepleriyle Saw, Slime Fire ve HapsirikKoz'un duran/git-gel türleri, Slime yakınlık erime çarpanı, HapsirikKoz'un rastgele bekleme/cooldown ile hapşırması ve birkaç saniyelik hasarlı duman alanı kapsama alındı. Sonraki açık taleple altı düşman gövdesine knockback, Inspector'dan ayarlı tek su kaybı ve birkaç saniyelik hasar karesi/flash eklendi. Flash yeni gövde darbelerini engellerken ısı/duman tüketimi sürer; bu geniş alanlar knockback tetiklemez. Duman görseli/animasyonu bekliyor ([karar](docs/kararlar.md), [prefab ayarları](docs/enemies.md)).
 
 ## Son test kontrol listesi
 
-- [ ] **QA01:** Isı/duman dışında yerde hiç hareket etmeden bekleyince su aynı kalıyor; Slime Fire'ın etkin ısı alanı veya HapsirikKoz dumanında dururken su azalıyor; alandan çıkınca veya geçici dumanın süresi dolunca tekrar duruyor.
+- [ ] **QA01:** Isı/duman ve düşman gövde teması dışında yerde hiç hareket etmeden bekleyince su aynı kalıyor; Slime Fire'ın etkin ısı alanı veya HapsirikKoz dumanında dururken su azalıyor; alandan çıkınca veya geçici dumanın süresi dolunca tekrar duruyor. Gövde darbesi tek su kaybı üretir; flash yeni gövde darbelerini engeller.
 - [ ] **QA02:** Normal zeminde yürüyüşte tüketim var; nemli zeminde daha düşük.
 - [ ] **QA03:** Yalnızca dikey zıplarken ve düşerken normal tüketim var.
 - [ ] **QA04:** Zeminden ayrılınca nemli zemin katsayısı havaya taşınmıyor.

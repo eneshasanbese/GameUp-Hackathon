@@ -34,6 +34,8 @@ public class Player : MonoBehaviour
     {
         gatherInput.DisablePlayerMap();
         stateMachine.ExitCurrentState();
+        foreach (BaseAbility ability in playerAbilities)
+            ability.OnPlayerDisabled();
     }
 
     private void Update()

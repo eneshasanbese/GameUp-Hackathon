@@ -1,0 +1,25 @@
+KÖZ OCAĞI — IDLE / HAVA ÇEKME
+
+İÇERİK
+Masters_1080: 1080 x 1080 şeffaf PNG ana kareler.
+Unity_256: 256 x 256 kareler ve dilimleme metadatalı sprite sheetler, PPU 256.
+Unity_128: 128 x 128 kareler ve dilimleme metadatalı sprite sheetler, PPU 128.
+İki Unity sürümünün tuval dünya boyutu aynıdır. 256 sürümünü 128 PPU kullanırsanız dünya boyutu iki katına çıkar.
+
+ANİMASYONLAR
+Idle: 8 kare, önerilen hız 8 FPS, Loop Time açık.
+Inhale: 12 kare, önerilen hız 12 FPS. Başlangıç, kuvvetlenme, zirve ve sakinleşme içerir. Sürekli nefes döngüsü için Loop Time açık; tek çekim hareketi için kapalı kullanılabilir.
+Inhale_05 ve Inhale_06: çekimin zirvesi. Oyun mekaniği ve efekt tetiklemeleri pakette yoktur.
+Hava çizgileri, parçacıklar, ateş dalgası dahil değil.
+
+UNITY
+Seçtiğiniz Unity_128 veya Unity_256 klasörünü PNG ve .meta dosyaları birlikte olacak şekilde Assets'e kopyalayın. Her ikisini birden kullanmak gerekli değil.
+Idle.png ve Inhale.png altındaki sprite'ları sayısal sırayla ayrı Animation kliplerine ekleyin. .anim ve Animator Controller dahil değildir.
+Meta uyumsuzluğu halinde Sprite (2D and UI), Multiple, hücre boyutu seçtiğiniz çözünürlük, PPU aynı sayı, pivot Custom (0.5, 0.15833333), Filter Bilinear, Mip Maps kapalı, Compression None. Okuma sırası soldan sağa, yukarıdan aşağıya.
+Frames klasörlerindeki tek PNG'ler alternatif teslimdir; önceden ayarlanmış meta yalnızca sheetlere eklenmiştir.
+
+KALİTE / SINIRLAR
+Kaynak JPG 1080 x 1080 idi. Beyaz arka plan kaldırıldı ve çıktı kayıpsız PNG olarak kaydedildi; kaynak JPEG'in mevcut sıkıştırma izleri ortadan kaldırılamaz.
+Ana kareler küçük karelerden büyütülmedi. Küçük sürümler ana karelerden türetildi. 128 sürüm doğal olarak daha az ayrıntı içerir.
+Bu paket yeniden çizilmiş cel animasyonu değil; kaynak görüntüye bölgesel deformasyon ve köz rengi düzenlemesi uygulanmış 2D animasyon geçişidir. Taş tabanın alt bölgesi sabit tutulmuştur. Göz kırpma eklenmemiştir.
+Unity içinde test edilmemiştir. Sprite dilimleme ve pivotu kendi sürümünüzde kontrol edin.

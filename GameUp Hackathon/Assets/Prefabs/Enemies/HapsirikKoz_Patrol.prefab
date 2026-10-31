@@ -128,6 +128,7 @@ GameObject:
   - component: {fileID: 4876123381591969478}
   - component: {fileID: 8653280212418976596}
   - component: {fileID: 8505730809760640802}
+  - component: {fileID: 2799230104771242221}
   m_Layer: 0
   m_Name: HapsirikKoz_Patrol
   m_TagString: Untagged
@@ -257,3 +258,15 @@ MonoBehaviour:
   speed: 1.5
   bodyVisual: {fileID: 6348192947756846842}
   faceMovement: 1
+--- !u!114 &2799230104771242221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5543656831144603662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2225a4fdc47ec86419b839442e5fefb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContactKnockback

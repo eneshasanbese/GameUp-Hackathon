@@ -30,6 +30,8 @@ WaterMeter tek bir 0–100 su değeri tutar:
 | Havada | 3 birim/saniye (kuru oran; zeminin katsayısı havaya taşınmaz) |
 | Kaynağa temas | 100'e dolum |
 
+Kullanıcının knockback talebiyle kabul edilen düşman gövde darbesi ayrıca tek seferlik `WaterMeter.Consume` çağrısıyla su düşürür; varsayılan miktar Player'ın `KnockbackAbility → Contact Water Loss` alanında `10`'dur. Flash süresince yeni gövde darbeleri reddedilir; ısı/dumanın süreli tüketimi devam eder. Ayrıntılar [knockback belgesinde](player-state-machine.md#knockback-ve-temas-hasarı).
+
 HapsirikKoz'un hapşırma dumanı, Slime Fire ile aynı `EnemyHeatArea`/su çarpanı sistemini kullanır. Geçici alan varsayılan 3 saniyede yok olur; içinden çıkınca veya süre dolunca çarpan kalkar. Örtüşen alanlar çarpılmaz; en yüksek çarpan geçerlidir. Ayarlar ve zamanlama [düşman belgesindedir](enemies.md#hapsirikkoz-hapşırma-döngüsü).
 
 Kuru zeminde su daha hızlı azalır ve damla daha hızlı küçülür; ıslak zeminde ikisi de yavaştır. 31 Ekim kullanıcı kararlarına göre görsel ve collider kalan suya göre birlikte 1–0.45 aralığında küçülür; yürüme/hava hızı ve zıplama kalkış hızı mevcut ability'lerin Inspector çarpanlarıyla artar. Kök obje ölçeği değişmez. Duvara basılı tutmak yerine gerçek yatay ilerleme ölçülür. Önceki sabit collider/hız/zıplama kurallarının yerini [güncel kararlar](kararlar.md) almıştır.

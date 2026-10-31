@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 6746680754289791890}
   - component: {fileID: 2497285578069972097}
   - component: {fileID: 5969134430943223080}
+  - component: {fileID: 8733031624878948677}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -286,6 +287,9 @@ MonoBehaviour:
   wetGroundLayer:
     serializedVersion: 2
     m_Bits: 128
+  extraDryGroundLayer:
+    serializedVersion: 2
+    m_Bits: 0
   groundCheckDistance: 0.15
   maximumGroundAngle: 60
 --- !u!114 &6624425716347783292
@@ -351,16 +355,38 @@ MonoBehaviour:
   currentWater: 100
   dryDrainPerSecond: 3
   wetDrainPerSecond: 1
+  extraDryDrainPerSecond: 6
   minimumGroundSpeed: 0.05
   bodyVisual: {fileID: 916759671138770455}
-  minimumScale: 0.45
   recoverySpeed: 12
   trail: {fileID: 2964806308830113821}
+  minimumScale: 0.45
   waterSourceLayer:
     serializedVersion: 2
     m_Bits: 16
   evaporationDuration: 0.3
   fallLimit: -12
+--- !u!114 &8733031624878948677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6087951766205847242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f29b7271640eb3a40ae8f600c2dc02df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KnockbackAbility
+  isPermitted: 1
+  force: {x: 6, y: 5}
+  controlLockDuration: 0.2
+  recoveryDuration: 0.3
+  recoveryAirspeed: 4
+  contactWaterLoss: 10
+  flashDuration: 2
+  flashInterval: 0.1
+  bodyVisual: {fileID: 916759671138770455}
 --- !u!1 &9153322777849959660
 GameObject:
   m_ObjectHideFlags: 0

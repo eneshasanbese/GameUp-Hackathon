@@ -12,7 +12,9 @@
 
 31 Ekim 2026 ısı hasarı düzeltmesi (T14/QA01): kullanıcının yeni kararıyla etkin Slime Fire ısısında yerde durmak da su kaybettiriyor; ısı dışında durmak ücretsiz. Ayrı Unity projesinde gerçek prefablarla 27 Play Mode kontrolü geçti: kuru/nemli duruş ve yürüyüş tüketimi, alan çıkışı/kapatma, çarpan 1, örtüşme, farklı fizik adımları ve ısıdan ölüm/yeniden doğma. Asıl sahne/build testi bekliyor ([kayıt](docs/enemies.md)).
 
-- [ ] Düşmanlarla doğrudan temas: Player knockback eklendikten sonra bağlanacak (kullanıcının açık TODO kararı).
+- [x] Düşmanlarla doğrudan temas: sonraki kullanıcı talebiyle Player KnockbackAbility ve altı gövde trigger'ı bağlandı; 13 asset ve 36 Play Mode kontrolü ayrı Unity projesinde geçti. Asıl sahnede his/denge ve build testi bekliyor ([kayıt](docs/player-state-machine.md#knockback-ve-temas-hasarı)).
+
+31 Ekim 2026 knockback: ayrı ability/state, düşmandan uzağa itiş, kısa kontrol kilidi/kübik toparlanma, Inspector'dan ayarlanabilir temas su kaybı (10) ve 2 saniye death_01 karesiyle flash eklendi. Flash yeni gövde darbelerini engeller; ısı/duman tüketimi sürer. Player ve altı düşman prefabı bağlıdır; mevcut sahne değişiklikleri korundu. Ayrı Unity 6000.5.0f1 projesinde 49 kontrol geçti; doğrulanan asset'ler gerçek meta/GUID'lerle projeye aktarıldı. Ana sahne hissi ve build testi bekliyor ([ayarlar ve testler](docs/player-state-machine.md#knockback-ve-temas-hasarı)).
 
 31 Ekim 2026 HapsirikKoz ek kapsamı: duran/devriye prefabları, Idle/Sneeze animasyonları ve kullanıcının istediği rastgele 1–5 saniye bekleme → tam hapşırma → rastgele 2–3 saniye cooldown döngüsü eklendi. Her tur cooldown sonrası yeni bekleme seçilir; aralıklar Inspector'dan değiştirilebilir. Ayrı Unity 6000.5.0f1 projesinde 18 asset ve 25 Play Mode kontrolü geçti; test edilmiş asset'ler gerçek meta dosyalarıyla projeye aktarıldı. Asıl sahnede yerleştirme/görüntü ve build testi bekliyor ([ayarlar ve test kaydı](docs/enemies.md)).
 

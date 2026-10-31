@@ -209,6 +209,7 @@ GameObject:
   - component: {fileID: 1194680560081262385}
   - component: {fileID: 3081094511278682681}
   - component: {fileID: 743375260538449272}
+  - component: {fileID: 2671934282921404439}
   m_Layer: 0
   m_Name: SlimeFire_Patrol
   m_TagString: Untagged
@@ -322,3 +323,15 @@ MonoBehaviour:
   speed: 1.5
   bodyVisual: {fileID: 663034450825811311}
   faceMovement: 1
+--- !u!114 &2671934282921404439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8232203703521971436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2225a4fdc47ec86419b839442e5fefb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContactKnockback

@@ -34,6 +34,7 @@ public abstract class BaseAbility : MonoBehaviour
 
     public virtual void EnterAbility() { }
     public virtual void ExitAbility() { }
+    public virtual void OnPlayerDisabled() { }
     public virtual void ProcessAbility() { }
     public virtual void ProcessFixedAbility() { }
     public virtual void UpdateAnimator() { }

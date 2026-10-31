@@ -12,6 +12,7 @@ public sealed class PlayerAnimation : MonoBehaviour
     private Animator animator;
     private Player player;
     private WaterMeter water;
+    private KnockbackAbility knockback;
     private bool wasActive;
 
     private void Awake()
@@ -19,6 +20,7 @@ public sealed class PlayerAnimation : MonoBehaviour
         animator = GetComponent<Animator>();
         player = GetComponentInParent<Player>();
         water = GetComponentInParent<WaterMeter>();
+        knockback = GetComponentInParent<KnockbackAbility>();
     }
 
     private void OnEnable()
@@ -52,13 +54,17 @@ public sealed class PlayerAnimation : MonoBehaviour
         }
 
         wasActive = true;
-        animator.SetInteger(StateParameter, (int)player.CurrentState);
+        bool hitVisual = knockback != null && knockback.IsFlashing;
+        if (hitVisual)
+            animator.ResetTrigger(HealParameter);
+        animator.SetInteger(StateParameter, (int)(hitVisual ? PlayerStates.State.Knockback : player.CurrentState));
     }
 
     private void PlayHeal()
     {
         if (player != null && player.isActiveAndEnabled && animator.isActiveAndEnabled &&
-            !water.IsRespawning)
+            !water.IsRespawning && (knockback == null || !knockback.IsFlashing) &&
+            player.CurrentState != PlayerStates.State.Knockback)
             animator.SetTrigger(HealParameter);
     }
 }

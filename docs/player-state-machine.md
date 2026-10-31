@@ -19,9 +19,34 @@ Player üzerindeki component ayarları:
 - **JumpAbility → Low Water Boost:** Low Water Air Speed Multiplier=1.4, Low Water Jump Multiplier=1.1; hava hızı ve kalkış hızı ayrı ayarlanır.
 - **Ability → Is Permitted:** ilgili duruma geçiş izni.
 
-`Components.unity` sahnesindeki Player'a `Player`, `GatherInput`, `PhysicsControl`, `IdleAbility`, `MoveAbility` ve `JumpAbility` component'leri bağlıdır. Player referansları ve input asset'i sahnede ayarlanmıştır. Player Inspector'ında hareket veya zıplama ayarı bulunmaz. Su miktarı, görseller ve kaynaklar [su damlası prototipi belgesinde](water-player.md) anlatılır.
+## Knockback ve temas hasarı
 
-Başka bir Circle'a Player eklemek GatherInput, PhysicsControl, Rigidbody2D ve CircleCollider2D gereksinimlerini ekler. Ayrıca IdleAbility, MoveAbility ve JumpAbility component'lerini ekleyip GatherInput'a Input Actions asset'ini bağla. Rigidbody2D Dynamic ve Gravity Scale pozitif olmalı. Zeminde trigger olmayan Collider2D bulunmalı.
+31 Ekim 2026 kullanıcı talebiyle `KnockbackAbility : BaseAbility` ve `PlayerStates.State.Knockback = 3` eklendi. Referans alınan diğer proje dosyasından ayrı knockback durumu, kontrol kilidi ve kübik toparlanma yaklaşımı uyarlandı; bu projede yeni input veya can sistemi kurulmadı. Hasar, kullanıcının devam onayıyla mevcut `WaterMeter.Consume` üzerinden tek seferlik su kaybıdır.
+
+`Assets/Prefabs/Player.prefab` kökündeki **KnockbackAbility** ayarları:
+
+| Alan | Varsayılan | Etki |
+|---|---|---|
+| Force | `(6, 5)` | Düşmandan uzağa yatay ve yukarı başlangıç hızı |
+| Control Lock Duration | `0.2` s | Input'un darbeyi kesemediği başlangıç süresi |
+| Recovery Duration | `0.3` s | Hava kontrolünün kübik olarak geri geldiği süre |
+| Recovery Airspeed | `4` | Toparlanma sırasındaki yatay hedef hız |
+| Contact Water Loss | `10` | Kabul edilen her gövde darbesindeki tek su kaybı |
+| Flash Duration | `2` s | Yanıp sönme ve yeni gövde darbelerine karşı koruma |
+| Flash Interval | `0.1` s | Görünür/gizli faz aralığı |
+| Body Visual | `Visual` SpriteRenderer | Hazır prefab bağlantısı |
+
+Darbe yönü oyuncu ve kaynak konumlarından bulunur; merkezler çakışırsa input'un tersine veya giriş yokken sağa itilir. Kuvvet mevcut state machine üzerinden FixedUpdate'te bir kez uygulanır; yukarı hız gerçek zıplama gibi zemin yapışmasını keser. Space basma/bırakma olayları knockback sırasında tüketilir ama yeni zıplama veya yükseliş kesme üretmez. Kilit ve toparlanma bitince yerde Idle/Move, havada Jump'a dönülür; flash kontrol geri geldikten sonra da sürebilir.
+
+Flash boyunca `Knockback.anim`, kullanıcının istediği `Frames/death/player_death_01.png` karesini tutar. `Visual.controller` ve `Player.controller` aynı Knockback state'ini kullanır. Tek karenin eski otomatik kırpımı/100 PPU ayarı, mevcut spriteID/fileID/GUID korunarak 128×128 hücre, 128 PPU ve normal oyuncu klipleriyle ortak `(0.5, 0.47265625)` pivot'a eşlendi. Kök, collider ve WaterMeter'ın yönettiği Visual ölçeği/konumu animasyondan değiştirilmez.
+
+Yanıp sönme yalnızca SpriteRenderer görünürlüğünü değiştirir; renk/alpha yazmaz, böylece yeniden doğma sönmesiyle yarışmaz. Flash sırasında Heal hasar görünümünü kesmez. Flash bitince normal state animasyonu ve başlangıç görünürlüğü geri gelir. Tekrarlı temaslar ve birden fazla düşman/collider flash'ı yeniden başlatmaz veya fazladan temas suyu düşürmez; koruma bittikten sonra gövdede kalınmışsa trigger stay yeni darbeyi kabul edebilir. Isı/duman tüketimi bu koruma sırasında devam eder.
+
+Player veya ability kapatılınca ve ölüm/yeniden doğma başlayınca flash ve bekleyen itiş temizlenir; tekrar etkinleşme eski Knockback durumunu devam ettirmez. Ölüm için ikinci coroutine veya sayaç yoktur. `GameUp → Player → Configure Knockback` menüsü mevcut Player/düşman prefab ayarlarını koruyarak component bağlantılarını, iki controller'ı ve hasar karesini yeniden kurar; hazır asset'leri kullanırken menüyü çalıştırmak gerekmez.
+
+`Components.unity` sahnesindeki Player prefab'ında `Player`, `GatherInput`, `PhysicsControl`, `IdleAbility`, `MoveAbility`, `JumpAbility` ve `KnockbackAbility` component'leri vardır. Player referansları ve input asset'i sahnede ayarlanmıştır. Player Inspector'ında hareket veya zıplama ayarı bulunmaz. Su miktarı, görseller ve kaynaklar [su damlası prototipi belgesinde](water-player.md) anlatılır.
+
+Başka bir Circle'a Player eklemek GatherInput, PhysicsControl, Rigidbody2D ve CircleCollider2D gereksinimlerini ekler. Ayrıca IdleAbility, MoveAbility, JumpAbility ve temas hasarı için KnockbackAbility component'lerini ekleyip GatherInput'a Input Actions asset'ini bağla. Rigidbody2D Dynamic ve Gravity Scale pozitif olmalı. Zeminde trigger olmayan Collider2D bulunmalı.
 
 ## Düşük suda hız ve zıplama
 
@@ -39,8 +64,9 @@ Inspector'daki her çarpanı 1 yapmak ilgili artışı kapatır. Sadece daha uza
 | Move | 6 / 10 FPS | 0.6 s | Döngü |
 | Jump | 5 / 10 FPS | 0.5 s | Bir kez; havada son düşüş pozu tutulur |
 | Heal | 4 / 5 FPS | 0.8 s | Kaynaktan dolumda bir kez |
+| Knockback | 1 / 10 FPS | 0.1 s | Hasar karesi flash/knockback süresince tutulur |
 
-`State` int parametresi mevcut `PlayerStates` değerlerini izler: Idle=0, Move=1, Jump=2. Hareket durumları arasında geçiş beklemesizdir; zıplama/düşüşten inişte güncel Idle veya Move seçilir. Jump sheet'inin altıncı, yere basarken sıkışma karesi havada tutulmaz; iniş esnemesi mevcut WaterMeter'da kalır.
+`State` int parametresi mevcut `PlayerStates` değerlerini izler: Idle=0, Move=1, Jump=2, Knockback=3. Flash sürerken animasyon parametresi Knockback'te tutulabilir; fiziksel state toparlanma sonunda normal harekete döner. Hareket durumları arasında geçiş beklemesizdir; zıplama/düşüşten inişte güncel Idle veya Move seçilir. Jump sheet'inin altıncı, yere basarken sıkışma karesi havada tutulmaz; iniş esnemesi mevcut WaterMeter'da kalır.
 
 `Heal` trigger'ı yalnızca eksik suyla kaynağa girişte gönderilir. Kaynakta kalmak klibi yeniden başlatmaz. Heal bitince o andaki Idle, Move veya Jump'a geçilir; oynarken input ve fizik devam eder. Yeniden doğma Heal'ı temizler. Yeni bir gameplay state'i eklenmez ve mevcut ability/input akışı değiştirilmez.
 
@@ -56,7 +82,8 @@ Klipler yalnızca sprite değiştirir; Visual ölçeği/konumu WaterMeter'da kal
 - `JumpAbility`: zıplama isteği, zıplama kuvveti, havadaki hareket ve iniş geçişi.
 - `GatherInput`: ayrı component olarak Input System asset'inin oyuncuya ait kopyasını yönetir; iki fizik adımı arasındaki kısa Space basışını saklayıp JumpAbility'ye bir kez verir.
 - `PhysicsControl`: Rigidbody2D, gerçek collider temasları ve aşağı şekil taramasıyla zemin desteğini yönetir. Eğimde hareket yüzey teğetini izler; duruşta yokuştan kalan dikey hız ve kayma engellenir. Suya bağlı boyut isteğinde mevcut CircleCollider2D'nin yarıçapı/offset'i birlikte değişir, destek hizası korunur ve büyümede boş alan kontrol edilir. Kök ölçek ve zıplama kuvveti değiştirilmez; gövdenin dönmesi kilitlenir.
-- `PlayerStates`: `Idle`, `Move`, `Jump`. Jump hem yükselmeyi hem düşmeyi kapsar.
+- `KnockbackAbility`: gövde temasıyla tek su kaybı, FixedUpdate itişi, kontrol kilidi/toparlanma, flash ve tekrar darbe koruması. `OnPlayerDisabled` ile bekleyen etki temizlenir.
+- `PlayerStates`: `Idle`, `Move`, `Jump`, `Knockback`. Jump hem yükselmeyi hem düşmeyi kapsar.
 
 Durum davranışları örnekteki gibi Update içinde, fizik işlemleri FixedUpdate içinde çalışır. Fizik adımında önce PhysicsControl zemin bilgisini günceller, sonra JumpAbility zıplama isteğini işler, ardından Player aktif ability'nin fizik metodunu çağırır. Kenardan yürüyerek veya durulan zeminin kalkmasıyla düşmek, yukarı itiş uygulamadan Jump'a geçirir. İnişte yatay giriş varsa Move, yoksa Idle seçilir.
 
@@ -73,3 +100,9 @@ Görsel oynanış hissi ve dışa aktarılan build testi yapılmadı.
 31 Ekim 2026 eğim/boyut güncellemesi: güncel Player prefab'ı ve gerçek kodla ayrı Unity 6000.5.0f1 projesinde 47 Play Mode doğrulaması geçti. ±45° kuru/nemli rampalarda tam ve küçük boyda duruş/hareket/tuş bırakma artık gereksiz Jump geçişi üretmiyor. Gerçek zıplama, kısa Space bırakışı, basılı tutarak iniş, duvarın zemin sayılmaması ve kenardan normal düşüş korundu. Boyut, dolum, düşük tavan ve yeniden doğma kapsamı [su belgesindedir](water-player.md#doğrulama). Asıl Components/Level 5 sahnelerinin oynanış hissi ve build testi yapılmadı.
 
 31 Ekim 2026 düşük su hareket artışı: güncel Player prefab'ı, ability/su/fizik kodu, Input System ve animasyonlarla ayrı Unity 6000.5.0f1 projesinde 48 Play Mode doğrulaması geçti. Tüketimi kapalı tutulan karşılaştırma testlerinde 100/50/1 su için yürüme ve hava hızı 6/7.2/8.376, kalkış hızı 10/10.5/10.99 ölçüldü. Tam basışta yatay zıplama mesafesi tam suda 12.24, 1 suda 18.93 test birimiydi; bunlar düz test geometrisindeki ölçümlerdir. Serialized Inspector alanlarının bağımsız ayarı, tüm çarpanların 1 ile kapanması, yalnızca yatay mesafe artışı, Space basılı inişte tek kalkış, erken bırakma, havada dolum/tüketimde ek dikey itiş oluşmaması, dolum/yeniden doğmada temel değerlere dönüş, hızlı küçük oyuncuyla 45° rampada durma ve WaterMeter yokken temel hareket doğrulandı. Asıl Components/Level 5 sahnelerinin oynanış/build testi yapılmadı.
+
+31 Ekim 2026 knockback/flash: bu uygulamada Unity 6000.5.0f1 ile `C:/Users/yhcan/AppData/Local/Temp/gameup-enemies-324e5073` projesinde **49 kontrol geçti (13 asset, 36 Play Mode)**. Güncel gerçek Player ve altı düşman prefab'ı, orijinal input/oyuncu/su kodu ve iki Animator Controller kullanıldı. Doğrulananlar: GUID ve hasar sprite fileID'sinin korunması, kurulumun tekrarlanabilmesi, tam bir temas su kesintisi, iki yönde itiş, merkez çakışmasında belirli yön, kontrol kilidi/kübik toparlanma, Space basma/bırakmayla darbeyi kesememe, gerçek Animator'da death_01 pozu, görünür/gizli flash ve bitişte normale dönüş, Heal önceliği, tekrar darbe koruması, birden çok düşman/collider ve trigger stay ile koruma sonrası yeni darbe.
+
+Ayrıca altı gerçek düşmanın gövde teması, geniş Slime ısı alanı ve dumanın knockback üretmemesi, flash sırasında ısı/duman tüketiminin sürmesi (yaklaşık 6 su/s), Player/ability kapatma-açma temizliği, ölümcül darbede tek yeniden doğma ve tam görünür/normal kontrole dönüş, izin kapatma ve Inspector hasar/kuvvet/süre değişimleri geçti. Normal Move/Idle, tek zıplama, erken bırakma ve iniş regresyonları da geçti. Test geometrisinde Player başlangıcı sıfıra alındı ve çok kuru zemin maskesi test örneğine bağlandı. Ana sahnelerin mevcut kullanıcı değişikliklerine yazılmadı.
+
+Düzenek `Assets/Editor/KnockbackVerification.cs`, sonuç `knockback-result.txt`, log `knockback-verification.log` dosyalarındadır. Test edilmiş prefab/controller/klip ve hedef sprite meta'sı ana projeye aktarıldı; yeni component'lerin gerçek Unity meta dosyaları eşleşti. Logda önceki geçici proje kayıtlarındaki bağımsız `UnityEditor.Search.SearchDatabase` başlangıç hatası vardır; C# derlemesi ve 49 kontrol başarılıdır. Ana sahnede oynanış hissi/görüntü ve dış build testi bekliyor.

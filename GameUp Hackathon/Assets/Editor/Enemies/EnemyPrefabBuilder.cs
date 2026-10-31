@@ -30,7 +30,7 @@ public static class EnemyPrefabBuilder
         CreatePrefab("SlimeFire_Patrol", false, true, walk);
         HapsirikKozPrefabBuilder.Rebuild();
         AssetDatabase.SaveAssets();
-        Debug.Log("Created six enemy prefabs and timed HapsirikKoz smoke. Direct contact/knockback remains TODO.");
+        Debug.Log("Created six enemy prefabs with contact knockback and timed HapsirikKoz smoke.");
     }
 
     [MenuItem("GameUp/Enemies/Rebuild Saw Animation")]
@@ -120,8 +120,8 @@ public static class EnemyPrefabBuilder
                 box.offset = new Vector2(0f, 0.32f);
                 contact = box;
             }
-            // Reserved for a later knockback/contact response. Do not block the player now.
             contact.isTrigger = true;
+            root.AddComponent<EnemyContactKnockback>();
 
             var visual = new GameObject("Visual");
             visual.transform.SetParent(root.transform, false);

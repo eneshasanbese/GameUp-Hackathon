@@ -1,6 +1,6 @@
 # Saw, Slime Fire ve HapsirikKoz prefabları
 
-31 Ekim 2026 kullanıcı talebiyle iki düşmanın duran ve iki nokta arasında git-gel yapan türleri eklendi. Doğrudan temas davranışı, kullanıcının sonraki kararıyla knockback eklenene kadar TODO olarak bırakıldı. Gövdeler trigger'dır; şimdilik hasar, itme, ölüm veya engelleme üretmez.
+31 Ekim 2026 kullanıcı talebiyle iki düşmanın duran ve iki nokta arasında git-gel yapan türleri eklendi. Doğrudan temas başlangıçta knockback eklenene kadar TODO'ydu; kullanıcının sonraki talebiyle altı düşman gövdesine temas hasarı ve knockback bağlandı. Gövdeler trigger'dır; fiziksel engel oluşturmaz.
 
 Aynı gün kullanıcı HapsirikKoz'u da istedi. Duran ve devriye türleri, mevcut `EnemyPatrol` ve `Visual`/Animator düzeniyle eklendi. Hapşırma zamanlaması kullanıcının devam mesajına göre rastgele bekleme ve ayrı cooldown kullanır.
 
@@ -41,7 +41,7 @@ Kökteki `HapsirikKozSneeze`, `Visual` Animator'ına bağlıdır; prefab'larda b
 
 Varsayılanlarla sıra **1–5 saniye bekleme → 1 saniye hapşırma → 2–3 saniye cooldown → yeni bekleme** şeklindedir. İki hapşırmanın başlangıcı arasında en az yaklaşık 4 saniye vardır. Süreler oyun zamanını izler; oyun duraklatılınca ilerlemez. Obje/component yeniden etkinleşince yeni bekleme seçilir.
 
-Kullanıcının sonraki talebiyle hapşırmaya geçici duman hasarı eklendi. Hazırlık kareleri zararsızdır; `Sneeze` animasyonunun 05 numaralı çıkış karesinde (sıfır tabanlı, yaklaşık 0.417 saniye) tek bir `HapsirikKoz_Smoke.prefab` oluşturulur. Dumanın bağımsız Rigidbody2D'si vardır; devriye düşmanı uzaklaşsa veya kapatılsa da çıktığı noktada ömrünü tamamlar. Alan oluşmadan veya alanın dışındayken duman hasarı uygulanmaz. Duman görseli/animasyonu sonraya bırakıldı; doğrudan temas/knockback TODO kararı sürer.
+Kullanıcının sonraki talebiyle hapşırmaya geçici duman hasarı eklendi. Hazırlık kareleri duman üretmez; `Sneeze` animasyonunun 05 numaralı çıkış karesinde (sıfır tabanlı, yaklaşık 0.417 saniye) tek bir `HapsirikKoz_Smoke.prefab` oluşturulur. Dumanın bağımsız Rigidbody2D'si vardır; devriye düşmanı uzaklaşsa veya kapatılsa da çıktığı noktada ömrünü tamamlar. Alan oluşmadan veya alanın dışındayken duman hasarı uygulanmaz. Duman görseli/animasyonu sonraya bırakıldı. Düşmanın gövdesi animasyonundan bağımsız olarak aşağıdaki temas darbesini verebilir.
 
 `Assets/Prefabs/Enemies/HapsirikKoz_Smoke.prefab` üzerindeki Inspector ayarları:
 
@@ -50,6 +50,14 @@ Kullanıcının sonraki talebiyle hapşırmaya geçici duman hasarı eklendi. Ha
 - **CircleCollider2D → Radius:** Varsayılan `1.75`; offset `(0, 0.4)`, **Is Trigger** açık.
 
 İki düşman prefabının **HapsirikKozSneeze → Smoke Cloud Prefab** bağlantısı hazırdır. Sahneye ayrıca duman yerleştirmek gerekmez. Duman içinde hareketsizken de zemin tüketimi çarpılır; Slime/duman alanları örtüşürse en yüksek çarpan uygulanır. Alandan çıkınca, duman kapanınca veya süresi dolunca o kaynağın çarpanı kalkar. Duman fiziksel engel değildir ve Water layer'ında değildir.
+
+## Gövde teması ve knockback
+
+Altı düşman prefabının kökünde `EnemyContactKnockback` vardır. Yalnızca kökteki gerçek gövde collider'ına değen oyuncunun `KnockbackAbility.TryKnockback` metodu çağrılır. Rigidbody'ye çocuk ısı alanından gelen trigger olayları, gövde gerçekten temas etmiyorsa reddedilir. Slime'ın geniş HeatArea'sı ve HapsirikKoz dumanı knockback/flash veya tek seferlik temas hasarı üretmez; kendi süreli tüketimlerini sürdürür.
+
+Varsayılan kabul edilen darbe: oyuncudan 10 su, düşmandan uzağa `(6, 5)` hız, 0.2 saniye kontrol kilidi + 0.3 saniye toparlanma ve 2 saniye hasar karesiyle flash. Flash yeni gövde darbelerini engeller; ısı/duman su tüketimini durdurmaz. İtiş, su kaybı ve flash ayarları Player prefabındaki `KnockbackAbility` üzerindedir; ayrıntılar [oyuncu belgesinde](player-state-machine.md#knockback-ve-temas-hasarı). Düşmanlarda ek Inspector referansı gerekmez. Su biterse mevcut tek ölüm/yeniden doğma akışı çalışır.
+
+Mevcut prefabları ayarlarını koruyarak güncellemek için `GameUp → Player → Configure Knockback` kullanılabilir. Düşman üreticileri de yeni ürettikleri altı gövdeye temas component'ini ekler; duman prefabına eklemez.
 
 ## Su tüketimi ve yaşam döngüsü
 
@@ -73,7 +81,7 @@ Yalnızca HapsirikKoz'u üretmek için **GameUp → Enemies → Rebuild Hapsirik
 
 ## Bekleyen iş
 
-- [ ] Doğrudan temas için Player knockback ekle ve düşman gövde trigger'larına bağla. Slime'ın geniş HeatArea trigger'ı knockback tetiklememeli.
+- [ ] Asıl sahnede knockback kuvveti, temas su kaybı ve flash süresinin hissini oynayarak dengele. Altı prefab bağlantısı ayrı Unity projesinde doğrulandı.
 - [ ] Asıl bölümde yerleşim, rota güvenliği, ısı yarıçapı ve çarpan dengesini elle oynayarak doğrula; dış build'i test et.
 
 ## Doğrulama
@@ -99,3 +107,5 @@ Düzenek `Assets/Editor/HapsirikKozVerification.cs`, sonuç `hapsirik-koz-result
 Doğrulananlar: Idle/gövde teması ve hazırlık karelerinde sıfır hasar; çıkış karesinde tek alan; 3 saniyelik ömür (ölçüm 2.998 saniye); kuru/nemli/çok kuru zeminde hareketsiz tüketim yaklaşık 6/2/12, havada 6 birim/saniye; alan çıkışı ve tekrar giriş; çarpan 1 ile kapatma; Slime ve birden çok duman örtüşmesinde en güçlü kaynağın kullanılması; güçlü kaynak bitince zayıfa dönüş; erken kapatma/silme, çoklu oyuncu collider'ı, kapalı kontrol ve su bitmesiyle tek yeniden doğma sonrası temizlik. Devriye düşmanı ilerlerken dumanın çıktığı konumda kaldığı, düşman hazırlık sırasında kapatılırsa duman çıkmadığı ve oluşmuş dumanın düşman silinse de kendi ömrünü tamamladığı da geçti.
 
 Düzenek `Assets/Editor/HapsirikSmokeVerification.cs`, sonuç `hapsirik-smoke-result.txt`, log `hapsirik-smoke-verification.log` dosyalarındadır (aynı geçici proje). Logda önceki kayıtta belirtilen bağımsız Unity Search başlangıç hatası vardır; C# derlemesi ve 40 kontrol başarılıdır. Ana sahne yerleşimi/oynanışı ve dış build testi bekliyor; duman görseli kullanıcı kararıyla sonraya bırakıldı.
+
+31 Ekim 2026 gövde knockback'i: güncel Player ve altı düşman prefab'ıyla aynı ayrı Unity projesinde **49 kontrol geçti (13 asset, 36 Play Mode)**. Altı gövde gerçek trigger temasında bir kez su düşürüp oyuncuyu itti. Flash sırasında tekrar darbeler ve çoklu collider/düşman yığılması engellendi; koruma bitince trigger stay yeni darbeyi verebildi. Slime geniş alanı ve duman itme üretmeden yaklaşık 6 su/s tüketimini sürdürdü; bu tüketim flash sırasında da sürdü. İtiş, hasar görünümü/yanıp sönme, Inspector ayarları, temizleme/ölüm/yeniden doğma ve hareket regresyonları [oyuncu belgesinde](player-state-machine.md#doğrulama) kayıtlıdır. Önceki 51/40 kontrol kayıtlarındaki “gövde teması zararsız” davranışı bu yeni kullanıcı kararıyla değişmiştir. Sahne yerleşimi/his ve build kontrolü bekliyor.

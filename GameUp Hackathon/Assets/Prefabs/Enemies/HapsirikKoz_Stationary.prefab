@@ -127,6 +127,7 @@ GameObject:
   - component: {fileID: 6820268127392329915}
   - component: {fileID: 3839676162454001837}
   - component: {fileID: 2964882558149190516}
+  - component: {fileID: 7965399136108506946}
   m_Layer: 0
   m_Name: HapsirikKoz_Stationary
   m_TagString: Untagged
@@ -240,3 +241,15 @@ MonoBehaviour:
   automaticSneezing: 1
   sneezeDelayRange: {x: 1, y: 5}
   cooldownRange: {x: 2, y: 3}
+--- !u!114 &7965399136108506946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3011946243228877821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2225a4fdc47ec86419b839442e5fefb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContactKnockback

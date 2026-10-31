@@ -127,6 +127,7 @@ GameObject:
   - component: {fileID: 8295309632667937844}
   - component: {fileID: 7182185596686117952}
   - component: {fileID: 6097115031152289466}
+  - component: {fileID: 681149972848696179}
   m_Layer: 0
   m_Name: Saw_Patrol
   m_TagString: Untagged
@@ -229,3 +230,15 @@ MonoBehaviour:
   speed: 1.5
   bodyVisual: {fileID: 7505799262325991345}
   faceMovement: 0
+--- !u!114 &681149972848696179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8545703145326869028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2225a4fdc47ec86419b839442e5fefb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContactKnockback

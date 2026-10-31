@@ -23,7 +23,7 @@ public static class HapsirikKozPrefabBuilder
         CreatePrefab(false, controller, smoke);
         CreatePrefab(true, controller, smoke);
         AssetDatabase.SaveAssets();
-        Debug.Log("Created two HapsirikKoz prefabs and timed smoke. Contact/knockback remains TODO.");
+        Debug.Log("Created two HapsirikKoz prefabs with contact knockback and timed smoke.");
     }
 
     private static AnimationClip CreateClip(string action, int frameCount, float frameRate, bool loop)
@@ -132,6 +132,8 @@ public static class HapsirikKozPrefabBuilder
             contact.size = new Vector2(0.64f, 0.7f);
             contact.offset = new Vector2(0f, 0.35f);
             contact.isTrigger = true;
+
+            root.AddComponent<EnemyContactKnockback>();
 
             var visual = new GameObject("Visual");
             visual.transform.SetParent(root.transform, false);
