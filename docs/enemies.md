@@ -25,6 +25,18 @@ HapsirikKoz kökü de ayak seviyesindedir. 31 Ekim 2026 görsel geçişiyle `Hap
 
 Hareketli türlerde **EnemyPatrol → End Offset**, yerleştirilen başlangıca göre dünya birimi cinsinden diğer uçtur; varsayılan `(3, 0)`. **Speed** varsayılan `1.5` birim/saniyedir; devriyede, takipte ve rotaya dönüşte kullanılır. Saw negatif, dikey ve çapraz offset kullanabilir. Yerdeki Slime/HapsirikKoz yalnızca X offset'ini kullanır; Y hareketi yerçekimi/çarpışmadan gelir. Sıfır hız veya sıfır etkili offset motoru ve takibi durdurur, yerçekimini durdurmaz. Seçili prefab'ın iki ucu Scene görünümünde sarı çizilir. Slime hareket yönüne döner; Saw'ın yüzü dik kalırken dişleri sheet animasyonuyla döner.
 
+## Slime Fire ısı alanının HeatAura görseli
+
+31 Ekim 2026 kullanıcı talebi (T42/T43 ek kapsamı): iki SlimeFire prefabında `HeatArea/HeatAura` çocuğu, mevcut `FireSlime/HeatAura/256/Heat_Sheet.png` setini oynatır. 24 kare, 12 FPS, 2 saniyelik döngü; ilk kare sonda yinelenmez. Sheet sabit 256×256 hücrelere, merkez pivot'a ve 256 PPU'ya ayarlanmıştır; Bilinear, mipmap kapalı ve sıkıştırmasızdır. Mevcut sheet GUID'i ve dilimlerin sprite kimlikleri korunur; alternatif 128/1080 dosyaları değiştirilmez.
+
+`EnemyHeatAuraVisual`, görseli `HeatArea` collider'ının offset'ine hizalar ve yarıçap değişince ölçeği günceller; Editor ve Play Mode'da çalışır. Referans karedeki görünür çap 202/256 dünya birimidir; şeffaf kenar boşluğu hesaba katılır. Varsayılan 1.75 yarıçap için görsel ölçeği yaklaşık 4.436'dır. Karelerdeki hafif nefes hareketi yalnızca görseldir; hasar yarıçapı sabit kalır. `EnemyHeatArea`, circle collider veya trigger kapatılırsa aura gizlenir; yeniden açılınca geri gelir.
+
+SpriteRenderer beyaz/alpha 1 ve alpha-blended unlit `Sprites/Default` materyalindedir; `Level` sorting layer, Order 0 kullanır. Slime gövdesi Order 1 ile önde kalır. Görsel düşmanla birlikte taşınır; gövdenin yön çevirmesinden bağımsızdır. Gövde/zemin collider'ları, ısı çarpanı, temas hasarı ve devriye/takip ayarları korunur. Prefablar hazır bağlıdır; ek Inspector veya sahne bağlantısı gerekmez.
+
+Yalnızca bu efekti yeniden kurmak için **GameUp → Enemies → Rebuild Slime Fire Heat Aura** kullanılabilir (`SlimeFireHeatAuraBuilder.cs`). Bu menü iki prefabın aura çocuğunu ve ortak efekt klibi/controller'ını günceller; diğer düşmanları veya Slime hareket/hasar ayarlarını sıfırlamaz. Genel **Rebuild Enemy Prefabs** üreticisi de HeatAura'yı bağlar; genel menünün mevcut ayarları varsayılana yazma davranışı sürer.
+
+Doğrulama: ayrı Unity `6000.5.0f1` projesinde 35 kontrol geçti (14 asset, 21 Play Mode/render). Sabit grid/sıra, iki saniyelik döngü, iki prefabda üç döngü boyunca 24 kare, gerçek zamanda bağımsız gövde/aura animasyonu, yarıçap/offset/ölçek/konum uyumu, kapatma/açma ve collider/hasar ayarlarının korunması kontrol edildi. [Sonuç](verification/heat-aura-result.txt), [kontroller](verification/heat-aura-checks.txt), [960×540 render önizlemesi](verification/heat-aura-preview.png). Ana bölümde görünüm/oynanış ve dış build testi bekliyor.
+
 ## Hareketli düşmanların takip alanı
 
 31 Ekim 2026 kullanıcı talebiyle `Saw_Patrol`, `SlimeFire_Patrol` ve `HapsirikKoz_Patrol`, oyuncu dış algılama çemberine girdiğinde devriyeyi kesip onu takip eder. Oyuncu tamamen çemberden çıkınca düşman ayrıldığı rota noktasına döner, önceki devriye yönüyle aynı iki uç arasında devam eder. Dönüş sırasında oyuncu yeniden alana girerse takip hemen başlar; özgün dönüş noktası korunur.
@@ -126,7 +138,7 @@ Saw'ın duran türü de önceki davranış gibi sürekli döner; iki tür ortak 
 
 Önceki 128 piksel sette Saw idle/walk sheet'lerinin otomatik dilimlenmesinde ilk iki kare birleşmişti. İlk entegrasyonda Unity Sprite Editor veri sağlayıcısıyla sekiz adet 128×128 kareye düzeltildi; var olan GUID, spriteID ve fileID'ler korundu, eksik ikinci kare için `_01` adlı yeni dilim eklendi. O sette PPU 128 ve Point filtre tercihleri korunmuştu. Yeni görsellere geçişte eski sheet'ler değiştirilmedi; eski dilim onarımı yeni üreticiden kaldırıldı.
 
-`Assets/Editor/Enemies/EnemyPrefabBuilder.cs`, **GameUp → Enemies → Rebuild Enemy Prefabs** menüsünden aynı asset'leri yeniden üretebilir. Menü, altı düşman prefab'ının, duman prefab'ının, beş klibin ve dört controller'ın ayarlarını varsayılanlara yeniden yazar; hazır prefab'ları kullanmak için menüyü çalıştırmak gerekmez. HapsirikKoz menüsü de iki düşman prefabıyla duman prefab'ını birlikte üretir. Projeye yeni paket eklenmedi.
+`Assets/Editor/Enemies/EnemyPrefabBuilder.cs`, **GameUp → Enemies → Rebuild Enemy Prefabs** menüsünden aynı asset'leri yeniden üretebilir. Menü, altı düşman prefab'ının, duman prefab'ının, HeatAura dahil altı klibin ve beş controller'ın ayarlarını varsayılanlara yeniden yazar; hazır prefab'ları kullanmak için menüyü çalıştırmak gerekmez. HapsirikKoz menüsü de iki düşman prefabıyla duman prefab'ını birlikte üretir. Projeye yeni paket eklenmedi.
 
 Yalnızca Saw klibini güncellemek için **GameUp → Enemies → Rebuild Saw Animation** kullanılabilir; bu menü prefabları ve Slime kliplerini yeniden yazmaz. Ortak klip üreticisi artık çok satırlı sheet'lerde `Idle_00`/`Patrol_00` adlarına göre sayısal sırayla çalışır, beklenen kare sayısını doğrular ve ilk kareyi sonda tekrar eklemez. Slime'ın eski konum eğrilerini yeniden üretmez.
 

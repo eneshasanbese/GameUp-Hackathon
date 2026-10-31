@@ -1,0 +1,23 @@
+YUMUŞAK ISI ALANI — NEFES DÖNGÜSÜ
+
+Sadece efekt; karakter içermez. 24 kare, 12 FPS, 2 saniye döngü.
+1080 / 256 / 128: her boyutta ayrı şeffaf PNG kareler.
+256 ve 128 için ayrıca 6 sütun x 4 satır spritesheet.
+Okuma: soldan sağa, yukarıdan aşağıya. İlk kare sonda tekrarlanmaz.
+
+GÖRÜNTÜ
+RGB tüm piksellerde sabit (255,112,32); sadece alfa mesafeyle değişir. Gaussian blur veya görüntü bulanıklaştırma uygulanmadı. Merkez tam opak; alfa merkez çevresinden dışa doğru kesintisiz azalır. Dış kenarda kontur yoktur. Yumuşak alfa geçişi doğal olarak yumuşak görünür; keskin sınır hedeflenmedi.
+Nefes hareketi yarıçapta artı/eksi yüzde 2.5. Tam alfa merkez korunur. Efektin görsel dış kenarı hafifçe oynar; oyun hasar yarıçapını oynatması gerekmez.
+
+UNITY
+Texture Type: Sprite (2D and UI).
+Sheet için Sprite Mode Multiple > Sprite Editor > Slice > Grid by Cell Size 128 veya 256.
+Pivot Center (0.5,0.5). 128 sürüm PPU 128; 256 sürüm PPU 256; böylece iki tuval de 1 world unit genişliğindedir.
+Animation 12 FPS, Loop Time açık. Sıra Heat_00 ... Heat_23.
+Filter Bilinear; Compression None; Mip Maps kapalı; Alpha Is Transparency açık.
+Efekti karakterin arkasına yerleştirin; alpha-blended unlit sprite materyali kullanın. Additive materyal bu dosyanın tam opak merkez davranışını korumaz.
+İstenen görünüm için başlangıçta SpriteRenderer rengini beyaz ve alpha 1 tutun; sahnede fazla baskınsa global alpha azaltılabilir.
+Bu dosyalar çizilmiş VFX katmanıdır; collider, hasar kodu, .meta, .anim veya Animator Controller içermez. Unity içinde test edilmedi.
+
+ALTERNATİF
+Tek PNG kullanıp efektin localScale değerini sinüsle yüzde 2.5 oynatmak da aynı tasarıma yakın bir sonuç verir; kare animasyonu kullanmak zorunlu değildir.

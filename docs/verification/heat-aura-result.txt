@@ -1,0 +1,2 @@
+PASS: Unity 6000.5.0f1; 35 checks (14 asset, 21 Play Mode/render). Isolated project; main levels and exported build not tested.
+Environment note: the isolated editor logged an ArgumentOutOfRangeException in UnityEditor.Search.SearchDatabase during startup indexing. All 35 listed asset/Play Mode/render assertions completed; this was outside the game scripts.

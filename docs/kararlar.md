@@ -1,5 +1,11 @@
 # Kararlar
 
+## Slime Fire — HeatAura ile ısı alanını gösterme
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı `SlimeFire_Patrol` ve `SlimeFire_Stationary` prefablarının HeatArea'sını belirginleştirmek için mevcut `FireSlime/HeatAura/` efektinin eklenmesini istedi.
+
+**Uygulama:** Paketin 256 piksel sheet'i, 24 kare/12 FPS/2 saniye nefes döngüsüyle Slime'ın arkasında oynatılır. Görsel merkez ve çap mevcut HeatArea collider'ını izler; hasar yarıçapı ve çarpanı değişmez. Alternatif çözünürlükler korunur. İki prefab ve yeniden üretici hazır bağlanır. [Ayarlar ve doğrulama](enemies.md#slime-fire-ısı-alanının-heataura-görseli).
+
 ## Saw — Samples 90 ve eşit döngü birleşimi
 
 **Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı Saw'ın fazla hızlı döndüğünü ve döngü sonunda takıldığını bildirdi; devam yanıtıyla 15'ten 90'a çıkardığı ayarın Animation penceresindeki **Samples** olduğunu netleştirdi.

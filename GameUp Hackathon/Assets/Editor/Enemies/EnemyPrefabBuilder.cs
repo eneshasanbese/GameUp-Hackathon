@@ -99,6 +99,7 @@ public static class EnemyPrefabBuilder
         AnimatorController saw = CreateSawAnimation();
         AnimatorController idle = CreateAnimation("SlimeFireIdle", "FireSlime/Unity_256/Idle.png", 12, 0.9f);
         AnimatorController walk = CreateAnimation("SlimeFireWalk", "FireSlime/Unity_256/Patrol.png", 12, 0.7f);
+        SlimeFireHeatAuraBuilder.RebuildAnimation();
         CreatePrefab("Saw_Stationary", true, false, saw);
         CreatePrefab("Saw_Patrol", true, true, saw);
         CreatePrefab("SlimeFire_Stationary", false, false, idle);
@@ -252,6 +253,7 @@ public static class EnemyPrefabBuilder
                 area.radius = 1.75f;
                 area.offset = new Vector2(0f, 0.4f);
                 heat.AddComponent<EnemyHeatArea>();
+                SlimeFireHeatAuraBuilder.Configure(heat);
             }
             ConfigureBody(root, saw, !patrol);
             PrefabUtility.SaveAsPrefabAsset(root, PrefabFolder + "/" + name + ".prefab");

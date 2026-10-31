@@ -1,0 +1,35 @@
+Heat sheet uses 256 PPU, bilinear, no compression/mipmaps, and transparent alpha
+24 fixed centred 256px cells follow left-to-right, top-to-bottom order
+Heat animation loops for exactly 2 seconds at 12 FPS
+Each heat frame has a full 1/12s hold without a duplicated first frame
+Stationary: prefab serializes the aura, animation, first frame, and alignment component
+Stationary: unlit alpha-blended aura renders behind body at full authored opacity
+Stationary: visible reference diameter and centre match the heat circle
+Stationary: original heat radius, centre, multiplier, and trigger preserved
+Stationary: no added collider; terrain/contact/gravity and movement roles preserved
+Patrol: prefab serializes the aura, animation, first frame, and alignment component
+Patrol: unlit alpha-blended aura renders behind body at full authored opacity
+Patrol: visible reference diameter and centre match the heat circle
+Patrol: original heat radius, centre, multiplier, and trigger preserved
+Patrol: no added collider; terrain/contact/gravity and movement roles preserved
+Stationary: all 24 frames render in order across three exact loops
+Stationary: changing heat radius/offset automatically realigns the aura
+Stationary: movement, root scaling, and body flipping keep the heat centre/diameter aligned
+Stationary: collider disable hides the aura
+Stationary: heat behaviour disable hides the aura
+Stationary: a non-trigger circle shows no active heat aura
+Stationary: HeatArea object disable also disables the aura
+Stationary: re-enabling heat restores the aura
+Stationary: real-time heat and body animators advance independently
+Stationary: breathing animation leaves the damage circle fixed
+Patrol: all 24 frames render in order across three exact loops
+Patrol: changing heat radius/offset automatically realigns the aura
+Patrol: movement, root scaling, and body flipping keep the heat centre/diameter aligned
+Patrol: collider disable hides the aura
+Patrol: heat behaviour disable hides the aura
+Patrol: a non-trigger circle shows no active heat aura
+Patrol: HeatArea object disable also disables the aura
+Patrol: re-enabling heat restores the aura
+Patrol: real-time heat and body animators advance independently
+Patrol: breathing animation leaves the damage circle fixed
+Both real prefabs render into a 960x540 preview
