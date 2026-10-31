@@ -3757,26 +3757,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GroundSurface
   surfaceMaterial: 1
---- !u!1 &1034656362 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3613046458439338343, guid: d053f8d8484a45747bb6c83fad885d1e, type: 3}
-  m_PrefabInstance: {fileID: 464968615}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1034656365
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1034656362}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a264a648d5170b2449f8839f2213d73b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LevelExit
-  nextSceneName: Level_2
-  fadeDuration: 0.5
-  fadeColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1001 &464968615
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3969,7 +3949,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.7023296, y: 1, z: -5}
+  m_LocalPosition: {x: -1.0763559, y: 1, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4174,6 +4154,26 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 57d3e64006607854082b4a1a9cf906e0, type: 3}
+--- !u!1 &1034656362 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3613046458439338343, guid: d053f8d8484a45747bb6c83fad885d1e, type: 3}
+  m_PrefabInstance: {fileID: 464968615}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1034656365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1034656362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a264a648d5170b2449f8839f2213d73b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelExit
+  nextSceneName: Level_2
+  fadeDuration: 0.5
+  fadeColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &1116324929
 GameObject:
   m_ObjectHideFlags: 0
