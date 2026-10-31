@@ -1,0 +1,36 @@
+Configuration is repeatable and preserves asset identity
+Player prefab imports with DeathAbility and no missing scripts
+Existing serialized state numbers are preserved
+Death clip references all eight existing frames with equal sample durations
+Death plays once for 0.8 seconds
+Assets/Animations/Visual.controller contains the death clip
+Assets/Animations/Player.controller contains the death clip
+Initial checkpoint is the scene start position
+Normal movement still responds to real Input System events
+Lethal depletion immediately enters active DeathAbility once
+Death stops physics and publishes gameplay cleanup once before reloading
+Repeated damage/refill/respawn and a reentrant Depleted subscriber cannot duplicate or cancel death
+Movement and jump cannot interrupt death
+Real Animator plays Death before the map can reload
+Existing water UI shows depletion during death
+Death remains visible and clears flash and trail
+Before the first source, scene reload respawns at the original start
+Reload restores full water, simulation, controls and a fresh player
+Reloaded UI binds to the new full WaterMeter
+Map reload restores destroyed stone traps and map transforms and removes runtime hazards
+Respawn clears heat, size penalty and old trail points
+Water source contact refills and records its safe RespawnPoint
+Nonlethal hit still starts shared flash immunity
+Death overrides a live hurt flash and keeps its animation visible
+Last source checkpoint survives map reload
+Repeated deaths retain the last checkpoint instead of reverting to the level start
+Falling below the limit uses the same DeathAbility even with water left
+Fall death also reloads safely at the checkpoint
+Disabled Animator allows an immediate safe reload
+Disabling Player during death cannot strand the respawn coroutine
+A scene that starts with zero water enters death safely during component initialization
+Changing levels does not carry over a previous scene's checkpoint
+Normal jump still works after death and level transitions
+Early jump release still ends ascent
+Editor-only fixture is intentionally outside the build list
+Saved Editor scene outside the build list also resets the map and respawns at its last checkpoint

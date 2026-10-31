@@ -1,0 +1,1 @@
+PASS: Unity 6000.5.0f1; 41 checks (9 asset, 32 Play Mode). Current Player, input, scripts and original stone prefab. Isolated project; Level_2 gameplay and exported build not tested.

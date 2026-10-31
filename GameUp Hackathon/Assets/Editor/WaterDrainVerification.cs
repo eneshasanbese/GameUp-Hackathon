@@ -254,8 +254,8 @@ public static class WaterDrainVerification
         water.Consume(water.CurrentWater - 0.005f);
         await Delay(0.08f);
         Check(deaths == 1 && water.IsEmpty && water.IsRespawning, "Ordinary idle alone starts exactly one depletion/respawn");
-        Near(await Rate(0.06f), 0f, "Respawn fade does not continue consuming water");
-        await Delay(0.5f);
+        Near(await Rate(0.06f), 0f, "Death animation does not continue consuming water");
+        await Delay(1f);
         Check(deaths == 1 && !water.IsRespawning && player.enabled && water.CurrentWater > 99f &&
             Mathf.Abs(physics.rb.position.x - 20f) < 0.1f, "Respawn restores water, control and checkpoint after idle depletion");
         await Clear();

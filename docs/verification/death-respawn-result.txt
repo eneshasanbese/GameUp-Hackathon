@@ -1,0 +1,1 @@
+PASS: Unity 6000.5.0f1; 36 checks (7 asset, 29 Play Mode). Real Player with Slip physics material, death frames, controllers, Input System, UI and stone prefab in three saved fixture scenes, including one outside the build list; main levels and exported build not tested.

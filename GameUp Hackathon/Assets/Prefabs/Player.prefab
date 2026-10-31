@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 2497285578069972097}
   - component: {fileID: 5969134430943223080}
   - component: {fileID: 8733031624878948677}
+  - component: {fileID: 6482228526159012014}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -255,6 +256,8 @@ MonoBehaviour:
     - {fileID: 6624425716347783292}
     - {fileID: 6746680754289791890}
     - {fileID: 2497285578069972097}
+    - {fileID: 8733031624878948677}
+    - {fileID: 6482228526159012014}
 --- !u!114 &6464358368479237696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,7 +373,6 @@ MonoBehaviour:
   waterSourceLayer:
     serializedVersion: 2
     m_Bits: 16
-  evaporationDuration: 0.3
   fallLimit: -12
 --- !u!114 &8733031624878948677
 MonoBehaviour:
@@ -393,6 +395,19 @@ MonoBehaviour:
   flashDuration: 2
   flashInterval: 0.1
   bodyVisual: {fileID: 916759671138770455}
+--- !u!114 &6482228526159012014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6087951766205847242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c9a8f82bc5e7a4d95a551e8853f31f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeathAbility
+  isPermitted: 1
 --- !u!1 &9153322777849959660
 GameObject:
   m_ObjectHideFlags: 0

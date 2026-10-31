@@ -6,6 +6,7 @@ public static class PlayerStates
         Move,
         // Jump covers both ascending and falling, including walking off an edge.
         Jump,
-        Knockback
+        Knockback,
+        Death
     }
 }

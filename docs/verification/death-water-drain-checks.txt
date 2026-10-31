@@ -1,0 +1,79 @@
+sandDrainMultiplier is saved as neutral 1x
+grassDrainMultiplier is saved as neutral 1x
+blackStoneDrainMultiplier is saved as neutral 1x
+Prefab recognizes extra dry ground without scene overrides
+Ground-Wet supports the real prefab
+Ground-Wet idle: measured=0,2498628, expected=0,25
+Stationary loss updates the existing water event
+Ground-Wet actual walking: measured=0,9998326, expected=1
+Walking sample measures real movement
+Ground-Dry supports the real prefab
+Ground-Dry idle: measured=0,5001069, expected=0,5
+Stationary loss updates the existing water event
+Ground-Dry actual walking: measured=2,99988, expected=3
+Walking sample measures real movement
+Ground-Extra-Dry supports the real prefab
+Ground-Extra-Dry idle: measured=2,000046, expected=2
+Stationary loss updates the existing water event
+Ground-Extra-Dry actual walking: measured=6,000139, expected=6
+Walking sample measures real movement
+All six measured rates follow the requested strict order
+Sand is independent of Ground-Wet
+Ground-Wet/Sand idle material factor: measured=0,312424, expected=0,3125
+Ground-Wet/Sand walking material factor: measured=1,250077, expected=1,25
+Grass is independent of Ground-Wet
+Ground-Wet/Grass idle material factor: measured=0,1998903, expected=0,2
+Ground-Wet/Grass walking material factor: measured=0,7999416, expected=0,8
+BlackStone is independent of Ground-Wet
+Ground-Wet/BlackStone idle material factor: measured=0,3749851, expected=0,375
+Ground-Wet/BlackStone walking material factor: measured=1,499938, expected=1,5
+Disabled material marker uses neutral fallback: measured=0,2498625, expected=0,25
+Missing material marker uses neutral fallback: measured=0,2498629, expected=0,25
+Sand is independent of Ground-Dry
+Ground-Dry/Sand idle material factor: measured=0,6248471, expected=0,625
+Ground-Dry/Sand walking material factor: measured=3,749851, expected=3,75
+Grass is independent of Ground-Dry
+Ground-Dry/Grass idle material factor: measured=0,4001609, expected=0,4
+Ground-Dry/Grass walking material factor: measured=2,399828, expected=2,4
+BlackStone is independent of Ground-Dry
+Ground-Dry/BlackStone idle material factor: measured=0,7499702, expected=0,75
+Ground-Dry/BlackStone walking material factor: measured=4,499821, expected=4,5
+Disabled material marker uses neutral fallback: measured=0,5001073, expected=0,5
+Missing material marker uses neutral fallback: measured=0,5001073, expected=0,5
+Sand is independent of Ground-Extra-Dry
+Ground-Extra-Dry/Sand idle material factor: measured=2,500155, expected=2,5
+Ground-Extra-Dry/Sand walking material factor: measured=7,500083, expected=7,5
+Grass is independent of Ground-Extra-Dry
+Ground-Extra-Dry/Grass idle material factor: measured=1,599886, expected=1,6
+Ground-Extra-Dry/Grass walking material factor: measured=4,800038, expected=4,8
+BlackStone is independent of Ground-Extra-Dry
+Ground-Extra-Dry/BlackStone idle material factor: measured=2,999881, expected=3
+Ground-Extra-Dry/BlackStone walking material factor: measured=8,999997, expected=9
+Disabled material marker uses neutral fallback: measured=2,000048, expected=2
+Missing material marker uses neutral fallback: measured=2,000048, expected=2
+Actual vertical jump clears the previous ground material
+Vertical jump without horizontal input uses normal air rate: measured=2,999876, expected=3
+Falling does not inherit wet/material discounts: measured=2,999881, expected=3
+Collider can read a material marker from its parent
+Material follows the actual supporting collider rather than the lower overlapping ground
+Motion reset clears stale material
+Pressing into a wall uses idle loss rather than walking loss: measured=0,5001073, expected=0,5
+Slope support at -30
+Idle slope drift stays below the walking threshold at -30: measured=0,5001043, expected=0,5
+Slope support at 30
+Idle slope drift stays below the walking threshold at 30: measured=0,5001073, expected=0,5
+Real Slime heat trigger still registers
+Idle rate combines dryness, material and heat: measured=4,999928, expected=5
+Walking rate combines dryness, material and heat: measured=15,00017, expected=15
+Overlapping heat keeps the strongest multiplier: measured=7,500083, expected=7,5
+Removing heat restores positive ordinary idle loss: measured=2,500155, expected=2,5
+Disabled controls stop ordinary idle loss: measured=0, expected=0
+Unsimulated body stops ordinary idle loss: measured=0, expected=0
+Disabled WaterMeter stops loss: measured=0, expected=0
+Idle loss is time based at fixed step 0,01: measured=0,4997258, expected=0,5
+Idle loss is time based at fixed step 0,04: measured=0,4999136, expected=0,5
+Water source refills and heals once despite positive idle loss
+Staying in water keeps refilling without repeated heal events
+Ordinary idle alone starts exactly one depletion/respawn
+Death animation does not continue consuming water: measured=0, expected=0
+Respawn restores water, control and checkpoint after idle depletion

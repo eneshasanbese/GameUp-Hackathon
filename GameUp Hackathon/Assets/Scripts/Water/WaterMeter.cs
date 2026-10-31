@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [DefaultExecutionOrder(100)]
 [DisallowMultipleComponent]
@@ -40,7 +41,6 @@ public sealed class WaterMeter : MonoBehaviour
 
     [Header("Refill and Respawn")]
     [SerializeField] private LayerMask waterSourceLayer;
-    [SerializeField, Min(0.01f)] private float evaporationDuration = 0.3f;
     [SerializeField] private float fallLimit = -12f;
 
     private Player player;
@@ -57,8 +57,9 @@ public sealed class WaterMeter : MonoBehaviour
     private bool depletionNotified;
     private bool restorePlayerEnabled;
     private bool restoreSimulated;
-    private SpriteRenderer[] renderers;
-    private Color[] colors;
+    private bool reloadingScene;
+    private static string respawnScenePath;
+    private static Vector2 respawnCheckpoint;
     private readonly Dictionary<UnityEngine.Object, float> drainMultipliers = new Dictionary<UnityEngine.Object, float>();
 
     public float CurrentWater => currentWater;
@@ -83,12 +84,28 @@ public sealed class WaterMeter : MonoBehaviour
     public event Action Depleted;
     public event Action RefilledFromSource;
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetRespawn()
+    {
+        respawnScenePath = null;
+        respawnCheckpoint = default;
+    }
+
     private void Awake()
     {
         player = GetComponent<Player>();
         physics = GetComponent<PhysicsControl>();
         body = GetComponent<Rigidbody2D>();
         checkpoint = body.position;
+        if (respawnScenePath != null && respawnScenePath == gameObject.scene.path)
+        {
+            checkpoint = respawnCheckpoint;
+            currentWater = Capacity;
+            body.position = checkpoint;
+            transform.position = new Vector3(checkpoint.x, checkpoint.y, transform.position.z);
+            physics.ResetMotion();
+            ResetRespawn();
+        }
         currentWater = Mathf.Clamp(currentWater, 0f, Capacity);
         if (bodyVisual == null)
             bodyVisual = GetComponentInChildren<SpriteRenderer>();
@@ -98,10 +115,6 @@ public sealed class WaterMeter : MonoBehaviour
             visualPosition = bodyVisual.transform.localPosition;
             spriteBottom = bodyVisual.sprite.bounds.min.y * visualScale.y;
         }
-        renderers = GetComponentsInChildren<SpriteRenderer>();
-        colors = new Color[renderers.Length];
-        for (int i = 0; i < renderers.Length; i++)
-            colors[i] = renderers[i].color;
         UpdateBodySize();
 
         if (trail == null)
@@ -130,7 +143,7 @@ public sealed class WaterMeter : MonoBehaviour
     {
         drainMultipliers.Clear();
         StopAllCoroutines();
-        if (IsRespawning)
+        if (IsRespawning && !reloadingScene)
             RestoreControls();
         ClearTrail();
     }
@@ -185,6 +198,8 @@ public sealed class WaterMeter : MonoBehaviour
 
     private void UpdateVisual(float deltaTime)
     {
+        if (IsRespawning)
+            return;
         if (physics.grounded && !wasGrounded)
             landingTimer = 0.16f;
         wasGrounded = physics.grounded;
@@ -219,7 +234,11 @@ public sealed class WaterMeter : MonoBehaviour
         SetWater(currentWater - amount);
     }
 
-    public void Refill() => SetWater(Capacity);
+    public void Refill()
+    {
+        if (!IsRespawning)
+            SetWater(Capacity);
+    }
 
     // Sources own their entry; overlapping heat areas use the strongest multiplier.
     public void SetDrainMultiplier(UnityEngine.Object source, float multiplier)
@@ -237,7 +256,11 @@ public sealed class WaterMeter : MonoBehaviour
             drainMultipliers.Remove(source);
     }
 
-    public void SetCheckpoint(Vector2 position) => checkpoint = position;
+    public void SetCheckpoint(Vector2 position)
+    {
+        if (!IsRespawning)
+            checkpoint = position;
+    }
     public void ResetPositionTracking() => previousPosition = body.position;
 
     private void UpdateBodySize()
@@ -292,57 +315,83 @@ public sealed class WaterMeter : MonoBehaviour
     {
         if (IsRespawning || !isActiveAndEnabled)
             return;
+        IsRespawning = true;
+        StartCoroutine(Respawn());
         if (IsEmpty && !depletionNotified)
         {
             depletionNotified = true;
             Depleted?.Invoke();
         }
-        StartCoroutine(Respawn());
     }
 
     private IEnumerator Respawn()
     {
-        IsRespawning = true;
         drainMultipliers.Clear();
         restorePlayerEnabled = player.enabled;
         restoreSimulated = body.simulated;
-        player.enabled = false;
+        DeathAbility death = player.GetComponent<DeathAbility>();
+        bool playingDeath = player.isActiveAndEnabled && death != null &&
+            player.stateMachine.ChangeState(PlayerStates.State.Death);
+        if (!playingDeath)
+            player.StopGameplay();
         physics.ResetMotion();
         body.simulated = false;
         ClearTrail();
-        for (float elapsed = 0f; elapsed < evaporationDuration; elapsed += Time.deltaTime)
-        {
-            SetOpacity(1f - elapsed / evaporationDuration);
+        // WaterMeter remains the single owner of death/respawn; the ability only plays the animation.
+        // Keep the guard set through the depletion event, including when no animation is available.
+        yield return null;
+        while (playingDeath && player.isActiveAndEnabled && !death.AnimationFinished)
             yield return null;
+
+        Scene scene = gameObject.scene;
+        bool canReload = !string.IsNullOrEmpty(scene.path);
+#if !UNITY_EDITOR
+        canReload &= Application.CanStreamedLevelBeLoaded(scene.path);
+#endif
+        if (canReload)
+        {
+            respawnScenePath = scene.path;
+            respawnCheckpoint = checkpoint;
+            reloadingScene = true;
+            // Reloading recreates all map objects, including destroyed traps and spawned hazards.
+#if UNITY_EDITOR
+            AsyncOperation load = Application.CanStreamedLevelBeLoaded(scene.path)
+                ? SceneManager.LoadSceneAsync(scene.path, LoadSceneMode.Single)
+                : UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(
+                    scene.path, new LoadSceneParameters(LoadSceneMode.Single));
+#else
+            AsyncOperation load = SceneManager.LoadSceneAsync(scene.path, LoadSceneMode.Single);
+#endif
+            if (load != null)
+            {
+                yield return load;
+                yield break;
+            }
+            reloadingScene = false;
+            ResetRespawn();
         }
+        // Unsaved test scenes have no scene asset to reload.
         body.position = checkpoint;
         transform.position = new Vector3(checkpoint.x, checkpoint.y, transform.position.z);
         physics.ResetMotion();
-        Refill();
+        SetWater(Capacity);
         ResetPositionTracking();
         deformation = Vector3.one;
         landingTimer = 0f;
         wasGrounded = false;
-        UpdateVisual(0f);
         ClearTrail();
         RestoreControls();
+        UpdateVisual(0f);
     }
 
     private void RestoreControls()
     {
-        SetOpacity(1f);
+        player.stateMachine.ExitCurrentState();
+        player.stateMachine.ChangeState(PlayerStates.State.Idle);
         body.simulated = restoreSimulated;
         player.enabled = restorePlayerEnabled;
         IsRespawning = false;
-    }
-
-    private void SetOpacity(float opacity)
-    {
-        for (int i = 0; i < renderers.Length; i++)
-        {
-            Color color = colors[i];
-            color.a *= opacity;
-            renderers[i].color = color;
-        }
+        if (player.isActiveAndEnabled)
+            player.gatherInput.EnablePlayerMap();
     }
 }

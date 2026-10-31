@@ -22,7 +22,8 @@ public sealed class JumpAbility : BaseAbility
         bool requested = linkedInput.ConsumeJump();
         bool released = linkedInput.ConsumeJumpRelease();
         if (!isPermitted || !player.isActiveAndEnabled ||
-            linkedStateMachine.currentState == PlayerStates.State.Knockback)
+            linkedStateMachine.currentState == PlayerStates.State.Knockback ||
+            linkedStateMachine.currentState == PlayerStates.State.Death)
             return;
 
         if (requested && linkedPhysicsControl.grounded && linkedStateMachine.ChangeState(thisAbilityState))
