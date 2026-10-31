@@ -7,21 +7,22 @@ public sealed class PhysicsControl : MonoBehaviour
 {
     public Rigidbody2D rb;
 
-    [Header("Ground")]
-    [SerializeField] private LayerMask groundLayers = ~0;
-    [SerializeField, Range(0f, 89f)] private float maxGroundAngle = 50f;
+    [Header("Ground Raycasts")]
+    [SerializeField] private LayerMask dryGroundLayer;
+    [SerializeField] private LayerMask wetGroundLayer;
+    [SerializeField] private Vector2 groundCheckOffset = new Vector2(0f, -0.45f);
+    [SerializeField, Min(0.01f)] private float groundRayDistance = 0.15f;
 
-    private Collider2D bodyCollider;
     private bool isJumpAscending;
 
-    public bool grounded { get; private set; }
+    public bool dryGrounded { get; private set; }
+    public bool wetGrounded { get; private set; }
+    public bool grounded => dryGrounded || wetGrounded;
 
     private void Awake()
     {
         if (rb == null)
             rb = GetComponent<Rigidbody2D>();
-
-        bodyCollider = GetComponent<Collider2D>();
         rb.constraints |= RigidbodyConstraints2D.FreezeRotation;
     }
 
@@ -32,20 +33,16 @@ public sealed class PhysicsControl : MonoBehaviour
 
     public void RefreshGrounded()
     {
-        // Ignore lingering floor contacts during a jump, but allow upward travel on slopes.
-        if (rb.linearVelocity.y <= 0.01f)
+        if (rb.linearVelocity.y <= 0f)
             isJumpAscending = false;
 
-        var groundFilter = new ContactFilter2D
-        {
-            useTriggers = false,
-            useLayerMask = true,
-            layerMask = groundLayers,
-            useNormalAngle = true,
-            minNormalAngle = 90f - maxGroundAngle,
-            maxNormalAngle = 90f + maxGroundAngle
-        };
-        grounded = !isJumpAscending && bodyCollider.IsTouching(groundFilter);
+        Vector2 origin = rb.position + groundCheckOffset;
+        RaycastHit2D dryHit = Physics2D.Raycast(origin, Vector2.down, groundRayDistance, dryGroundLayer);
+        RaycastHit2D wetHit = Physics2D.Raycast(origin, Vector2.down, groundRayDistance, wetGroundLayer);
+
+        // If layers overlap below the ray, use the closest surface.
+        wetGrounded = !isJumpAscending && wetHit && (!dryHit || wetHit.distance < dryHit.distance);
+        dryGrounded = !isJumpAscending && dryHit && !wetGrounded;
     }
 
     public void SetHorizontalSpeed(float speed)
@@ -53,10 +50,31 @@ public sealed class PhysicsControl : MonoBehaviour
         rb.linearVelocity = new Vector2(speed, rb.linearVelocity.y);
     }
 
+    public void ApproachHorizontalSpeed(float targetSpeed, float acceleration)
+    {
+        SetHorizontalSpeed(Mathf.MoveTowards(rb.linearVelocity.x, targetSpeed,
+            acceleration * Time.fixedDeltaTime));
+    }
+
+    public void ResetMotion()
+    {
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+        isJumpAscending = false;
+        dryGrounded = wetGrounded = false;
+    }
+
     public void Jump(float speed)
     {
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, speed);
         isJumpAscending = true;
-        grounded = false;
+        dryGrounded = wetGrounded = false;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Vector3 origin = transform.TransformPoint(groundCheckOffset);
+        Gizmos.color = grounded ? Color.green : Color.red;
+        Gizmos.DrawLine(origin, origin + Vector3.down * groundRayDistance);
     }
 }

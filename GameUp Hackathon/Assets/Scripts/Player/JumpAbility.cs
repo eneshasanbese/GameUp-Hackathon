@@ -6,6 +6,7 @@ public sealed class JumpAbility : BaseAbility
 {
     [SerializeField, Min(0f)] private float airspeed = 6f;
     [SerializeField, Min(0f)] private float jumpForce = 10f;
+    [SerializeField, Min(0.01f)] private float airAcceleration = 90f;
 
     public override PlayerStates.State thisAbilityState => PlayerStates.State.Jump;
 
@@ -32,11 +33,12 @@ public sealed class JumpAbility : BaseAbility
 
     public override void ProcessFixedAbility()
     {
-        linkedPhysicsControl.SetHorizontalSpeed(linkedInput.horizontalInput * airspeed);
+        linkedPhysicsControl.ApproachHorizontalSpeed(linkedInput.horizontalInput * airspeed, airAcceleration);
     }
 
     public override void ExitAbility()
     {
-        linkedPhysicsControl.SetHorizontalSpeed(0f);
+        if (!player.isActiveAndEnabled)
+            linkedPhysicsControl.SetHorizontalSpeed(0f);
     }
 }
