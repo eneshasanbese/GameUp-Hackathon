@@ -11,6 +11,33 @@ public static class HapsirikKozPrefabBuilder
     private const string PrefabFolder = "Assets/Prefabs/Enemies";
     private const string SpriteFolder = "Assets/platformerPack/Sprites/Enemies/HapsirikKoz 1/Unity_256/";
 
+    [MenuItem("GameUp/Enemies/Rebuild HapsirikKoz Smoke Visual")]
+    public static void RebuildSmokeVisual()
+    {
+        string path = PrefabFolder + "/HapsirikKoz_Smoke.prefab";
+        GameObject root = PrefabUtility.LoadPrefabContents(path);
+        try
+        {
+            ConfigureSmokeVisual(root);
+            PrefabUtility.SaveAsPrefabAsset(root, path);
+        }
+        finally { PrefabUtility.UnloadPrefabContents(root); }
+        AssetDatabase.SaveAssets();
+    }
+
+    private static void ConfigureSmokeVisual(GameObject root)
+    {
+        if (AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(SlimeFireHeatAuraBuilder.ControllerPath) == null)
+            SlimeFireHeatAuraBuilder.RebuildAnimation();
+        SlimeFireHeatAuraBuilder.Configure(root);
+        SpriteRenderer renderer = root.transform.Find("HeatAura").GetComponent<SpriteRenderer>();
+        // Start invisible even before the first Update, avoiding a full-opacity flash on emission.
+        renderer.color = new Color(1f, 1f, 1f, 0f);
+        var settings = new SerializedObject(root.GetComponent<EnemySmokeCloud>());
+        settings.FindProperty("smokeVisual").objectReferenceValue = renderer;
+        settings.ApplyModifiedPropertiesWithoutUndo();
+    }
+
     [MenuItem("GameUp/Enemies/Rebuild HapsirikKoz Prefabs")]
     public static void Rebuild()
     {
@@ -106,6 +133,7 @@ public static class HapsirikKozPrefabBuilder
             area.offset = new Vector2(0f, 0.4f);
             root.AddComponent<EnemyHeatArea>();
             root.AddComponent<EnemySmokeCloud>();
+            ConfigureSmokeVisual(root);
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(root, PrefabFolder + "/HapsirikKoz_Smoke.prefab");
             return prefab.GetComponent<EnemySmokeCloud>();
         }

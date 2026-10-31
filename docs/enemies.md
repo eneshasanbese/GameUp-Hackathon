@@ -96,15 +96,23 @@ Kökteki `HapsirikKozSneeze`, `Visual` Animator'ına bağlıdır; prefab'larda b
 
 Varsayılanlarla sıra **1–5 saniye bekleme → 1 saniye hapşırma → 2–3 saniye cooldown → yeni bekleme** şeklindedir. İki hapşırmanın başlangıcı arasında en az yaklaşık 4 saniye vardır. Süreler oyun zamanını izler; oyun duraklatılınca ilerlemez. Obje/component yeniden etkinleşince yeni bekleme seçilir.
 
-Kullanıcının sonraki talebiyle hapşırmaya geçici duman hasarı eklendi. Hazırlık kareleri duman üretmez; `Sneeze` animasyonunun 05 numaralı çıkış karesinde (sıfır tabanlı, yaklaşık 0.417 saniye) tek bir `HapsirikKoz_Smoke.prefab` oluşturulur. Dumanın bağımsız Rigidbody2D'si vardır; devriye düşmanı uzaklaşsa veya kapatılsa da çıktığı noktada ömrünü tamamlar. Alan oluşmadan veya alanın dışındayken duman hasarı uygulanmaz. Duman görseli/animasyonu sonraya bırakıldı. Düşmanın gövdesi animasyonundan bağımsız olarak aşağıdaki temas darbesini verebilir.
+Kullanıcının sonraki talebiyle hapşırmaya geçici duman hasarı eklendi. Hazırlık kareleri duman üretmez; `Sneeze` animasyonunun 05 numaralı çıkış karesinde (sıfır tabanlı, yaklaşık 0.417 saniye) tek bir `HapsirikKoz_Smoke.prefab` oluşturulur. Dumanın bağımsız Rigidbody2D'si vardır; devriye düşmanı uzaklaşsa veya kapatılsa da çıktığı noktada ömrünü tamamlar. Alan oluşmadan veya alanın dışındayken duman hasarı uygulanmaz. Sonraki HeatAura talebiyle aşağıdaki alfa geçişli görsel bağlandı. Düşmanın gövdesi animasyonundan bağımsız olarak aşağıdaki temas darbesini verebilir.
 
 `Assets/Prefabs/Enemies/HapsirikKoz_Smoke.prefab` üzerindeki Inspector ayarları:
 
 - **EnemySmokeCloud → Duration:** Varsayılan `3` saniye; süre sonunda obje ve ısı etkisi temizlenir.
+- **EnemySmokeCloud → Smoke Visual:** Prefabın `HeatAura` çocuğundaki SpriteRenderer; hazır bağlıdır.
+- **EnemySmokeCloud → Fade In Duration / Fade Out Duration:** Varsayılan `0.25 / 0.5` saniye. Oluşurken alfa 0→1, ömrünün son yarım saniyesinde 1→0 ilerler. `0` ilgili geçişi anlık yapar. Toplam geçiş süresi duman ömrünü aşarsa iki süre aynı oranda kısalır.
 - **EnemyHeatArea → Drain Multiplier:** Varsayılan `2`; Slime Fire ile aynı tüketim sistemini kullanır. `1` etkiyi kapatır.
 - **CircleCollider2D → Radius:** Varsayılan `1.75`; offset `(0, 0.4)`, **Is Trigger** açık.
 
 İki düşman prefabının **HapsirikKozSneeze → Smoke Cloud Prefab** bağlantısı hazırdır. Sahneye ayrıca duman yerleştirmek gerekmez. Duman içinde hareketsizken de zemin tüketimi çarpılır; Slime/duman alanları örtüşürse en yüksek çarpan uygulanır. Alandan çıkınca, duman kapanınca veya süresi dolunca o kaynağın çarpanı kalkar. Duman fiziksel engel değildir ve Water layer'ında değildir.
+
+31 Ekim 2026 HeatAura eki (T42/T43): `HapsirikKoz_Smoke/HeatAura`, Slime ile aynı 256 piksel sheet'i, 24 kare/12 FPS/2 saniyelik ortak nefes klibini, unlit materyali ve collider hizalama bileşenini kullanır. `Level`, Order 0 ile düşman gövdesinin arkasındadır. `EnemySmokeCloud` yalnızca bu dumanın renderer alfa değerini kendi yaşam süresinden hesaplar; ortak klip alfa yazmaz. Böylece iki saniyelik nefes döngüsü yeni bir 0→1 geçişi başlatmaz ve Slime'ın sürekli aurası etkilenmez. Başlangıç sprite'ı alfa 0 olarak kaydedilir; ilk karede opak parıltı oluşmaz. Yeniden etkinleşme hem süreyi hem açılma geçişini sıfırlar; duraklatma geçişi de durdurur. Isı yarıçapı ve hasar çarpanı alfa ile değişmez; ısı ömür boyunca etkin kalır.
+
+İki HapsirikKoz mevcut ortak duman prefabını kullandığından düşman prefablarına yeni bağlantı gerekmez. Yalnızca duman görselini yeniden bağlamak için **GameUp → Enemies → Rebuild HapsirikKoz Smoke Visual** kullanılabilir; dumanın mevcut ömür/hasar ayarlarını korur. **Rebuild HapsirikKoz Prefabs** ve genel üretici de görseli bağlar; bu genel menülerin varsayılan ayarlara yazma davranışı sürer.
+
+Bu ek için ayrı Unity `6000.5.0f1` projesinde **35 kontrol geçti (9 asset, 26 Play Mode/render)**: başlangıç alfa 0, açılma/tam görünürlük/kapanma, nefes döngüsünde alfa sıfırlanmaması, Inspector süreleri, kısa ömür, yeniden etkinleşme, duraklatma, geçişler boyunca ısı ve süre sonunda temizliği; iki gerçek prefabda tek emisyon, devriyeden bağımsız konum ve düşman kapanınca ömrü tamamlama. [Sonuç](verification/smoke-aura-result.txt), [kontroller](verification/smoke-aura-checks.txt), [önizleme](verification/smoke-aura-preview.png). Ana bölüm görünümü ve dış build testi bekliyor.
 
 ## Gövde teması ve knockback
 

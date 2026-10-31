@@ -1,5 +1,11 @@
 # Kararlar
 
+## HapsirikKoz — duman HeatAura ve alfa geçişi
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı duran/devriye HapsirikKoz'un ortak `HapsirikKoz_Smoke` prefabına Slime ile aynı HeatAura tasarımını, oluşurken 0→1 ve biterken 1→0 alfa geçişiyle eklemeyi istedi.
+
+**Uygulama:** Ortak nefes animasyonu dumanın bağımsız konumunda oynar; alfa dumanın toplam ömrünü izler ve her nefes döngüsünde sıfırlanmaz. Başlangıç ayarı 3 saniye ömür, 0.25 saniye açılma ve son 0.5 saniye kapanmadır; Inspector'dan değiştirilebilir. Isı yarıçapı, çarpanı ve hapşırmanın çıkış karesi korunur. İki düşmanın mevcut ortak prefab bağlantısı yeterlidir. [Ayarlar ve doğrulama](enemies.md#hapsirikkoz-hapşırma-döngüsü).
+
 ## Slime Fire — HeatAura ile ısı alanını gösterme
 
 **Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı `SlimeFire_Patrol` ve `SlimeFire_Stationary` prefablarının HeatArea'sını belirginleştirmek için mevcut `FireSlime/HeatAura/` efektinin eklenmesini istedi.
