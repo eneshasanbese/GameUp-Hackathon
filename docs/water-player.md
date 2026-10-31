@@ -92,6 +92,14 @@ Inspector: **Fill** mavi dolgu RectTransform'u, **Portrait** portre Image'ı, **
 
 Önerilen hiyerarşi (`Level1`): `Canvas` (Scale With Screen Size, 1920×1080) → `WaterHUD` (WaterBarUI) → `Portrait` ve `BarFrame` (siyah) → `BarBack` (koyu, 4 px içeride) → `Fill` (mavi).
 
+## Bölüm geçişi (LevelExit)
+
+`Assets/Scripts/Level/LevelExit.cs`, bölüm sonundaki trigger alanıdır. Bölüm sonu bir su birikintisidir: bileşen, bölümün son `WaterSource` örneğinin kök nesnesine (Water layer'daki trigger'ın olduğu yere) eklenir. Yalnızca sahnedeki o örneğe eklenir, prefab'a uygulanmaz; yoksa her birikinti bölümü bitirir. Player suyu varken girince sıradaki sahne bir kez yüklenir; su sıfırken veya yeniden doğarken geçiş olmaz. Yüklemeden önce Player bileşeni kapatılır, böylece input ve tüketim durur. Yeni sahne kendi Player'ıyla başladığı için su dolu başlar; önceki bölümden su taşınmaz ([K04](kararlar.md)).
+
+Inspector: **Next Scene Name** boşsa build listesindeki bir sonraki sahne, doluysa o isimdeki sahne (ör. `Level_2`) yüklenir. Sahne build listesinde değilse geçiş olmaz ve Console'da bir kez uyarı çıkar. Nesne bir Collider2D (Is Trigger açık) ister; WaterSource'un kendi trigger'ı bunu karşılar. Birikinti aynı anda suyu doldurur ve checkpoint kaydeder, ama sahne hemen değiştiği için bunun etkisi olmaz.
+
+Geçiş ekranı: `Assets/Scripts/Level/SceneFader.cs` kodla oluşturulur, sahneye bir şey eklenmez. Damla birikintiye girince yerinde durdurulur (Player kapalı, `Rigidbody2D.simulated` kapalı; input ve tüketim yok). Ekran **Fade Duration** (varsayılan 0.5 sn) içinde **Fade Color** rengine (varsayılan siyah) kararır. Sonraki sahne arka planda `LoadSceneAsync` ile yüklenir ve iki kare daha beklenir, sonra yeni bölüm aynı sürede açılır. Yükleme takılması karartının arkasında kalır. Fade Duration 0 olursa geçiş anında olur. Final fidanı (T27) bu bileşen değildir; son bölümde kazanma ayrı kurulacak.
+
 ## Doğrulama
 
 31 Ekim 2026 son bekleme/malzeme güncellemesi: ayrı `C:/Users/yhcan/AppData/Local/Temp/gameup-enemies-324e5073` projesinde Unity 6000.5.0f1 ile güncel Player prefab'ı ve oyuncu/su kodu derlendi; **79 asset/Play Mode kontrolü geçti**. Altı oran `0.25/0.5/1/2/3/6` olarak ölçüldü. Üç malzemenin üç kuruluk layer'ında bekleme/yürüme tüketimi, işaretsiz/kapalı component varsayılanı, üst nesnedeki malzeme, gerçek yakın destek seçimi, duvara basma, ±30° eğimde bekleme, dikey zıplama/düşüşte malzemenin sıfırlanması, gerçek Slime ısı alanı ve örtüşmesi/temizliği, kapalı kontrol/fizik/su component'i, 0.01/0.04 fizik adımları, kaynakta tek Heal ve sıradan beklemeden tek ölüm/yeniden doğma doğrulandı. Denge testi için malzeme çarpanları yalnızca test nesnelerinde 1.25/0.8/1.5 yapıldı; gerçek prefab'da hepsi 1'dir.

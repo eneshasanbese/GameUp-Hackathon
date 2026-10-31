@@ -88,4 +88,6 @@ Isı/duman, artık seçilen bekleme veya yürüme tabanını malzeme çarpanınd
 
 **Karar:** Oyun `Level1` ve `Level2` olmak üzere iki bölümden oluşur. Her bölüm ayrı sahnedir. Yaşayan tek fidan yalnızca son bölümdedir; `Level1` bir geçiş noktasıyla biter, ara fidan eklenmez.
 
+**Bölüm sonu (31 Ekim 2026):** Kullanıcı: “benim sonraki seviyeye geçmem için o su birikintileri var ya, oralara gelmem gerekiyor, yani aslında su birikintisi level sonuna ulaştın demek.” Bölümün sonu bir su birikintisidir; o birikintiye `LevelExit` eklenir ve sıradaki bölüm yüklenir. Son bölümün sonunun (fidan) nasıl kurulacağı ayrıca belirlenecek.
+
 **Açık kalanlar:** Bir sonraki bölüme su taşınıp taşınmayacağı (öneri: her bölüm dolu suyla başlar; sahne yüklenince bu kendiliğinden olur), bölüm uzunlukları ve kaynak sayıları (T38, ilk oynanış testinden sonra), “Tekrar oyna”nın `Level1`'den mi son bölümün başından mı başlayacağı.
