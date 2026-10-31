@@ -62,13 +62,13 @@ public static class EnemyChaseVerification
                 Vector2 before = enemyBody.position;
                 await Delay(0.2f);
                 Check(enemy.IsChasing && enemyBody.position.x < before.x - 0.15f, name + " interrupts patrol to chase player");
-                Check(name == "Saw" ? enemyBody.position.y > 0.05f : Mathf.Abs(enemyBody.position.y) < 0.001f,
+                Check(name == "Saw" ? enemyBody.position.y > 0.05f : Mathf.Abs(enemyBody.position.y) < 0.03f,
                     name + " follows its configured chase axes");
                 if (name != "Saw")
                     Check(enemy.GetComponentInChildren<SpriteRenderer>().flipX != (name == "SlimeFire"), name + " faces the chase direction");
                 Teleport(new Vector2(30f, 0f));
                 await Delay(0.7f);
-                Check(!enemy.IsChasing && enemyBody.position.x > before.x + 0.1f && Mathf.Abs(enemyBody.position.y) < 0.001f,
+                Check(!enemy.IsChasing && enemyBody.position.x > before.x + 0.1f && Mathf.Abs(enemyBody.position.y) < 0.03f,
                     name + " returns to the interrupted route and resumes patrol");
                 Check(enemy.GetComponentInChildren<Animator>().GetCurrentAnimatorStateInfo(0).length > 0f, name + " animation keeps playing during movement");
                 Clear();
@@ -151,7 +151,7 @@ public static class EnemyChaseVerification
 
     private static async Task PatrolRegression()
     {
-        Setup("SlimeFire");
+        Setup("Saw");
         Set(enemy, "endOffset", new Vector2(-0.6f, 0.6f));
         Teleport(new Vector2(30f, 0f));
         await Delay(0.3f);
@@ -204,12 +204,23 @@ public static class EnemyChaseVerification
 
     private static void Setup(string name)
     {
+        if (name != "Saw")
+        {
+            var floor = new GameObject("Ground for walking chase regression");
+            objects.Add(floor);
+            floor.layer = LayerMask.NameToLayer("Ground-Dry");
+            floor.transform.position = new Vector3(0f, -0.5f);
+            floor.AddComponent<BoxCollider2D>().size = new Vector2(100f, 1f);
+        }
         GameObject root = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player.prefab"), new Vector3(30f, 0f), Quaternion.identity);
         objects.Add(root); player = root.GetComponent<Player>(); playerBody = root.GetComponent<Rigidbody2D>();
         playerBody.constraints = RigidbodyConstraints2D.FreezeAll;
         root.GetComponent<KnockbackAbility>().enabled = false;
         WaterMeter water = root.GetComponent<WaterMeter>();
         Set(water, "dryDrainPerSecond", 0f); Set(water, "wetDrainPerSecond", 0f);
+        Set(water, "extraDryDrainPerSecond", 0f);
+        Set(water, "dryIdleDrainPerSecond", 0f); Set(water, "wetIdleDrainPerSecond", 0f);
+        Set(water, "extraDryIdleDrainPerSecond", 0f);
         root = Object.Instantiate(Load(name + "_Patrol"), Vector3.zero, Quaternion.identity);
         objects.Add(root); enemy = root.GetComponent<EnemyPatrol>(); enemyBody = root.GetComponent<Rigidbody2D>();
         HapsirikKozSneeze sneeze = root.GetComponent<HapsirikKozSneeze>();

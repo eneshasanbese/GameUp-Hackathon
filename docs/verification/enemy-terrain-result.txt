@@ -1,0 +1,1 @@
+PASS: Unity 6000.5.0f1; 72 checks (19 asset, 53 Play Mode). Isolated project; main levels and exported build not tested.

@@ -11,6 +11,82 @@ public static class EnemyPrefabBuilder
     private const string AnimationFolder = "Assets/Animations/Enemies";
     private const string SpriteFolder = "Assets/platformerPack/Sprites/Enemies/";
 
+    [MenuItem("GameUp/Enemies/Configure Terrain Physics")]
+    public static void ConfigureTerrainPhysics()
+    {
+        foreach (string name in new[] { "Saw", "SlimeFire", "HapsirikKoz" })
+        {
+            foreach (string variant in new[] { "Stationary", "Patrol" })
+            {
+                string path = PrefabFolder + "/" + name + "_" + variant + ".prefab";
+                GameObject root = PrefabUtility.LoadPrefabContents(path);
+                try
+                {
+                    ConfigureBody(root, name == "Saw", variant == "Stationary");
+                    PrefabUtility.SaveAsPrefabAsset(root, path);
+                }
+                finally { PrefabUtility.UnloadPrefabContents(root); }
+            }
+        }
+        AssetDatabase.SaveAssets();
+    }
+
+    public static void ConfigureBody(GameObject root, bool flying, bool stationary)
+    {
+        Rigidbody2D body = root.GetComponent<Rigidbody2D>();
+        body.bodyType = flying && stationary ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic;
+        body.gravityScale = flying ? 0f : 1f;
+        body.constraints = RigidbodyConstraints2D.FreezeRotation |
+            (!flying && stationary ? RigidbodyConstraints2D.FreezePositionX : RigidbodyConstraints2D.None);
+        body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        body.interpolation = RigidbodyInterpolation2D.Interpolate;
+        EnemyPatrol patrol = root.GetComponent<EnemyPatrol>();
+        if (patrol != null)
+        {
+            var settings = new SerializedObject(patrol);
+            settings.FindProperty("flying").boolValue = flying;
+            settings.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        // Keep damage on the original root trigger. Only this separate shape blocks terrain;
+        // it must never push the player or another enemy, or block a heat/smoke trigger.
+        Transform existing = root.transform.Find("TerrainBody");
+        GameObject terrain = existing != null ? existing.gameObject : new GameObject("TerrainBody");
+        terrain.transform.SetParent(root.transform, false);
+        Collider2D contact = root.GetComponent<Collider2D>();
+        Collider2D solid;
+        Vector2 offset = contact.offset;
+        if (contact is CircleCollider2D circle)
+        {
+            var shape = terrain.GetComponent<CircleCollider2D>();
+            if (shape == null) shape = terrain.AddComponent<CircleCollider2D>();
+            shape.radius = circle.radius;
+            solid = shape;
+        }
+        else
+        {
+            var shape = terrain.GetComponent<BoxCollider2D>();
+            if (shape == null) shape = terrain.AddComponent<BoxCollider2D>();
+            Vector2 size = ((BoxCollider2D)contact).size;
+            // Ground sprite roots are at the feet. A deliberately shortened damage trigger
+            // must not make the visible feet sink into the floor.
+            float bottom = Mathf.Min(0f, offset.y - size.y * 0.5f);
+            float top = offset.y + size.y * 0.5f;
+            shape.size = new Vector2(size.x, top - bottom);
+            offset.y = (top + bottom) * 0.5f;
+            solid = shape;
+        }
+        solid.offset = offset;
+        solid.isTrigger = false;
+        int groundLayers = LayerMask.GetMask("Ground-Dry", "Ground-Wet", "Ground-Extra-Dry");
+        if (groundLayers == 0) throw new InvalidOperationException("Enemy physics requires the ground layers.");
+        solid.includeLayers = groundLayers;
+        solid.excludeLayers = ~groundLayers;
+        solid.layerOverridePriority = 1;
+        solid.sharedMaterial = AssetDatabase.LoadAssetAtPath<PhysicsMaterial2D>("Assets/platformerPack/Material/Slip.physicsMaterial2D");
+        if (solid.sharedMaterial == null) throw new InvalidOperationException("Missing Slip physics material.");
+    }
+
     [MenuItem("GameUp/Enemies/Rebuild Enemy Prefabs")]
     public static void Rebuild()
     {
@@ -174,6 +250,7 @@ public static class EnemyPrefabBuilder
                 area.offset = new Vector2(0f, 0.4f);
                 heat.AddComponent<EnemyHeatArea>();
             }
+            ConfigureBody(root, saw, !patrol);
             PrefabUtility.SaveAsPrefabAsset(root, PrefabFolder + "/" + name + ".prefab");
         }
         finally

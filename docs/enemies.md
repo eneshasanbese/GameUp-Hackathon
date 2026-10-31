@@ -2,7 +2,7 @@
 
 31 Ekim 2026 ek kapsamı: `KozOcagi_Stationary.prefab` ve `KozOcagiDemo.unity` sabit yatay çekim ve bağımsız puan/saniye su kaybı için eklendi. Köz Ocağı temas hasarı/knockback taşımaz. [Inspector, hareket entegrasyonu ve 54 kontrolün kaydı](koz-ocagi.md).
 
-31 Ekim 2026 kullanıcı talebiyle iki düşmanın duran ve iki nokta arasında git-gel yapan türleri eklendi. Doğrudan temas başlangıçta knockback eklenene kadar TODO'ydu; kullanıcının sonraki talebiyle altı düşman gövdesine temas hasarı ve knockback bağlandı. Gövdeler trigger'dır; fiziksel engel oluşturmaz.
+31 Ekim 2026 kullanıcı talebiyle iki düşmanın duran ve iki nokta arasında git-gel yapan türleri eklendi. Doğrudan temas başlangıçta knockback eklenene kadar TODO'ydu; kullanıcının sonraki talebiyle altı düşman gövdesine temas hasarı ve knockback bağlandı. Hasar gövdeleri trigger'dır; oyuncuya fiziksel engel oluşturmaz. Sonraki zemin/duvar düzeltmesinde ayrı `TerrainBody` collider'ları eklendi.
 
 Aynı gün kullanıcı HapsirikKoz'u da istedi. Duran ve devriye türleri, mevcut `EnemyPatrol` ve `Visual`/Animator düzeniyle eklendi. Hapşırma zamanlaması kullanıcının devam mesajına göre rastgele bekleme ve ayrı cooldown kullanır.
 
@@ -19,22 +19,33 @@ Unity proje köküne göre `Assets/Prefabs/Enemies/` altında altı hazır prefa
 | `HapsirikKoz_Stationary.prefab` | Idle, rastgele Sneeze, geçici hasarlı duman ve cooldown |
 | `HapsirikKoz_Patrol.prefab` | Aynı hapşırma/duman döngüsüyle git-gel ve hareket yönüne dönüş |
 
-Prefab'ı istenen sahneye sürüklemek yeterlidir. Sahnelere otomatik düşman yerleştirilmedi. Saw kökü bıçağın merkezi, Slime kökü ayak seviyesidir. Kök Rigidbody2D kinematiktir ve yerçekimi kullanmaz; güzergâh zemin aramaz. Özellikle Slime rotasını yürünebilir yüzeye yerleştir.
+Prefab'ı istenen sahneye sürüklemek yeterlidir. Saw kökü bıçağın merkezi, Slime ve HapsirikKoz kökü ayak seviyesidir. Slime/HapsirikKoz'un duran ve devriye türleri `Dynamic`, `Gravity Scale = 1` kullanır; havada bırakılınca ve kenardan çıkınca düşerler. Saw devriye türü `Dynamic`, `Gravity Scale = 0` ile uçar; sabit Saw kinematik kalır. Zemin/duvar çarpışması aşağıda açıklanmıştır.
 
 HapsirikKoz kökü de ayak seviyesindedir. 31 Ekim 2026 görsel geçişiyle `HapsirikKoz 1/Unity_256` sheet'leri kullanılır: kareler 256×256, PPU 256 ve ortak normalize pivot `(0.5, 0.07407407)` (yaklaşık `(128, 18.963)` piksel). `Visual` yerel konumu sıfırdır. Gövde trigger'ının boyutu `(0.64, 0.7)`, offset'i `(0, 0.35)` deneme ayarıdır. Devriye sırasında Idle/Sneeze oynatılır; pakette ayrı yürüyüş animasyonu yoktur.
 
-Hareketli türlerde **EnemyPatrol → End Offset**, yerleştirilen başlangıca göre dünya birimi cinsinden diğer uçtur; varsayılan `(3, 0)`. **Speed** varsayılan `1.5` birim/saniyedir; devriyede, takipte ve rotaya dönüşte kullanılır. Negatif, dikey ve çapraz offset kullanılabilir. Sıfır hız veya sıfır offset hareketi ve takibi durdurur. Seçili prefab'ın iki ucu Scene görünümünde sarı çizilir. Slime hareket yönüne döner; Saw'ın yüzü dik kalırken dişleri sheet animasyonuyla döner.
+Hareketli türlerde **EnemyPatrol → End Offset**, yerleştirilen başlangıca göre dünya birimi cinsinden diğer uçtur; varsayılan `(3, 0)`. **Speed** varsayılan `1.5` birim/saniyedir; devriyede, takipte ve rotaya dönüşte kullanılır. Saw negatif, dikey ve çapraz offset kullanabilir. Yerdeki Slime/HapsirikKoz yalnızca X offset'ini kullanır; Y hareketi yerçekimi/çarpışmadan gelir. Sıfır hız veya sıfır etkili offset motoru ve takibi durdurur, yerçekimini durdurmaz. Seçili prefab'ın iki ucu Scene görünümünde sarı çizilir. Slime hareket yönüne döner; Saw'ın yüzü dik kalırken dişleri sheet animasyonuyla döner.
 
 ## Hareketli düşmanların takip alanı
 
 31 Ekim 2026 kullanıcı talebiyle `Saw_Patrol`, `SlimeFire_Patrol` ve `HapsirikKoz_Patrol`, oyuncu dış algılama çemberine girdiğinde devriyeyi kesip onu takip eder. Oyuncu tamamen çemberden çıkınca düşman ayrıldığı rota noktasına döner, önceki devriye yönüyle aynı iki uç arasında devam eder. Dönüş sırasında oyuncu yeniden alana girerse takip hemen başlar; özgün dönüş noktası korunur.
 
 - **EnemyPatrol → Player Chase → Detection Radius:** Varsayılan `4` dünya birimi. Çemberin merkezi düşmanın kök konumudur ve düşmanla birlikte hareket eder. `0` takibi kapatır. Scene görünümünde seçili düşmanın alanı camgöbeği, takipte kırmızı görünür; **Gizmos** açık olmalıdır.
-- **Horizontal Chase Only:** Slime Fire ve HapsirikKoz'da açık; oyuncu zıplarken düşman mevcut yüksekliğini koruyup yatayda yaklaşır. Saw'da kapalı; iki eksende oyuncuya yaklaşır. Bu ayar yalnızca takip hareketini etkiler; dikey/çapraz devriye rotası korunur.
+- **Flying:** Saw'da açık; motor iki eksende çalışır. Slime/HapsirikKoz'da kapalı; motor yalnızca yatay hızı belirler, düşüş hızını korur. Prefab üreticisi buna uygun Rigidbody ayarlarını kaydeder.
+- **Horizontal Chase Only:** Saw'da kapalı; iki eksende oyuncuya yaklaşır. Uçan türde açılırsa yalnızca yatay takip eder. Yerdeki türler her zaman yalnızca yatay takip eder; oyuncu zıplarken yukarı taşınmaz, desteksiz kalınca düşer.
 
 Algılama, her fizik adımında gerçek oyuncu collider'larının çemberle örtüşmesini sorgular; yeni bir hasar/trigger collider'ı eklenmez. Oyuncunun trigger sensörleri ve Player component'i taşımayan nesneler takip başlatmaz. Oyuncu kapanınca, ölürken/yeniden doğarken, collider'ı kapanınca/silinince veya uzağa ışınlanınca takip bırakılır. Çoklu oyuncu collider'larında kalan fiziksel örtüşme yeterlidir. Takip alanı Slime ısısından ve gövde temasından bağımsızdır; kendisi su kaybı veya knockback üretmez.
 
-Üç prefab hazır ayarlıdır; sahnede oyuncu referansı, ek layer veya collider bağlantısı gerekmez. Prefab üreticisi Saw'ın iki eksenli ayarını da korur. Duran türlerde ve Köz Ocağı'nda takip yoktur. Hareket mevcut kinematik düzeni kullanır; duvar/zemin arama veya yol bulma eklenmediğinden takip alanını bölümün güvenli geçişlerine göre ayarla.
+Üç prefab hazır ayarlıdır; sahnede oyuncu referansı, ek layer veya collider bağlantısı gerekmez. Prefab üreticisi Saw'ın iki eksenli ayarını da korur. Duran türlerde ve Köz Ocağı'nda takip yoktur. Duvarın arkasındaki oyuncu algılanabilir; düşman fiziksel olarak duvarda durur. Yol bulma/zıplama yoktur; engelin etrafından dolaşmayı denemez.
+
+## Yerçekimi ve zemin/duvar çarpışması
+
+31 Ekim 2026 kullanıcı bildirimi: takipte duvar/zemin içinden geçme ve yerdeki düşmanların havada kalması. Üç devriye türünde `MovePosition` yerine `linearVelocity` kullanılır. Yerdeki türlerin Y hızı her fizik adımında korunur; takip bitince eski yüksekliğe uçmak yerine yalnızca rota X konumuna dönerler. Motor kapanınca yatay hız kesilir, düşüş sürer. [Unity MovePosition belgesi](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Rigidbody2D.MovePosition.html), bu metodun taşıma adımında yerçekimini uygulamadığını açıklar.
+
+Altı gövde prefabında `TerrainBody` çocuğu vardır. **Is Trigger kapalıdır**; yalnızca `Ground-Dry`, `Ground-Wet`, `Ground-Extra-Dry` katmanlarıyla çarpışır. `Include Layers` bu üç katmanı, `Exclude Layers` diğerlerini seçer; `Layer Override Priority = 1`. Oyuncu, diğer düşmanlar, ısı/duman alanları bu fizik kutusuyla engellenmez. Mevcut kök hasar trigger'ı ve bütün ısı/duman bağlantıları korunur. Yerdeki kutu ayak hizasına kadar uzanır; hasar kutusunun kısaltılması görseli zemine gömmez. Mevcut sürtünmesiz `Slip` materyali duvarda asılı kalmayı önler; hareketli gövdelerde Continuous çarpışma kullanılır.
+
+Slime/HapsirikKoz'un duran türlerinde yalnızca yatay konum ve dönüş kilitlidir; düşebilirler. Köz Ocağı sabit çevresel kaynak, duman ise çıktığı yerde kalan geçici alan olarak korunur. Uçurumdan düşen yürüyen düşman eski platforma tırmanmaz; güvenli devriye uçlarını sahnede ayarla. Ayrı düşman ölüm/respawn veya yol bulma sistemi eklenmedi.
+
+Mevcut prefab ayarlarını, animasyonları ve GUID'leri koruyarak yeniden uygulamak için **GameUp → Enemies → Configure Terrain Physics** kullanılır. Normal prefab üreticileri de aynı fizik ayarlarını uygular. Sahnedeki zemin/duvar collider'ları trigger olmamalı ve üç zemin katmanından birinde bulunmalıdır. Prefab instance'larında eski Rigidbody/collider override'ı varsa Inspector'dan kontrol et; sahneler bu düzeltmede yeniden yazılmadı.
 
 ## Slime Fire ısı alanı
 
@@ -112,6 +123,12 @@ Yalnızca HapsirikKoz'u üretmek için **GameUp → Enemies → Rebuild Hapsirik
 - [ ] Asıl bölümde yerleşim, rota güvenliği, ısı yarıçapı ve çarpan dengesini elle oynayarak doğrula; dış build'i test et.
 
 ## Doğrulama
+
+31 Ekim 2026 yerçekimi/duvar düzeltmesi, Unity `6000.5.0f1`, ayrı `C:/Users/yhcan/AppData/Local/Temp/gameup-enemies-324e5073` projesi: güncel oyuncu/düşman kodu, gerçek prefablar, animasyonlar, zemin layer'ları ve Physics2D ayarlarıyla **72 kontrol geçti (19 asset, 53 Play Mode)**. Üç zemin katmanında dört yerdeki türün düşüşü/inişi, motor kapalıyken yerçekimi, takipte duvarda kalma ve geri ayrılma, Saw'ın havada kalması ve taban/tavan çarpışması, kenardan devriye/takipte düşüş, düşüşte rotaya dönüşün eski yüksekliğe taşımaması, motor kapatma, yerdeki dikey offset'in yok sayılması ve ısı/gövde hasarı ayrımı doğrulandı. Doğrulanan altı prefab mevcut meta/GUID'leri korunarak ana projeye aktarıldı. [Sonuç](verification/enemy-terrain-result.txt), [kontroller](verification/enemy-terrain-checks.txt).
+
+Aynı oturumda güncellenen takip regresyonu da **52 kontrol geçti (9 asset, 43 Play Mode)**. Yerdeki türlerin düzeneğine zemin eklendi; çapraz uçuş rotası Saw'da sınandı; hasarı tek başına ölçmek için normal bekleme tüketimi test içinde sıfırlandı. Üretim su oranları değiştirilmedi. [Regresyon sonucu](verification/enemy-chase-physics-result.txt), [kontroller](verification/enemy-chase-physics-checks.txt). Önceki aşağıdaki kayıtlar tarihsel sonuçlardır.
+
+Yeni yeniden çalıştırılabilir düzenek `Assets/Editor/Enemies/EnemyTerrainVerification.cs`: ayrı kopya projede `-batchmode -nographics -projectPath "<test projesi>" -executeMethod EnemyTerrainVerification.Run -logFile "<log yolu>"`; `-quit` ekleme. Bu düzenek test kopyasındaki prefab fiziğini menü komutuyla günceller. Detaylı `enemy-terrain-verification.log` ve `enemy-chase-physics-verification.log` geçici projede bulunur. Her iki çalıştırmada Unity'nin başlangıç SearchDatabase indeksleme istisnası kaydedildi; C# derleme hatası ve başarısız davranış kontrolü yoktur. **Ana bölümde elle oynanış/denge ve dış build testi bekliyor.**
 
 31 Ekim 2026 Saw döngü sonu düzeltmesi: ayrı Unity `6000.5.0f1` projesinde **18 kontrol geçti (8 asset, 10 Play Mode)**. Konum: `C:/Users/yhcan/AppData/Local/Temp/gameup-enemies-324e5073`. Oturum başındaki gerçek klip, önceki bozuk zamanlamanın karşılaştırma örneği olarak saklandı: görünür sprite değişimleri yaklaşık 83.333 ms, son sprite gösterimi yaklaşık 20.833 ms idi. Hata iki gerçek Saw prefabının Animator'ında yeniden üretildi. Samples 90 korunarak aynı son sprite ile bitiş sabitlenince native klip süresi 1.333333 sn ve son görünür sprite süresi de 83.333 ms oldu.
 

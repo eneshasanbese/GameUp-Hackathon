@@ -158,6 +158,7 @@ public static class HapsirikKozPrefabBuilder
                 movementSettings.FindProperty("faceMovement").boolValue = true;
                 movementSettings.ApplyModifiedPropertiesWithoutUndo();
             }
+            EnemyPrefabBuilder.ConfigureBody(root, false, !patrol);
             PrefabUtility.SaveAsPrefabAsset(root, PrefabFolder + "/" + name + ".prefab");
         }
         finally
