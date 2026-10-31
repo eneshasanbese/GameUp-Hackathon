@@ -98,7 +98,13 @@ Inspector: **Fill** mavi dolgu RectTransform'u, **Portrait** portre Image'ı, **
 
 Inspector: **Next Scene Name** boşsa build listesindeki bir sonraki sahne, doluysa o isimdeki sahne (ör. `Level_2`) yüklenir. Sahne build listesinde değilse geçiş olmaz ve Console'da bir kez uyarı çıkar. Nesne bir Collider2D (Is Trigger açık) ister; WaterSource'un kendi trigger'ı bunu karşılar. Birikinti aynı anda suyu doldurur ve checkpoint kaydeder, ama sahne hemen değiştiği için bunun etkisi olmaz.
 
-Geçiş ekranı: `Assets/Scripts/Level/SceneFader.cs` kodla oluşturulur, sahneye bir şey eklenmez. Damla birikintiye girince yerinde durdurulur (Player kapalı, `Rigidbody2D.simulated` kapalı; input ve tüketim yok). Ekran **Fade Duration** (varsayılan 0.5 sn) içinde **Fade Color** rengine (varsayılan siyah) kararır. Sonraki sahne arka planda `LoadSceneAsync` ile yüklenir ve iki kare daha beklenir, sonra yeni bölüm aynı sürede açılır. Yükleme takılması karartının arkasında kalır. Fade Duration 0 olursa geçiş anında olur. Final fidanı (T27) bu bileşen değildir; son bölümde kazanma ayrı kurulacak.
+Geçiş ekranı: `Assets/Scripts/Level/SceneFader.cs` kodla oluşturulur, sahneye bir şey eklenmez. Damla birikintiye girince yerinde durdurulur (Player kapalı, `Rigidbody2D.simulated` kapalı; input ve tüketim yok). Ekran **Fade Duration** (varsayılan 0.5 sn) içinde **Fade Color** rengine (varsayılan siyah) kararır. Sonraki sahne arka planda `LoadSceneAsync` ile yüklenir ve iki kare daha beklenir, sonra yeni bölüm aynı sürede açılır. Yükleme takılması karartının arkasında kalır. Fade Duration 0 olursa geçiş anında olur.
+
+## Anında ölüm alanı (KillZone, lav)
+
+`Assets/Scripts/Level/KillZone.cs` trigger'a giren Player'ın suyunu `Consume(CurrentWater)` ile sıfırlar. Böylece ölüm, su bitişindeki aynı tek akışla olur: buharlaşma, son checkpoint'e dönüş ve dolum. Yeniden doğarken ya da su zaten sıfırken etkisi yoktur. Bileşen, aynı nesnede Is Trigger açık bir Collider2D ister; Tilemap Collider 2D de olur. Collider yoksa Console'da uyarı çıkar.
+
+Lav için önerilen kurulum: `Grid` altında ayrı bir `Hazard-Lava` tilemap, layer `Default` (Player ile çarpışır, zemin maskelerinde yok). Bu tilemap'te Tilemap Collider 2D (Is Trigger açık, Composite yok) ve `KillZone` bulunur. Collider katı olmadığı için damla lavın üstünde durmaz, içine girer ve ölür. Final fidanı (T27) bu bileşen değildir; son bölümde kazanma ayrı kurulacak.
 
 ## Doğrulama
 

@@ -1,5 +1,11 @@
 # Kararlar
 
+## Lav — anında ölüm
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı, planladığı mağara bölümünün (Level 3) altına lav eklemek istedi: “karakter lavaya girdiği gibi ölsün istiyorum.” Meşale ısı alanı ve ışıklandırma da bu bölüm için konuşuldu, ancak henüz plan aşamasındalar ve kod değişikliği istemiyorlar.
+
+**Uygulama:** `Assets/Scripts/Level/KillZone.cs` lavın trigger collider'ına eklenir. Damla değdiği anda suyu sıfırlanır; bu, mevcut tek ölüm akışını başlatır (buharlaşma, son checkpoint'te doğma, dolum). Ayrı bir ölüm sistemi kurulmadı; knockback flash'ı lavdan korumaz. Üç bölüme geçiş aşağıdaki K04 bölümünde (1 Kasım 2026) kayıtlıdır.
+
 ## Saw — Samples 90 ve eşit döngü birleşimi
 
 **Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı Saw'ın fazla hızlı döndüğünü ve döngü sonunda takıldığını bildirdi; devam yanıtıyla 15'ten 90'a çıkardığı ayarın Animation penceresindeki **Samples** olduğunu netleştirdi.
@@ -101,6 +107,8 @@ Isı/duman, artık seçilen bekleme veya yürüme tabanını malzeme çarpanınd
 **Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı: “Ben şimdi Level 2yi yapmak istiyorum.” Genel plandaki “ek bölüm eklenmez” varsayılanı ve T38'deki “ikinci bölüm şart değil” notu bu talimatla aşılmıştır.
 
 **Karar:** Oyun `Level1` ve `Level2` olmak üzere iki bölümden oluşur. Her bölüm ayrı sahnedir. Yaşayan tek fidan yalnızca son bölümdedir; `Level1` bir geçiş noktasıyla biter, ara fidan eklenmez.
+
+**Üçüncü bölüm (1 Kasım 2026):** Kullanıcı: “Level 2yi Level 3e bağlicam nasıl yapmalıyım.” Oyun artık `Level_1` → `Level_2` → `Level_3` (mağara) olmak üzere üç bölümdür. `Level_2`'nin sonundaki birikinti `Level_3`'e geçer. Yaşayan tek fidan `Level_3`'te, mağaranın ortasında, ışık hüzmesi altındadır (plan).
 
 **Bölüm sonu (31 Ekim 2026):** Kullanıcı: “benim sonraki seviyeye geçmem için o su birikintileri var ya, oralara gelmem gerekiyor, yani aslında su birikintisi level sonuna ulaştın demek.” Bölümün sonu bir su birikintisidir; o birikintiye `LevelExit` eklenir ve sıradaki bölüm yüklenir. Son bölümün sonunun (fidan) nasıl kurulacağı ayrıca belirlenecek.
 

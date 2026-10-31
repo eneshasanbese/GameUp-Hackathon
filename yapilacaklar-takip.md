@@ -1,6 +1,6 @@
 # Su Damlası — Yapılacaklar Takibi
 
-**Son kontrol:** 31 Ekim 2026, 20:18 (diskteki dosyalara ve koda göre; `Level_1`/`Level_2` sahne dosyaları okunarak incelendi, oynanmadı)
+**Son kontrol:** 1 Kasım 2026, 00:17 (diskteki dosyalara ve koda göre; `Level_1`/`Level_2`/`Level_3` sahne dosyaları okunarak incelendi, oynanmadı)
 **Ana belge:** [genel-yapilacaklar.md](genel-yapilacaklar.md). T numaraları oradaki görevlerle aynıdır.
 **Kural:** Kurulum maddeleri diskteki dosyalarla doğrulanınca işaretlenir. Oynanış maddeleri (T/QA) ancak asıl sahnede (`Level1`) oynanarak denendikten sonra işaretlenir. Kodu yazılmış ama oyunda denenmemiş maddeler **Uygulandı; test bekliyor** olarak not edilir. Kaydedilmemiş değişiklikler sayılmaz.
 
@@ -48,10 +48,21 @@
 - [x] `Tiles/Double` import ayarları: Single, PPU 128, Full Rect, Bilinear, mip map kapalı, sıkıştırma yok (314 dosya)
 - [x] `Backgrounds/Double` import ayarları aynı şekilde yapıldı (14 dosya)
 - [x] Tile paletleri oluşturuldu: `Ground-Dry` (kum), `Ground-Wet` (çim), `Decor` (314 tile), `Ground-Extra-Dry`
+  - 31 Ekim 2026: `Ground-Extra-Dry/Extra Dry.prefab` alfabetik dizilimden `Ground-Dry`/`Ground-Wet` ile aynı yerleşime alındı (3×3 blok, dikey sütun, tek blok, yatay + yuvarlak uçlar, bulutlar, rampalar). Aynı 28 taş tile'ı, GUID'ler korundu. **Unity palet görünümü kontrol bekliyor.**
+  - Not: `Ground-Extra-Dry` klasöründe 9 dekor tile'ı da var (`dry_bush`, `stone_pile` vb.; `Decor-Desert`'tekilerden ayrı dosyalar, collider tipi Sprite). `Decor` paletinde ve `Level_1/2/3` sahnelerinde kullanılıyorlar; silinmemeli. Yalnızca `Decor-Front`'a boyanmalı; istenirse Unity Project penceresinde `Decor` klasörüne taşınabilir.
 - [ ] K02 kararı `docs/kararlar.md` dosyasına yazıldı: Kenney Platformer Pack, `Double` klasörü, PPU 128. Ana belgedeki T42 ve T44 maddeleri (18 PPU, Point filtre, Pixel Perfect Camera) bu paket için geçerli değil.
 - [ ] Nemli zeminin görseli kesinleşti (şu an çim; "son fidan" hikâyesiyle çelişebilir, bkz. QA19)
 - [ ] `Decor-Desert` paleti: Kenney stilinde 9 cansız dekor tile'ı (kum: `dry_grass`, `dry_bush`, `tumbleweed`, `dry_cactus`, `sand_pebbles`; taş: `stone_pebbles`, `stone_pile`, `stone_spike`, `stone_dry_shrub`). PPU 128, collider yok, `Decor-Front`'a boyanır. **Dosyalar eklendi; Unity içe aktarımı ve palet görünümü kontrol bekliyor.**
 - [ ] QA19 — `Level1`'deki yeşil `cactus` dekorları yaşayan bitki gibi duruyor; istenirse `dry_cactus` ile değiştirilecek.
+- [ ] Mağara paletleri (31 Ekim 2026): Kenney kum/çimen tile'larının yeniden boyanmasıyla aynı şekil ve çarpışma, `Ground-Dry` ile aynı yerleşim. **Dosyalar eklendi; Unity içe aktarımı ve palet görünümü kontrol bekliyor.**
+  - `Cave-Rock` (28, gri-mor dalgalı kaya, collider Sprite) → `Ground-Dry`'a boyanır
+  - `Cave-Wet` (28, mavi zikzak üst bant, collider Sprite) → `Ground-Wet`'e boyanır; zikzak kenar dışarıdaki çimenle aynı "nemli" işaretidir
+  - `Cave-Soil` (28, kahverengi zikzak toprak, collider Sprite) → final ışığının altındaki toprak; `Ground-Wet` önerilir
+  - `Cave-Decor` (9, collider yok) → `Decor-Front`: sarkıt ×2, dikit ×2, mağara taşları, zemin/küçük/tavan kristali, kuru kök. Tavandan sarkanlar tavanın hemen altındaki kareye boyanır.
+- [ ] Mağara sprite'ları `platformerPack/Sprites/Cave/`: `Backgrounds/background_cave_far` ve `background_cave_near` (512×1280 = 4×10 birim, yatayda dikişsiz), `Light/glow_cyan`, `glow_warm`, `light_shaft` (3×8 birim, pivot üst-orta). Unity'de bağlanmadı.
+  - Arka plan: mağara sahnesinde `Background` altındaki iki SpriteRenderer'ın sprite'ı bunlarla değiştirilir, Draw Mode Tiled, Size (34.25, 10), Y = 0; Main Camera arka plan rengi #2D2643.
+  - Işık (URP 2D, tilemap'ler `Sprite-Lit-Default` kullanıyor): `Global Light 2D` yoğunluğu ≈ 0.35–0.45; kristallere camgöbeği Point Light 2D; oyuncuya küçük yumuşak Point Light 2D (yoksa damla karanlıkta seçilmiyor); finalde hüzme sprite'ı `Sprite-Unlit-Default` ile + sıcak Point/Spot Light 2D. Değerler önizleme hesabıdır, oyunda denenmedi.
+- [ ] Karar kaydı: `docs/kararlar.md` K04 iki bölüm diyor; diskte `Level_3` (mağara) var ve kullanıcı final fidanı mağaranın sonuna koymayı planlıyor. Bölüm sayısı ve finalin hangi sahnede olduğu K04'e yazılmalı.
 
 ## 3. Sahne ve bölüm (`Level1`)
 
@@ -70,10 +81,10 @@
 - [x] `Level2` sahnesi oluşturuldu: diskte `Scenes/Level_2.unity` (sahne `Level1` de `Level_1` olarak yeniden adlandırıldı). 31 Ekim 2026, 18:49 kaydında bölüm x≈53'e kadar çizili: başlangıç ve üç kum bulutu (iki `HapsirikKoz`), üç taş bulut (`Ground-Extra-Dry`, üç `Saw_Patrol`), kum blok + `HapsirikKoz`, `KozOcagi_Stationary`, alt mağarada birikinti ve sağda 5 birimlik duvar. Dekor `Decor-Desert` ile yapıldı. Oynanarak denenmedi.
 - [x] `Level_2` build listesinde `Level_1`'in hemen altında (sıra: 0 `Level_1`, 1 `Level_2`); diskte doğrulandı.
 - [ ] `Level2`'de Player başlangıç konumu, su kaynakları ve `CameraBounds` noktaları yeni bölüme göre ayarlandı (sonra **Invalidate Bounding Shape Cache**). Player ayarlı (−10.8, −0.3). Tek `WaterSource` (50, −3) mağarada; başlangıçtan oraya kadar ≈60 birim boyunca checkpoint yok. `CameraBounds` hâlâ `Level1` değerlerinde (x −13…55); sol duvar (x −14) görüş dışında.
-- [ ] **Mağaradaki birikinti = bölüm sonu** (20:03 kullanıcı kararı: bölüm sonu su birikintisidir). Mağaradan çıkış olmaması bu durumda sorun değil; birikintiye ulaşınca bölüm biter. Ama `Level_2` son bölüm olduğu için bu birikintide sıradaki sahne yok: fidan/kazanma (T27) burada nasıl kurulacak, karar bekliyor.
+- [ ] **Mağaradaki birikinti = bölüm sonu** (20:03 kullanıcı kararı: bölüm sonu su birikintisidir). Mağaradan çıkış olmaması bu durumda sorun değil; birikintiye ulaşınca bölüm biter. 1 Kasım: `Level_2` artık son bölüm değil; bu birikintiye `LevelExit` (Next Scene Name `Level_3`) eklenecek, `Level_3` build listesine 3. sırada girecek. **Kullanıcı kuruyor; diskte henüz yok.**
 - [ ] `jumpForce` 7 artık iki sahnede de sahne override'ı (prefab'da hâlâ 10). Alana sağ tıklayıp **Apply to Prefab** ile prefab'a taşınmalı; `Level_1` bu değerle oynanarak denenmeli.
 - [ ] Bulut düşmanları: 4 karelik bulutlarda 3 birim devriye + 1,75 duman; iniş yeri neredeyse hep dolu, itilince çukura düşülüyor. Taş bulutlarda da aynı durum: x 22'deki testere 3 karelik bulutun dışına taşıyor, x 28–34'teki iki testere iç içe geçiyor. Devriye mesafesini kısalt, düşmanı sabitle ya da bulutu genişlet.
-- [ ] Final: x≈53'te 5 birimlik duvar var; bölüm sonu mağaradaki birikinti. Fidan/kazanma nesnesi henüz yok (bkz. üstteki madde ve T27).
+- [ ] Final: x≈53'te 5 birimlik duvar var; bölüm sonu mağaradaki birikinti (`Level_3`'e geçiş). Fidan artık `Level_3`'te.
 - [ ] Küçük: x 34–35 arasında 1 karelik delik (küçük damla düşebilir). Birikintinin altında (49–50, −4) hem kum hem çimen tile'ı üst üste duruyor; kum olanları sil.
 - [ ] Zorluk geçişi: `Level_1`'de hiç düşman yok, `Level_2`'de 9 düşman var (4 `HapsirikKoz`, 3 `Saw_Patrol`, 1 `KozOcagi`). Oyuncu her düşmanı ilk kez zor bir yerde görüyor; 1–2 düşmanı tek başına ve geniş zeminde `Level_1`'e koymak ya da `Level_2`'de sayıyı azaltmak önerildi.
 - [ ] Nemli zemin `Level_2`'de yalnızca 2 tile (mağaradaki birikintinin altında); bölümün geri kalanı kuru ve çok kuru. Uzun yürüme yerlerine (başlangıç zemini, x 35–41 blok) birkaç nemli parça dinlenme alanı olabilir.
@@ -81,6 +92,13 @@
 - [ ] `Level_2`'nin üç zemin tilemap'ine `GroundSurface` ekle (`Level_1`'deki gibi: `Ground-Dry` → Sand, `Ground-Wet` → Grass, `Ground-Extra-Dry` → BlackStone). Şu an malzeme çarpanlarının hepsi 1 olduğu için fark yok; çarpanlar değişirse `Level_2` zemini çarpansız kalır.
 - [ ] `Level_1` sonunda `Level_2`'ye geçiş noktası. Script yazıldı: `Assets/Scripts/Level/LevelExit.cs` (su varken tek seferlik geçiş, yeni bölüm dolu suyla başlar). Bölüm sonu su birikintisi olduğu için bileşen `Level_1`'in son `WaterSource` örneğine (x≈44) eklenir; prefab'a uygulanmaz. Kullanıcı sahneye ekleyip geçişi denedi ve geçişte donma fark etti. Diskte doğrulandı: `Level_1`'de birikintiye `LevelExit` (Next Scene Name `Level_2`) eklenmiş, build listesi `Level_1`, `Level_2` (kaydedilmiş, commit edilmemiş). 20:18: kararma/açılma geçişi eklendi (`SceneFader.cs`, varsayılan 0.5 sn siyah; sahne kurulumu gerekmez). **Fade geçişi uygulandı; Unity'de test bekliyor.**
 - [ ] Karar: `Level2`'ye su dolu mu başlıyor, yoksa `Level1`'den kalan su mu taşınıyor? Şu an `LevelExit` ile dolu başlıyor (öneri buydu); taşınması istenirse ek kod gerekir.
+
+**Level 3 — mağara (`Scenes/Level_3.unity` yapım aşamasında, commit edilmedi, build listesinde yok)**
+
+- [ ] Lav: anında ölüm (kullanıcı kararı, [kararlar](docs/kararlar.md)). Script yazıldı: `Assets/Scripts/Level/KillZone.cs`, değince su sıfırlanır ve mevcut ölüm/yeniden doğma akışı başlar. 1 Kasım 2026 diskte doğrulandı: `Hazard` tilemap (layer Default, Tilemap Collider 2D Is Trigger, Composite yok, `KillZone` açık, `Sprite-Unlit-Default`), sol altta lav havuzu (x −12…7, y −29…−26), yüzeyde `LavaAnimation` Animated Tile (Collider Type Sprite), kaya ile üst üste binme yok. **Kurulum doğru; oynanarak test bekliyor.**
+- [ ] **Düşme sınırı:** `Level_3` Player'ında `WaterMeter → Fall Limit` hâlâ −12, bölüm −30'a kadar iniyor. Damla y −12'nin altına indiği anda ölüyor; alt mağara, `WaterSource_3` (52, −23) ve lav ulaşılamaz. Bu sahnede Fall Limit −35 yapılmalı (prefab'a uygulanmamalı; Level_1/2 çukurları −12'ye göre).
+- [ ] `Level_3` mağarasının tamamı `Ground-Extra-Dry` tilemap'inde (taş): her yerde çok kuru tüketim (yürürken 6, dururken 2 birim/sn). Bilerek mi, karar bekliyor. `Ground-Dry`/`Ground-Wet` boş. `GroundSurface` bileşenleri de yok (`Level_2`'den kopyalandığı için).
+- [ ] Plan (kod yok): karanlık mağara (Global Light 2D kısık), damlaya ve birikintilere ışık, ısı alanlı meşaleler (`torch_on_a/b` + Spot Light 2D + mevcut `EnemyHeatArea`), mağara ortasında ışık hüzmesi altında susuz fidan (final). 1 Kasım: oyun üç bölüm oldu ([K04](docs/kararlar.md)); final fidanı `Level_3`'te.
 ## 4. Oyuncu
 
 - [ ] T08 — Player prefab'ı: kökte Rigidbody 2D + Circle Collider 2D (su azaldıkça küçülür, bkz. [K03](docs/kararlar.md)), animasyonlu sprite `Visual` alt objesinde, layer `Player`. **Uygulandı; Level1'de test bekliyor.**
@@ -145,7 +163,7 @@ Su değerinin tamamı `WaterMeter`'da; ayrıntılar [su belgesinde](docs/water-p
 - [ ] T24 — Birikintiye art arda girip çıkmak hata veya kilitlenme yaratmıyor. **Uygulandı; test bekliyor.**
 - [ ] T25 — Su bitince tek seferlik ölüm başlıyor. **Uygulandı; test bekliyor.**
 - [ ] T26 — Yeniden doğmada konum, hız, su, kontrol ve UI sıfırlanıyor. **Uygulandı (UI bar dahil); test bekliyor.**
-- [ ] T27 — Final fidanı: kazanma mesajı çıkıyor, tüketim ve kontrol kapanıyor. **Başlanmadı.** Görseller hazır: `platformerPack/Sprites/Sapling/sapling_thirsty.png` (oyun boyunca) ve `sapling_green.png` (kazanınca, T54). 128×192 px, PPU 128, alt-orta pivot; nesne zemin yüzeyine konur. Fidan yalnızca son bölümde (`Level2`) olacak; `Level1` geçiş noktasıyla biter.
+- [ ] T27 — Final fidanı: kazanma mesajı çıkıyor, tüketim ve kontrol kapanıyor. **Başlanmadı.** Görseller hazır: `platformerPack/Sprites/Sapling/sapling_thirsty.png` (oyun boyunca) ve `sapling_green.png` (kazanınca, T54). 128×192 px, PPU 128, alt-orta pivot; nesne zemin yüzeyine konur. Fidan yalnızca son bölümde (`Level_3`, mağara) olacak; `Level_1` ve `Level_2` su birikintisiyle (`LevelExit`) biter.
 - [ ] T28 — Tekrar oyna bölümü baştan başlatıyor. **Başlanmadı.**
 - [ ] T29 — Baştan sona ilk build alındı ve denendi. **Başlanmadı.**
 
