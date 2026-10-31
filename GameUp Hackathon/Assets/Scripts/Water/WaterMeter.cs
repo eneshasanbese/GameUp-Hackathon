@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [DefaultExecutionOrder(100)]
@@ -46,12 +47,26 @@ public sealed class WaterMeter : MonoBehaviour
     private bool restoreSimulated;
     private SpriteRenderer[] renderers;
     private Color[] colors;
+    private readonly Dictionary<UnityEngine.Object, float> drainMultipliers = new Dictionary<UnityEngine.Object, float>();
 
     public float CurrentWater => currentWater;
     public float NormalizedWater => currentWater / Capacity;
     public bool IsEmpty => currentWater <= 0f;
     public bool IsRespawning { get; private set; }
     public Vector2 Checkpoint => checkpoint;
+    public float DrainMultiplier
+    {
+        get
+        {
+            float multiplier = 1f;
+            foreach (var entry in drainMultipliers)
+            {
+                if (entry.Key != null)
+                    multiplier = Mathf.Max(multiplier, entry.Value);
+            }
+            return multiplier;
+        }
+    }
     public event Action<float> WaterChanged;
     public event Action Depleted;
     public event Action RefilledFromSource;
@@ -101,6 +116,7 @@ public sealed class WaterMeter : MonoBehaviour
 
     private void OnDisable()
     {
+        drainMultipliers.Clear();
         StopAllCoroutines();
         if (IsRespawning)
             RestoreControls();
@@ -123,10 +139,11 @@ public sealed class WaterMeter : MonoBehaviour
             return;
 
         // In the air no ground flag is set, so the normal dry rate applies.
+        // Heat areas (DrainMultiplier) scale whichever surface rate is active.
         float rate = physics.wetGrounded ? wetDrainPerSecond
             : physics.extraDryGrounded ? extraDryDrainPerSecond
             : dryDrainPerSecond;
-        Consume(rate * Time.fixedDeltaTime);
+        Consume(rate * DrainMultiplier * Time.fixedDeltaTime);
     }
 
     private void Update()
@@ -177,6 +194,23 @@ public sealed class WaterMeter : MonoBehaviour
     }
 
     public void Refill() => SetWater(Capacity);
+
+    // Sources own their entry; overlapping heat areas use the strongest multiplier.
+    public void SetDrainMultiplier(UnityEngine.Object source, float multiplier)
+    {
+        if (source == null || !isActiveAndEnabled || IsRespawning)
+            return;
+        if (float.IsNaN(multiplier) || float.IsInfinity(multiplier))
+            return;
+        drainMultipliers[source] = Mathf.Max(1f, multiplier);
+    }
+
+    public void RemoveDrainMultiplier(UnityEngine.Object source)
+    {
+        if (!ReferenceEquals(source, null))
+            drainMultipliers.Remove(source);
+    }
+
     public void SetCheckpoint(Vector2 position) => checkpoint = position;
     public void ResetPositionTracking() => previousPosition = body.position;
 
@@ -243,6 +277,7 @@ public sealed class WaterMeter : MonoBehaviour
     private IEnumerator Respawn()
     {
         IsRespawning = true;
+        drainMultipliers.Clear();
         restorePlayerEnabled = player.enabled;
         restoreSimulated = body.simulated;
         player.enabled = false;

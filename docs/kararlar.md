@@ -1,5 +1,11 @@
 # Kararlar
 
+## Saw, Slime Fire ve yakınlıkta erime
+
+**Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı, mevcut Saw/Slime Fire sheet'lerinden duran ve belirli iki nokta arasında git-gel yapan prefablar istedi. Slime'ın yakınlıktaki oyuncunun erime çarpanını artırması açıkça istendi. Önceki düşmanları kapsam dışında tutan karar, yalnızca bu iki düşman ve davranışları için güncellendi.
+
+**Temas kararı:** Kullanıcının devam mesajı: “doğrudan temas şu anlık /to-do olarak kalsın player a knockback ekleyeceğiz.” Bu nedenle doğrudan temas şimdilik etkisizdir; knockback, temas hasarı veya temasla yeniden doğma uygulanmadı. Isı alanı ayrı trigger'dır ve mevcut tüketimi çarpar; yerde dururken sıfır tüketim kuralı korunur. Çarpan 2, alan yarıçapı 1.75, git-gel offset'i (3, 0) ve hızı 1.5 deneme değerleridir. Üst üste alanlarda en güçlü etki kullanılır. Ayrıntılar [düşman belgesindedir](enemies.md).
+
 ## K03 — Suya bağlı görsel ve fiziksel küçülme
 
 **Tarih:** 31 Ekim 2026.
@@ -25,5 +31,7 @@
 **Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı bölüme "extra dry" zemin ekledi, `Ground-Extra-Dry` fizik layer'ını (10) oluşturdu ve kodun bu layer'ı algılamasını istedi. Genel plandaki "sıcak bölge ilk sürüm için zorunlu değil" notu ve P2 "özel sıcak/kuru alan" fikri bu talimatla kapsama alınmıştır.
 
 **Uygulama:** `PhysicsControl` üçüncü bir LayerMask (`Extra Dry Ground Layer`) taşır ve `extraDryGrounded` bilgisini verir; bu zemin de `grounded` sayılır, böylece yürüme ve zıplama normal çalışır. `WaterMeter`, çok kuru zeminde gerçek yatay ilerlemede `Extra Dry Drain Per Second` oranını kullanır. Yerde dururken tüketim yine yoktur; havada kuru oran geçerlidir, çok kuru katsayı havaya taşınmaz.
+
+**Isı alanıyla birlikte:** Slime Fire ısı alanının `DrainMultiplier` değeri, o an geçerli zemin oranını çarpar. Çok kuru zeminde ısı alanındaki hareket deneme değerleriyle 6 × 2 = 12 birim/saniye tüketir; bu birleşim dengelenirken birlikte test edilmelidir.
 
 **Deneme ayarı:** `Extra Dry Drain Per Second = 6` (kuru oranın iki katı). Oynanışla dengelenecek başlangıç değeridir. Görsel olarak yalnızca renkle değil doku/şekil ile de ayrılması gerekir (T43).

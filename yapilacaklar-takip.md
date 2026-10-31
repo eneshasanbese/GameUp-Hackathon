@@ -6,6 +6,10 @@
 
 ## 1. Proje kurulumu
 
+31 Ekim 2026 ek kapsam: Saw ve Slime Fire için duran/git-gel prefabları ve Slime yakınlık erime çarpanı uygulandı. Unity 6000.5.0f1 ile ayrı geçici projede 20 asset ve 31 Play Mode kontrolü geçti; ayarlar ve doğrulama kaydı [düşman belgesinde](docs/enemies.md). Asıl sahnelere yerleşim ve build testi yapılmadı.
+
+- [ ] Düşmanlarla doğrudan temas: Player knockback eklendikten sonra bağlanacak (kullanıcının açık TODO kararı).
+
 - [x] Unity 6000.5.0f1 projesi oluşturuldu (URP 2D, yeni Input System)
 - [x] `.gitignore` eklendi; `Library`, `Temp`, `Logs`, `UserSettings` depo dışında (T05)
 - [x] Unity git ayarları doğru: Force Text, Visible Meta Files

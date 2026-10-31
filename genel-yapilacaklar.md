@@ -245,7 +245,7 @@ Bu liste uygulama talimatı değildir. Her ek fikir tamamlanma süresini ve test
 | Kolay tüketim ayarı | Daha erişilebilir deneme | Orta; temel denge oturduktan sonra |
 | Geçici yeşil görsel iz | Umut/hayat teması | Hikâye onayı gerekir; başka canlı bitki üretip “son fidan” fikrini çeliştirmesin |
 
-**Şimdilik dışarıda:** İkinci bölüm, hareket eden platformlar, ayrıca tasarlanmış dar geçit/puzzle mekaniği, dinamik gölge sistemi, düşmanlar, silah, karmaşık su fiziği, envanter, kayıt/yükleme ve çok oyunculu mod. Suya bağlı collider küçülmesi ve hareket/zıplama çarpanları 31 Ekim kullanıcı kararlarıyla kapsam içindedir.
+**Şimdilik dışarıda:** İkinci bölüm, hareket eden platformlar, ayrıca tasarlanmış dar geçit/puzzle mekaniği, dinamik gölge sistemi, diğer düşmanlar, silah, karmaşık su fiziği, envanter, kayıt/yükleme ve çok oyunculu mod. Suya bağlı collider küçülmesi ve hareket/zıplama çarpanları 31 Ekim kullanıcı kararlarıyla kapsam içindedir. Aynı günkü açık kullanıcı talebiyle Saw ve Slime Fire'ın duran/git-gel türleri ile Slime yakınlık erime çarpanı kapsama alındı; doğrudan temas, ileride Player knockback eklenecek TODO'dur ([karar](docs/kararlar.md), [prefab ayarları](docs/enemies.md)).
 
 ## Son test kontrol listesi
 
