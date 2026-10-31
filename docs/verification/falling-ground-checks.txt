@@ -1,0 +1,44 @@
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: original GUID and root fileID preserved
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: no missing scripts
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: both original sprites import
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: existing dryness and material systems wired
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: solid two-tile support waits without gravity
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: quarter-second default delay
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: original GUID and root fileID preserved
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: no missing scripts
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: both original sprites import
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: existing dryness and material systems wired
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: solid two-tile support waits without gravity
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: quarter-second default delay
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: no Player, no fall
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: non-Player weight does not trigger
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: side contact does not trigger
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: underside contact does not trigger
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: disabled Player does not trigger
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: actual Player lands and recognizes support
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: actual Player reads ground material
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: platform stays solid during initial delay
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: platform falls after delay even when Player leaves
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: platform falls vertically without rotation
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: downward speed stays bounded
+Assets/Prefabs/Traps/FallingGround_Sand.prefab: fallen platform is cleaned up
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: no Player, no fall
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: non-Player weight does not trigger
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: side contact does not trigger
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: underside contact does not trigger
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: disabled Player does not trigger
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: actual Player lands and recognizes support
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: actual Player reads ground material
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: platform stays solid during initial delay
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: platform falls after delay even when Player leaves
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: platform falls vertically without rotation
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: downward speed stays bounded
+Assets/Prefabs/Traps/FallingGround_Rock.prefab: fallen platform is cleaned up
+Inspector delay controls the grace period
+Disabled component suspends the countdown
+Re-enabled component resumes the countdown
+Disabling during fall suspends motion
+Re-enabling resumes the same fall
+Pause suspends the countdown
+Unpause resumes the countdown
+Player loses support after platform releases

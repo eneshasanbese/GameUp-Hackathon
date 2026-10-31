@@ -199,7 +199,8 @@ public static class FallingStoneTrapVerification
         trap = SpawnTrap(); player = SpawnPlayer(new Vector2(0f, 1f)); water = player.GetComponent<WaterMeter>();
         water.Consume(95f); int deaths = 0; water.Depleted += () => deaths++;
         await Delay(0.65f);
-        Check(water.IsRespawning && !player.isActiveAndEnabled && deaths == 1,
+        Check(water.IsRespawning && player.CurrentState == PlayerStates.State.Death &&
+            !player.GetComponent<Rigidbody2D>().simulated && deaths == 1,
             "Lethal stone contact starts exactly one existing respawn with controls stopped");
         await Delay(1.5f);
         Check(player.isActiveAndEnabled && !water.IsRespawning && water.CurrentWater == WaterMeter.Capacity && deaths == 1,

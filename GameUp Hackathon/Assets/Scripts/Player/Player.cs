@@ -36,19 +36,23 @@ public class Player : MonoBehaviour
 
     private void OnDisable()
     {
+        StopGameplay();
+        stateMachine.ExitCurrentState();
+    }
+
+    public void StopGameplay()
+    {
         GameplayStopped?.Invoke();
         physicsControl.ClearExternalHorizontalSpeeds();
         gatherInput.DisablePlayerMap();
-        stateMachine.ExitCurrentState();
         foreach (BaseAbility ability in playerAbilities)
             ability.OnPlayerDisabled();
     }
 
     private void Update()
     {
-        Debug.Log("Current State: " + CurrentState);
         stateMachine.ProcessAbility();
-        if (CurrentState != PlayerStates.State.Knockback)
+        if (CurrentState != PlayerStates.State.Knockback && CurrentState != PlayerStates.State.Death)
             Flip();
 
         foreach (BaseAbility ability in playerAbilities)

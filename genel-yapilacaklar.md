@@ -1,5 +1,9 @@
 # Su Damlası Oyunu — Genel Yapılacaklar
 
+1 Kasım 2026 basınca düşen zemin ek kapsamı (T30/T42): kullanıcı talebiyle `FallingGround_Sand.prefab` ve `FallingGround_Rock.prefab`, oyuncu üstlerine bastıktan 0.25 saniye sonra tek kez düşer. Beklemede zemin desteği korunur; yan/alt temas sayacı başlatmaz. [Ayarlar ve doğrulama](docs/falling-ground-traps.md). Genel kabul kutuları asıl bölüm testini bekler.
+
+1 Kasım 2026 ölüm/yeniden doğma güncellemesi (T25–T26, QA07–QA09): açık kullanıcı talebiyle sıfır su/düşme `DeathAbility` durumuna girer; hazır ölüm animasyonu tamamlanınca sahne yeniden yüklenerek harita sıfırlanır ve son checkpoint'te tam suyla doğulur. [Bağlantılar ve doğrulama](docs/water-player.md#kaynak-ve-yeniden-doğuş). Genel kabul kutuları asıl bölüm testini bekler.
+
 1 Kasım 2026 düşen taş tuzağı ek kapsamı (T30/T42, QA06–QA09): açık kullanıcı talebiyle `Trap_stoneSpike.prefab`, oyuncu altındaki alana yaklaşınca tek kez düşer; zeminin arkasından geçip 3 saniyede silinir. Kullanıcının ek onayıyla mevcut su kaybı/knockback/flash sistemi kullanılır. Özgün prefab kimlikleri ve Level_2 instance bağlantısı korunur. [Ayarlar ve doğrulama](docs/stone-spike-trap.md).
 
 31 Ekim 2026 Köz Ocağı HeatAura (T42/T43): kullanıcı talebiyle SlimeFire'daki mevcut ısı animasyonu sürekli oynayacak şekilde eklendi; etki alanına uyar ve rüzgârın arkasında görünür. Mevcut su/çekim davranışı korunur. [Ayarlar ve doğrulama](docs/koz-ocagi.md#sürekli-heataura--31-ekim-2026).

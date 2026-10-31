@@ -1,0 +1,41 @@
+Original prefab GUID preserved
+Original root fileID preserved for Level_2 instance
+Prefab imports without missing scripts
+Saved prefab is wired and waits without gravity
+Sprite-shaped hitbox is inactive until release and cannot block terrain
+Hitbox interacts only with Player, leaving global physics settings intact
+Existing sprite draws on Level order -1 behind Level_2 ground order 0
+Original sprite reference is preserved
+Original downward sprite rotation is preserved
+Non-Player collider on Player layer cannot release trap
+Player outside horizontal range does not release trap
+Player above the stone does not release trap
+Player trigger sensors do not release trap
+Disabled Player cannot release trap
+Player with stopped physics cannot release trap
+Disabled Player collider cannot release trap
+Player mask filters other layers
+Approach from the left releases the actual rotated prefab downward
+Released stone keeps falling after Player leaves
+Approach from the right also releases stone
+Stone passes through Ground-Dry vertically without rotating or stopping
+Fall preserves orientation through Ground-Dry
+Fall speed stays bounded on Ground-Dry
+Stone remains until its configured three-second lifetime
+Stone destroys itself after three seconds even after Player is removed
+Stone passes through Ground-Wet vertically without rotating or stopping
+Fall preserves orientation through Ground-Wet
+Fall speed stays bounded on Ground-Wet
+Stone passes through Ground-Extra-Dry vertically without rotating or stopping
+Fall preserves orientation through Ground-Extra-Dry
+Fall speed stays bounded on Ground-Extra-Dry
+Disabling behaviour suspends falling physics and damage
+Re-enabling resumes the same one-shot fall
+Falling contact uses the real Player's ten-point water hit and flash protection
+Hit enters the existing knockback/movement state flow
+Stone disables its damage hitbox after its first Player contact
+Continued falling cannot deal duplicate water damage
+Fixture starts existing shared immunity
+Existing flash immunity rejects stone damage
+Lethal stone contact starts exactly one existing respawn with controls stopped
+Existing respawn restores Player and water without a second death

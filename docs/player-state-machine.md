@@ -1,5 +1,7 @@
 # Player state machine
 
+1 Kasım 2026 ölüm/harita sıfırlaması (T25–T26): `DeathAbility`, mevcut state machine'de `Death=4` durumudur. `WaterMeter` su sıfırlanınca veya düşme sınırında tek yeniden doğma coroutine'ini başlatır. Player ölüm animasyonu boyunca açık kalır; `StopGameplay` giriş/çekim/flash/bekleyen itişi temizler ve mevcut `GameplayStopped` abonelerine haber verir. Zıplama ve yön çevirme ölüm durumunu kesemez. Klip bitince harita yeniden yüklenir, son checkpoint yeni Player'a aktarılır. [Ayrıntı ve sahne koşulları](water-player.md#kaynak-ve-yeniden-doğuş).
+
 31 Ekim 2026 Köz Ocağı eki: `PhysicsControl` kaynak başına yatay hedef hız katkılarını normal Idle/Move/Jump hedefiyle birleştirir. `Player.OnDisable` kayıtları temizler; mevcut suya bağlı hız/zıplama korunur. [Birimler, yaşam döngüsü ve testler](koz-ocagi.md).
 
 T09 kapsamı: sağ/sol hareket, tek zıplama, yere temas ve düşüş. Yapı, paylaşılan örnekteki gibi `BaseAbility : MonoBehaviour` üzerinden ayrı ability component'leri kullanır.
@@ -50,9 +52,9 @@ Yanıp sönme yalnızca SpriteRenderer görünürlüğünü değiştirir; renk/a
 
 Player veya ability kapatılınca ve ölüm/yeniden doğma başlayınca flash ve bekleyen itiş temizlenir; tekrar etkinleşme eski Knockback durumunu devam ettirmez. Ölüm için ikinci coroutine veya sayaç yoktur. `GameUp → Player → Configure Knockback` menüsü mevcut Player/düşman prefab ayarlarını koruyarak component bağlantılarını, iki controller'ı ve hasar karesini yeniden kurar; hazır asset'leri kullanırken menüyü çalıştırmak gerekmez.
 
-`Components.unity` sahnesindeki Player prefab'ında `Player`, `GatherInput`, `PhysicsControl`, `IdleAbility`, `MoveAbility`, `JumpAbility` ve `KnockbackAbility` component'leri vardır. Player referansları ve input asset'i sahnede ayarlanmıştır. Player Inspector'ında hareket veya zıplama ayarı bulunmaz. Su miktarı, görseller ve kaynaklar [su damlası prototipi belgesinde](water-player.md) anlatılır.
+`Components.unity` sahnesindeki Player prefab'ında `Player`, `GatherInput`, `PhysicsControl`, `IdleAbility`, `MoveAbility`, `JumpAbility`, `KnockbackAbility` ve `DeathAbility` component'leri vardır. Player referansları ve input asset'i sahnede ayarlanmıştır. Player Inspector'ında hareket veya zıplama ayarı bulunmaz. Su miktarı, görseller ve kaynaklar [su damlası prototipi belgesinde](water-player.md) anlatılır.
 
-Başka bir Circle'a Player eklemek GatherInput, PhysicsControl, Rigidbody2D ve CircleCollider2D gereksinimlerini ekler. Ayrıca IdleAbility, MoveAbility, JumpAbility ve temas hasarı için KnockbackAbility component'lerini ekleyip GatherInput'a Input Actions asset'ini bağla. Rigidbody2D Dynamic ve Gravity Scale pozitif olmalı. Zeminde trigger olmayan Collider2D bulunmalı.
+Başka bir Circle'a Player eklemek GatherInput, PhysicsControl, Rigidbody2D ve CircleCollider2D gereksinimlerini ekler. Ayrıca IdleAbility, MoveAbility, JumpAbility, temas hasarı için KnockbackAbility ve ölüm animasyonu için DeathAbility component'lerini ekleyip GatherInput'a Input Actions asset'ini bağla. Rigidbody2D Dynamic ve Gravity Scale pozitif olmalı. Zeminde trigger olmayan Collider2D bulunmalı.
 
 ## Düşük suda hız ve zıplama
 
@@ -71,8 +73,9 @@ Inspector'daki her çarpanı 1 yapmak ilgili artışı kapatır. Sadece daha uza
 | Jump | 5 / 10 FPS | 0.5 s | Bir kez; havada son düşüş pozu tutulur |
 | Heal | 4 / 5 FPS | 0.8 s | Kaynaktan dolumda bir kez |
 | Knockback | 1 / 10 FPS | 0.1 s | Hasar karesi flash/knockback süresince tutulur |
+| Death | 8 / 10 FPS | 0.8 s | Bir kez; tamamlanınca sahne sıfırlanır ve son checkpoint'e dönülür |
 
-`State` int parametresi mevcut `PlayerStates` değerlerini izler: Idle=0, Move=1, Jump=2, Knockback=3. Flash sürerken animasyon parametresi Knockback'te tutulabilir; fiziksel state toparlanma sonunda normal harekete döner. Hareket durumları arasında geçiş beklemesizdir; zıplama/düşüşten inişte güncel Idle veya Move seçilir. Jump sheet'inin altıncı, yere basarken sıkışma karesi havada tutulmaz; iniş esnemesi mevcut WaterMeter'da kalır.
+`State` int parametresi mevcut `PlayerStates` değerlerini izler: Idle=0, Move=1, Jump=2, Knockback=3, Death=4. Ölüm en yüksek görsel önceliktir; Heal tetikleyicisi ve flash temizlenir. Ölüm dışında flash sürerken animasyon parametresi Knockback'te tutulabilir; fiziksel state toparlanma sonunda normal harekete döner. Hareket durumları arasında geçiş beklemesizdir; zıplama/düşüşten inişte güncel Idle veya Move seçilir. Jump sheet'inin altıncı, yere basarken sıkışma karesi havada tutulmaz; iniş esnemesi mevcut WaterMeter'da kalır.
 
 `Heal` trigger'ı yalnızca eksik suyla kaynağa girişte gönderilir. Kaynakta kalmak klibi yeniden başlatmaz. Heal bitince o andaki Idle, Move veya Jump'a geçilir; oynarken input ve fizik devam eder. Yeniden doğma Heal'ı temizler. Yeni bir gameplay state'i eklenmez ve mevcut ability/input akışı değiştirilmez.
 
@@ -89,7 +92,8 @@ Klipler yalnızca sprite değiştirir; Visual ölçeği/konumu WaterMeter'da kal
 - `GatherInput`: ayrı component olarak Input System asset'inin oyuncuya ait kopyasını yönetir; iki fizik adımı arasındaki kısa Space basışını saklayıp JumpAbility'ye bir kez verir.
 - `PhysicsControl`: Rigidbody2D, gerçek collider temasları ve aşağı şekil taramasıyla zemin desteğini yönetir. Eğimde hareket yüzey teğetini izler; duruşta yokuştan kalan dikey hız ve kayma engellenir. Suya bağlı boyut isteğinde mevcut CircleCollider2D'nin yarıçapı/offset'i birlikte değişir, destek hizası korunur ve büyümede boş alan kontrol edilir. Kök ölçek ve zıplama kuvveti değiştirilmez; gövdenin dönmesi kilitlenir.
 - `KnockbackAbility`: gövde temasıyla tek su kaybı, FixedUpdate itişi, kontrol kilidi/toparlanma, flash ve tekrar darbe koruması. `OnPlayerDisabled` ile bekleyen etki temizlenir.
-- `PlayerStates`: `Idle`, `Move`, `Jump`, `Knockback`. Jump hem yükselmeyi hem düşmeyi kapsar.
+- `DeathAbility`: kontrol/hasar görselini temizleyip Death klibini başlatır; klip tamamlanmasını WaterMeter okur. İkinci ölüm coroutine'i veya su sayacı tutmaz.
+- `PlayerStates`: `Idle`, `Move`, `Jump`, `Knockback`, `Death`. Jump hem yükselmeyi hem düşmeyi kapsar.
 
 Durum davranışları örnekteki gibi Update içinde, fizik işlemleri FixedUpdate içinde çalışır. Fizik adımında önce PhysicsControl zemin bilgisini günceller, sonra JumpAbility zıplama isteğini işler, ardından Player aktif ability'nin fizik metodunu çağırır. Kenardan yürüyerek veya durulan zeminin kalkmasıyla düşmek, yukarı itiş uygulamadan Jump'a geçirir. İnişte yatay giriş varsa Move, yoksa Idle seçilir.
 
