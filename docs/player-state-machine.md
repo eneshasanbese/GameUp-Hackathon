@@ -20,6 +20,23 @@ Player üzerindeki component ayarları:
 
 Başka bir Circle'a Player eklemek GatherInput, PhysicsControl, Rigidbody2D ve CircleCollider2D gereksinimlerini ekler. Ayrıca IdleAbility, MoveAbility ve JumpAbility component'lerini ekleyip GatherInput'a Input Actions asset'ini bağla. Rigidbody2D Dynamic ve Gravity Scale pozitif olmalı. Zeminde trigger olmayan Collider2D bulunmalı.
 
+## Animasyonlar
+
+`Components.unity` sahnesinde `Visual` üzerinde Animator ve `PlayerAnimation` vardır. `PlayerAnimation` aynı objenin Animator'ını, üstteki Player ve WaterMeter'ı otomatik bulur. Animator'a `Assets/Animations/Visual.controller` bağlıdır; Inspector'da başka referans gerekmez. Başka bir oyuncuya taşınırsa bu iki component'i SpriteRenderer'ın olduğu Visual'a ekle. `Player.controller` da aynı klip ve geçişleri içerir; sahnede kullanılan controller Visual'dır.
+
+| Klip | Kare / hız | Süre | Davranış |
+|---|---|---|---|
+| Idle | 4 / 5 FPS | 0.8 s | Döngü |
+| Move | 6 / 10 FPS | 0.6 s | Döngü |
+| Jump | 5 / 10 FPS | 0.5 s | Bir kez; havada son düşüş pozu tutulur |
+| Heal | 4 / 5 FPS | 0.8 s | Kaynaktan dolumda bir kez |
+
+`State` int parametresi mevcut `PlayerStates` değerlerini izler: Idle=0, Move=1, Jump=2. Hareket durumları arasında geçiş beklemesizdir; zıplama/düşüşten inişte güncel Idle veya Move seçilir. Jump sheet'inin altıncı, yere basarken sıkışma karesi havada tutulmaz; iniş esnemesi mevcut WaterMeter'da kalır.
+
+`Heal` trigger'ı yalnızca eksik suyla kaynağa girişte gönderilir. Kaynakta kalmak klibi yeniden başlatmaz. Heal bitince o andaki Idle, Move veya Jump'a geçilir; oynarken input ve fizik devam eder. Yeniden doğma Heal'ı temizler. Yeni bir gameplay state'i eklenmez ve mevcut ability/input akışı değiştirilmez.
+
+Klipler yalnızca sprite değiştirir; Visual ölçeği/konumu WaterMeter'da kalır. Yeni sprite dilimleri 128 PPU, 128×128 hücre ve `(0.5, 0.47265625)` pivot kullanarak Idle'ın mevcut taban hizasını korur. Heal, `player_refill` sheet'indeki dört tam hücreyi kullanır; ayrı dilimlenmiş parıltılar tek başına kare olarak oynatılmaz.
+
 ## Kodun düzeni
 
 - `Player`: referansları toplar, `GetComponents<BaseAbility>()` ile aynı objenin ability'lerini bulur ve aktif durumu Update/FixedUpdate üzerinden çalıştırır. Somut ability oluşturmaz; hız, input okuma veya fizik uygulama kodu içermez.
@@ -41,3 +58,5 @@ Diğer sistemler `Player.CurrentState` ve `Player.IsGrounded` üzerinden oyuncun
 Component yapısı için Unity 6000.5.0f1 üzerinde 13 Play Mode testi geçti: hareket/zıplama regresyonları, component ayarlarının davranışa etkisi, aynı duruma tekrar geçiş ve ability geçiş izinleri doğrulandı. `Components.unity` Unity Editor ile açılarak altı component, Player referansları, GatherInput'taki input asset'i, Rigidbody2D ve collider bağlantıları da doğrulandı.
 
 Görsel oynanış hissi ve dışa aktarılan build testi yapılmadı.
+
+31 Ekim 2026 animasyon bağlantısı: Unity 6000.5.0f1 ile ayrı, küçük bir projede güncel oyuncu/su kodu, Input System, klipler ve controller kullanılarak 19 Play Mode doğrulaması geçti. Sanal klavyeyle Move/Idle, zıplama/iniş, kaynağa giriş/kalma/tekrar giriş, Heal sırasında hareket ve bitişte Move'a dönüş, yeniden doğmada temizlenme ve dolu suyla giriş kontrol edildi. Sprite referansları, klip süreleri ve taban hizası ayrıca Unity importuyla doğrulandı. Test sahnesi geçici olarak oluşturuldu; asıl Components sahnesinde oynanış hissi ve build testi yapılmadı.

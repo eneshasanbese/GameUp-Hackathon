@@ -50,6 +50,7 @@ public sealed class WaterMeter : MonoBehaviour
     public Vector2 Checkpoint => checkpoint;
     public event Action<float> WaterChanged;
     public event Action Depleted;
+    public event Action RefilledFromSource;
 
     private void Awake()
     {
@@ -182,17 +183,24 @@ public sealed class WaterMeter : MonoBehaviour
             RespawnAtCheckpoint();
     }
 
-    private void OnTriggerEnter2D(Collider2D other) => RefillFromSource(other);
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        bool needsWater = currentWater < Capacity;
+        if (RefillFromSource(other) && needsWater)
+            RefilledFromSource?.Invoke();
+    }
+
     private void OnTriggerStay2D(Collider2D other) => RefillFromSource(other);
 
-    private void RefillFromSource(Collider2D other)
+    private bool RefillFromSource(Collider2D other)
     {
         if (IsRespawning || !player.isActiveAndEnabled || (waterSourceLayer.value & (1 << other.gameObject.layer)) == 0)
-            return;
+            return false;
         Refill();
         Transform point = other.transform.Find("RespawnPoint");
         if (point != null)
             checkpoint = point.position;
+        return true;
     }
 
     public void ClearTrail()
