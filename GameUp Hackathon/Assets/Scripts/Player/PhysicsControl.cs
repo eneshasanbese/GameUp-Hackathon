@@ -11,6 +11,7 @@ public sealed class PhysicsControl : MonoBehaviour
     [Header("Ground Contact")]
     [SerializeField] private LayerMask dryGroundLayer;
     [SerializeField] private LayerMask wetGroundLayer;
+    [SerializeField] private LayerMask extraDryGroundLayer;
     [FormerlySerializedAs("groundRayDistance")]
     [SerializeField, Min(0.01f)] private float groundCheckDistance = 0.15f;
     [SerializeField, Range(0f, 85f)] private float maximumGroundAngle = 60f;
@@ -28,7 +29,8 @@ public sealed class PhysicsControl : MonoBehaviour
 
     public bool dryGrounded { get; private set; }
     public bool wetGrounded { get; private set; }
-    public bool grounded => dryGrounded || wetGrounded;
+    public bool extraDryGrounded { get; private set; }
+    public bool grounded => dryGrounded || wetGrounded || extraDryGrounded;
     public Vector2 GroundNormal { get; private set; } = Vector2.up;
     public float BodyScale { get; private set; } = 1f;
 
@@ -40,6 +42,8 @@ public sealed class PhysicsControl : MonoBehaviour
         fullRadius = bodyCollider.radius;
         fullOffset = bodyCollider.offset;
         rb.constraints |= RigidbodyConstraints2D.FreezeRotation;
+        if (extraDryGroundLayer.value == 0)
+            Debug.LogWarning($"{name}: PhysicsControl Extra Dry Ground Layer is not set; that ground will not count as grounded.", this);
     }
 
     private void FixedUpdate()
@@ -50,7 +54,7 @@ public sealed class PhysicsControl : MonoBehaviour
     public void RefreshGrounded()
     {
         bool wasGrounded = grounded;
-        dryGrounded = wetGrounded = false;
+        dryGrounded = wetGrounded = extraDryGrounded = false;
         groundCollider = null;
         groundDistance = float.PositiveInfinity;
         GroundNormal = Vector2.up;
@@ -61,7 +65,7 @@ public sealed class PhysicsControl : MonoBehaviour
 
         minimumGroundNormalY = Mathf.Cos(maximumGroundAngle * Mathf.Deg2Rad);
         var filter = new ContactFilter2D();
-        filter.SetLayerMask(dryGroundLayer.value | wetGroundLayer.value);
+        filter.SetLayerMask(dryGroundLayer.value | wetGroundLayer.value | extraDryGroundLayer.value);
         filter.useTriggers = false;
         int contactCount = bodyCollider.GetContacts(filter, contacts);
         Vector2 center = bodyCollider.bounds.center;
@@ -105,8 +109,10 @@ public sealed class PhysicsControl : MonoBehaviour
             GroundNormal = Vector2.up;
             return;
         }
-        wetGrounded = (wetGroundLayer.value & (1 << groundCollider.gameObject.layer)) != 0;
-        dryGrounded = !wetGrounded;
+        int groundBit = 1 << groundCollider.gameObject.layer;
+        wetGrounded = (wetGroundLayer.value & groundBit) != 0;
+        extraDryGrounded = !wetGrounded && (extraDryGroundLayer.value & groundBit) != 0;
+        dryGrounded = !wetGrounded && !extraDryGrounded;
     }
 
     private void ConsiderGround(Collider2D other, Vector2 normal, float distance)
@@ -206,7 +212,7 @@ public sealed class PhysicsControl : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
         isJumpAscending = false;
-        dryGrounded = wetGrounded = false;
+        dryGrounded = wetGrounded = extraDryGrounded = false;
         GroundNormal = Vector2.up;
     }
 
@@ -214,7 +220,7 @@ public sealed class PhysicsControl : MonoBehaviour
     {
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, speed);
         isJumpAscending = true;
-        dryGrounded = wetGrounded = false;
+        dryGrounded = wetGrounded = extraDryGrounded = false;
     }
 
     private void OnDrawGizmosSelected()
