@@ -17,9 +17,12 @@ public sealed class WaterMeter : MonoBehaviour
 
     [Header("Visual")]
     [SerializeField] private SpriteRenderer bodyVisual;
-    [SerializeField, Range(0.7f, 1f)] private float minimumScale = 0.7f;
     [SerializeField, Min(0.01f)] private float recoverySpeed = 12f;
     [SerializeField] private TrailRenderer trail;
+
+    [Header("Water Size")]
+    [Tooltip("Visual and collider size near empty water. 0.45 means 45% of the full size.")]
+    [SerializeField, Range(0.25f, 1f)] private float minimumScale = 0.45f;
 
     [Header("Refill and Respawn")]
     [SerializeField] private LayerMask waterSourceLayer;
@@ -71,6 +74,7 @@ public sealed class WaterMeter : MonoBehaviour
         colors = new Color[renderers.Length];
         for (int i = 0; i < renderers.Length; i++)
             colors[i] = renderers[i].color;
+        UpdateBodySize();
 
         if (trail == null)
             return;
@@ -104,6 +108,7 @@ public sealed class WaterMeter : MonoBehaviour
 
     private void FixedUpdate()
     {
+        UpdateBodySize();
         float speed = Mathf.Abs(body.position.x - previousPosition.x) / Time.fixedDeltaTime;
         previousPosition = body.position;
         if (IsRespawning || !player.isActiveAndEnabled || !body.simulated)
@@ -145,7 +150,7 @@ public sealed class WaterMeter : MonoBehaviour
         landingTimer = Mathf.Max(0f, landingTimer - deltaTime);
         deformation = Vector3.Lerp(deformation, shape, 1f - Mathf.Exp(-(landing ? 30f : recoverySpeed) * deltaTime));
 
-        float size = Mathf.Lerp(minimumScale, 1f, NormalizedWater);
+        float size = physics.BodyScale;
         if (bodyVisual != null)
         {
             bodyVisual.transform.localScale = Vector3.Scale(visualScale, deformation) * size;
@@ -171,10 +176,16 @@ public sealed class WaterMeter : MonoBehaviour
     public void SetCheckpoint(Vector2 position) => checkpoint = position;
     public void ResetPositionTracking() => previousPosition = body.position;
 
+    private void UpdateBodySize()
+    {
+        physics.SetBodyScale(Mathf.Lerp(minimumScale, 1f, NormalizedWater));
+    }
+
     private void SetWater(float value)
     {
         float previous = currentWater;
         currentWater = Mathf.Clamp(value, 0f, Capacity);
+        UpdateBodySize();
         if (!IsEmpty)
             depletionNotified = false;
         if (!Mathf.Approximately(previous, currentWater))

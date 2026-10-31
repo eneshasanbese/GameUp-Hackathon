@@ -36,16 +36,16 @@ Build alırken `ProjectSettings/EditorBuildSettings.asset` ve varsa seçili Buil
 - Zıplama ve düşüş, yatay input olmasa da normal tüketim üretir. Önceki nemli zemin katsayısı havaya taşınmaz. Tüketim geçen süreye bağlıdır.
 - Su tek bir bileşende tutulur ve sınırlandırılır. UI ve görsel başka bir su sayacı oluşturmaz. Su sıfırken damla kazanamaz.
 - Ara duraklar su birikintileridir. Yaşayan ara fidan/ağaç checkpoint'i ekleme; yaşayan tek fidan finaldedir.
-- Su miktarı collider'ı, kök ölçeğini, hareket hızını veya zıplama kuvvetini değiştirmez. Küçülme/esneme `Visual` üzerinde kalır.
+- 31 Ekim 2026 kullanıcı kararlarıyla su azalınca görsel ve `CircleCollider2D` birlikte küçülür; yürüme/hava hızı ve zıplama kalkış hızı Inspector çarpanlarıyla artar. Kök ölçek değişmez. Esneme yalnızca `Visual` üzerindedir; fiziksel boyutu `PhysicsControl`, suya bağlı boyut isteğini `WaterMeter`, hareket çarpanlarını mevcut ability'ler yönetir. Önceki sabit collider/hız/zıplama yönergeleri bu kararlar için geçersizdir; [karar kaydını](docs/kararlar.md) esas al. Zıplama artışı yalnızca kalkışta uygulanır.
 - Su izi geçici görseldir; yeni zemin, bitki, geri toplanabilir su veya yeni kaynak oluşturmaz.
 - Ölüm/yeniden doğma ve kazanma tek kez başlatılır. Kazanınca kontrol ve tüketim durur. Yeniden oyna, son checkpoint yerine bölüm başlangıcını ve tüm oyun durumunu sıfırlar.
-- Düşman, silah, fiziksel küçülme, ek bölüm ve diğer kapsam dışı sistemleri göreve ekleme.
+- Düşman, silah, ek bölüm ve diğer kapsam dışı sistemleri göreve ekleme. Suya bağlı collider küçülmesi son kullanıcı kararıyla kapsam içindedir.
 
 ## Mevcut kodla çalışma
 
 - `Player`, aynı GameObject üzerindeki `BaseAbility` component'lerini toplar ve `StateMachine` üzerinden çalıştırır. Mevcut durumlar `Idle`, `Move`, `Jump` olup `Jump` düşüşü de kapsar. [Oyuncu belgesini](docs/player-state-machine.md) oku.
 - `GatherInput`, InputActionAsset'in oyuncuya ait kopyasını yönetir; kısa zıplama basma/bırakma olaylarını fizik adımları arasında saklar. İkinci input sistemi ekleme.
-- `PhysicsControl`, `Ground-Dry` ve `Ground-Wet` için iki raycast kullanır; `Rigidbody2D` ve `CircleCollider2D` ister. Takip dosyasındaki Capsule önerisi nedeniyle mevcut collider'ı otomatik değiştirme.
+- `PhysicsControl`, `Ground-Dry` ve `Ground-Wet` desteğini gerçek collider temasları ve aşağı şekil taramasıyla algılar; `Rigidbody2D` ve `CircleCollider2D` ister. Tarama güncel collider boyutunu izler, duvar normalini zemin saymaz. Eğimde hareket yüzey teğetini izler; gerçek zıplamada zemine yapışma uygulanmaz. Takip dosyasındaki Capsule önerisi nedeniyle collider türünü otomatik değiştirme.
 - `WaterMeter` bugün birkaç sorumluluğu bir arada taşır. Genel belgedeki `WaterSource`, `RespawnController`, `PlayerSizeVisual`, `GameFlow` gibi isimler öneridir; bu sınıfların mevcut olduğunu varsayma veya yalnızca isimleri tamamlamak için sistemi bölme. [Su belgesini](docs/water-player.md) oku.
 - Fizik işlemlerini mevcut `FixedUpdate` düzeninde tut. Unity 6 kodundaki `linearVelocity` kullanımını eski API örneklerine göre değiştirme. Input → zemin algılama → zıplama → aktif ability fiziği → su tüketimi sırasını etkileyen değişiklikleri davranışla doğrula.
 - Yerel C# düzenini sürdür: dosya adıyla eşleşen component sınıfı, mevcut global namespace, Inspector ayarları için `[SerializeField]`, mevcut stil ve API adları. Sırf stil için toplu yeniden adlandırma/formatlama yapma. Serialized alan adı değişirse Inspector verilerinin korunmasını sağla.

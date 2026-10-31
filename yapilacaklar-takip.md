@@ -102,6 +102,11 @@ Ayrıntılar [genel-yapilacaklar.md](genel-yapilacaklar.md) içinde.
 
 - [ ] T30–T38 — Bölüm tasarımı ve oynanış dengesi
 - [ ] T39–T48 — Görsel karar, damla görseli, küçülme, su izi
+
+31 Ekim 2026, T09/T45–T48 güncellemesi: kullanıcı suya bağlı collider küçülmesini onayladı ([K03](docs/kararlar.md)). Tek CircleCollider2D görselle birlikte küçülüyor; `Player → WaterMeter → Water Size → Minimum Scale` deneme değeri 0.45. Temas/şekil taraması ve eğime göre hareket uygulandı. Gerçek Player prefab'ının kopyasıyla ayrı Unity projesinde 47 Play Mode doğrulaması geçti; asıl Components/Level 5 sahnelerinde oynanış ve build kontrolü bekliyor. Bu sonuç tüm T39–T48 veya genel QA listesinin tamamlandığı anlamına gelmez.
+
+31 Ekim 2026, düşük su hareket eki: kullanıcı talebiyle MoveAbility/JumpAbility Inspector'ına bağımsız yürüme, hava hızı ve kalkış hızı çarpanları eklendi (1.4/1.4/1.1). Aynı su değeri kullanılıyor; 1 katsayısı artışı kapatıyor. Dolu/yarım/az su ölçümleri, Inspector ayarı, havada dolum, yeniden doğma ve hızlı küçük oyuncuyla rampa regresyonu dahil 48 Play Mode doğrulaması ayrı Unity projesinde geçti. Asıl sahne/build oynanışı bekliyor; [kapsam](docs/player-state-machine.md#doğrulama).
+
 - [ ] T49–T55 — Arayüz, ses, kaynak/lisans listesi, final sunumu
 - [ ] QA01–QA20 — Son test listesi
 - [ ] D01–D09 — Teslim listesi

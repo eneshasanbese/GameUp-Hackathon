@@ -8,6 +8,12 @@ public sealed class JumpAbility : BaseAbility
     [SerializeField, Min(0f)] private float jumpForce = 10f;
     [SerializeField, Min(0.01f)] private float airAcceleration = 90f;
 
+    [Header("Low Water Boost")]
+    [Tooltip("Maximum horizontal air speed multiplier near empty water. 1 disables the boost.")]
+    [SerializeField, Min(1f)] private float lowWaterAirSpeedMultiplier = 1.4f;
+    [Tooltip("Maximum takeoff speed multiplier near empty water. Applied once per jump; 1 keeps the original jump height.")]
+    [SerializeField, Min(1f)] private float lowWaterJumpMultiplier = 1.1f;
+
     public override PlayerStates.State thisAbilityState => PlayerStates.State.Jump;
 
     private void FixedUpdate()
@@ -19,7 +25,7 @@ public sealed class JumpAbility : BaseAbility
             return;
 
         if (requested && linkedPhysicsControl.grounded && linkedStateMachine.ChangeState(thisAbilityState))
-            linkedPhysicsControl.Jump(jumpForce);
+            linkedPhysicsControl.Jump(jumpForce * GetLowWaterMultiplier(lowWaterJumpMultiplier));
 
         if (released && linkedStateMachine.currentState == thisAbilityState && linkedPhysicsControl.rb.linearVelocityY > 0f)
             linkedPhysicsControl.rb.linearVelocityY = 0f;
@@ -37,7 +43,8 @@ public sealed class JumpAbility : BaseAbility
 
     public override void ProcessFixedAbility()
     {
-        linkedPhysicsControl.ApproachHorizontalSpeed(linkedInput.horizontalInput * airspeed, airAcceleration);
+        float currentAirspeed = airspeed * GetLowWaterMultiplier(lowWaterAirSpeedMultiplier);
+        linkedPhysicsControl.ApproachHorizontalSpeed(linkedInput.horizontalInput * currentAirspeed, airAcceleration);
     }
 
     public override void ExitAbility()
