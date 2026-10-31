@@ -1161,6 +1161,14 @@ PrefabInstance:
       propertyPath: jumpForce
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 5487654895149416657, guid: e5cb2d18a11191049bbc4140a8e445b4, type: 3}
+      propertyPath: m_Radius
+      value: 0.47253507
+      objectReference: {fileID: 0}
+    - target: {fileID: 5487654895149416657, guid: e5cb2d18a11191049bbc4140a8e445b4, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.0059756637
+      objectReference: {fileID: 0}
     - target: {fileID: 6087951766205847242, guid: e5cb2d18a11191049bbc4140a8e445b4, type: 3}
       propertyPath: m_Name
       value: Player
