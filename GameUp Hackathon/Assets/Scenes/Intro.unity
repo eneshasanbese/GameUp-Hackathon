@@ -641,9 +641,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StoryPlayer
   text: {fileID: 166248798}
   paragraphs:
-  - 
-  - "\t"
-  - 
+  - "\u0130klim krizinden dolay\u0131 D\xFCnya'da kurak\u0131k ba\u015Flad\u0131.
+    A\u011Fa\xE7lar kurudu ve ya\u011Fmur ya\u011Fmamaya ba\u015Flad\u0131.\t"
+  - "\u0130nsano\u011Flunun da su kaynaklar\u0131 t\xFCkenmeye ba\u015Flam\u0131\u015Ft\u0131.\nBunun
+    \xFCzerine insanlar, \xF6zel bir s\u0131v\u0131 geli\u015Ftirdiler."
+  - "Bu \xF6zel s\u0131v\u0131, suya nazaran daha ge\xE7 buharla\u015Fan, suyla ayn\u0131
+    etkileri g\xF6steren \xF6zel bir s\u0131v\u0131."
+  - "Bu s\u0131v\u0131n\u0131n amac\u0131 ise, d\xFCnyada geriye kalm\u0131\u015F
+    olan fidanlar\u0131 sulamak."
+  - "D\xDCNYANIN SON UMUDU SENS\u0130N."
   playOnStart: 1
   background: {fileID: 0}
   fadeDuration: 0.8

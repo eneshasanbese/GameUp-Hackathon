@@ -34,7 +34,9 @@ public class StoryPlayer : MonoBehaviour
 
     private void Awake()
     {
-        if (text != null)
+        if (text == null)
+            Debug.LogWarning($"{name}: StoryPlayer has no Text assigned; the story will not be shown.", this);
+        else
             text.alpha = 0f;
         if (background != null && !playOnStart)
             background.alpha = 0f;
