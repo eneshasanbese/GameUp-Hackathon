@@ -42,3 +42,7 @@ Müzik: `Music.prefab`'ın Audio Source **Output**'u mixer'ın Music grubuna ba�
 - Hikâye metinleri: kullanıcı yazacak (Inspector'da Paragraphs listesi).
 - Menü/intro müziği: isteğe bağlı.
 - Teslim platformu WebGL olursa **Oyundan çık** düğmesi gizlenmeli (K01).
+
+## Duraklatma (PauseMenu)
+
+`Scripts/UI/PauseMenu.cs` (1 Kasım 2026 kullanıcı isteği). Bölümlerde **ESC** oyunu durdurur: `Time.timeScale = 0`, `AudioListener.pause = true` (düşman/su döngü sesleri durur; müzik ve `Sfx` kaynağı `ignoreListenerPause` ile çalmaya devam eder), oyuncu girdisi `GatherInput.DisablePlayerMap` ile kapanır (bekleyen zıplama silinir) ve panel açılır. ESC ya da **Resume** devam ettirir. **GoToMainMenu** kararmayla `MainMenu`'yü yükler (oyun kararırken donuk kalır); **QuitGame** oyunu kapatır. Sahneden çıkarken (`OnDestroy`) zaman ve ses her durumda normale döner. Ölüm/yeniden doğma, bölüm geçişi (`SceneFader.IsBusy`) ve fidan sahnesi/son hikâyesi sırasında (Player kapalı) duraklatma yapılmaz. Kurulum: tek bir `PauseCanvas` prefab'ı (panel + düğmeler + `PauseMenu`) üç bölüme konur.

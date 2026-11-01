@@ -83,6 +83,8 @@ public static class Sfx
             source.playOnAwake = false;
             source.spatialBlend = 0f;
             source.outputAudioMixerGroup = output;
+            // Short one-shots (and UI sounds) still play on the pause screen; enemy loops do pause.
+            source.ignoreListenerPause = true;
         }
         return source;
     }

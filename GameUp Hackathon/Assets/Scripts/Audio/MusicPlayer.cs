@@ -42,6 +42,8 @@ public sealed class MusicPlayer : MonoBehaviour
     private void Awake()
     {
         source = GetComponent<AudioSource>();
+        // Music keeps playing on the pause screen (PauseMenu pauses the AudioListener).
+        source.ignoreListenerPause = true;
         string scenePath = gameObject.scene.path;
         if (current != null && current != this)
         {
@@ -102,6 +104,7 @@ public sealed class MusicPlayer : MonoBehaviour
         else if (overlay.isPlaying)
             overlay.Stop();   // A second switch replaces the previous clip.
         overlay.playOnAwake = false;
+        overlay.ignoreListenerPause = true;
         overlay.spatialBlend = 0f;
         overlay.priority = 0;
         overlay.outputAudioMixerGroup = source.outputAudioMixerGroup;
