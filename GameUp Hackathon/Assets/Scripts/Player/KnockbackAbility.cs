@@ -24,6 +24,7 @@ public sealed class KnockbackAbility : BaseAbility
 
     public override PlayerStates.State thisAbilityState => PlayerStates.State.Knockback;
     public bool IsFlashing => flashRemaining > 0f;
+    public event System.Action HitAccepted;
 
     protected override void Initialization()
     {
@@ -52,6 +53,7 @@ public sealed class KnockbackAbility : BaseAbility
         // A lethal hit enters the existing respawn flow, which cancels the pending impulse/flash.
         if (water != null)
             water.Consume(contactWaterLoss);
+        HitAccepted?.Invoke();
         return true;
     }
 
@@ -65,6 +67,7 @@ public sealed class KnockbackAbility : BaseAbility
             return false;
         BeginFlash();
         water.Consume(waterPoints);
+        HitAccepted?.Invoke();
         return true;
     }
 

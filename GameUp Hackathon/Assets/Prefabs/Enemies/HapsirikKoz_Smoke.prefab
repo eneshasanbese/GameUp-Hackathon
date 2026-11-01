@@ -144,6 +144,7 @@ GameObject:
   - component: {fileID: 3602869633988346462}
   - component: {fileID: 6478496563956884269}
   - component: {fileID: 3150892546187982600}
+  - component: {fileID: 114000000000000102}
   m_Layer: 0
   m_Name: HapsirikKoz_Smoke
   m_TagString: Untagged
@@ -259,3 +260,18 @@ MonoBehaviour:
   smokeVisual: {fileID: 8772417057347305098}
   fadeInDuration: 0.25
   fadeOutDuration: 0.5
+--- !u!114 &114000000000000102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3152077829490176649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6c99c5944b38e409bb4c9f4c027f54, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::SoundOnEnable
+  clip: {fileID: 0}
+  volume: 0.4
+  hearingDistance: 12

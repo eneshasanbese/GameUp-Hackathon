@@ -157,6 +157,8 @@ GameObject:
   - component: {fileID: 9030294724640835369}
   - component: {fileID: 8783527058120800526}
   - component: {fileID: 4347701119822894874}
+  - component: {fileID: 610000000000000201}
+  - component: {fileID: 114000000000000201}
   m_Layer: 12
   m_Name: EmberSpitter
   m_TagString: Untagged
@@ -210,6 +212,10 @@ MonoBehaviour:
   obstacleLayerMask:
     serializedVersion: 2
     m_Bits: 1216
+  windupSound: {fileID: 0}
+  fireSound: {fileID: 8300000, guid: e737141d70e408d48a628ad17cb951d7, type: 3}
+  soundVolume: 0.7
+  hearingDistance: 12
 --- !u!50 &4347701119822894874
 Rigidbody2D:
   serializedVersion: 5
@@ -377,3 +383,53 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.9, y: 1.2}
   m_EdgeRadius: 0
+--- !u!61 &610000000000000201
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5946591008197146109}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 4294967039
+  m_LayerOverridePriority: 1
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0.6}
+  m_AutoTiling: 0
+  m_Size: {x: 0.9, y: 1.2}
+  m_EdgeRadius: 0
+--- !u!114 &114000000000000201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5946591008197146109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2225a4fdc47ec86419b839442e5fefb4, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContactKnockback

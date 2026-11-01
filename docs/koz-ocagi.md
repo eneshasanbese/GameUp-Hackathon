@@ -4,9 +4,17 @@
 
 ## Prefab ve Inspector
 
+1 Kasım 2026 nefes sesi ve mesafe (T52): `KozOcagi_Stationary.prefab` kökündeki AudioSource, kullanıcının seçtiği `Assets/Audio/Sounds/u_j7nsvy18lj-inhale-nose-408293.mp3` klibini çalar. **Play On Awake** ve **Loop** açık; **Volume 0.7**, **Spatial Blend 1 (3D)**, **Volume Rolloff Linear**, **Min Distance 5.4**, **Max Distance 13**, **Doppler Level 0**. Unity, AudioListener'a uzaklığa göre sesi azaltır ve kaynağın yönüne göre sağ/sol konumlandırır; ek script veya event bağlantısı gerekmez. Aktif kaynak sahne başlangıcından itibaren döner; menzile girince klip yeniden başlatılmaz. Ayarlar prefab kökündeki **AudioSource** component'indedir.
+
+Level_1/2/3'te AudioListener ana kameradadır ve kamera Z = −5'tedir. Köz Ocağı Z = 0 iken 5.4–13 gerçek 3D mesafe, kameraya XY düzleminde yaklaşık 2–12 birim aralığına karşılık gelir. 5.4'e kadar tam ses, 5.4–13 arasında doğrusal azalma, 13 ve ötesinde sessizlik. Bu mesafe oyuncuya doğrudan değil kameradaki dinleyiciye göredir; kamera sınırları da işitsel konumu etkiler. Prefab'ın klip/mesafe bağlantıları kaynak dosyada kontrol edildi; uygulandı, editör/build testi bekliyor.
+
+Önceki ses adayının kaynağı/lisansı (T53): [Inhale.wav — green3y3guy](https://freesound.org/people/green3y3guy/sounds/420855/), **CC0 1.0**, kaynak sayfasında 1 Kasım 2026 doğrulandı. Herkese açık [HQ MP3 önizlemesi](https://cdn.freesound.org/previews/420/420855_3665858-hq.mp3) aynı tarihte indirilerek döngü hazırlanmıştı; özgün WAV indirilmiş gibi sunulmaz. Kaynak sayfası kaydı erkek içe nefes çekişi olarak etiketler. Bu aday artık prefab'a bağlı değildir; bu kayıt yeni seçilen MP3'ün lisans doğrulaması sayılmaz.
+
+Önceki `koz_ocagi_inhale_loop.wav` adayının düzenlemesi: giriş/çıkış sessizlikleri yerine 1.32–2.42 saniye arasındaki nefes bölümünden 1 saniyelik parçalar, 0.5 saniye aralık ve sinüs penceresiyle dairesel olarak örtüştürülerek 8 saniyelik sürekli doku oluşturuldu. 160 Hz high-pass, 350 Hz −4 dB ve 2600 Hz +3 dB EQ, 10 kHz low-pass uygulandı; ortalama seviye −27 dBFS, tepe −13.58 dBFS. Baş/son sıfır geçişine alındı; PCM dosyada sınır sıçraması 0, sınır komşusu adımı en çok 71/32768. Bunlar önceki adayın dosya ölçümleridir; mevcut MP3 veya mesafe davranışının oynanış testi değildir.
+
 Eklenen kaynaklar: `Assets/Scripts/Enemies/EmberSuctionEnemy.cs`, `EmberSuctionDemoControls.cs`, `Assets/Editor/Enemies/EmberSuctionPrefabBuilder.cs` ve `EmberSuctionVerification.cs`; prefab/sahne ve tüm yeni meta dosyaları. Mevcut kodda yalnızca `Player.cs` ve `PhysicsControl.cs` değişti; `WaterMeter` mevcut API'siyle kullanıldı. Ortak yönergeler, kararlar, plan/takip ve ilgili teknik belgeler güncellendi.
 
-Unity köküne göre `Assets/Prefabs/Enemies/KozOcagi_Stationary.prefab` sahneye sürüklenebilir. Ayak hizası köktür; `Visual`, `RangeOrigin`, `PullPoint` ve `EffectArea` ayrıdır. Kök Rigidbody2D veya katı gövde taşımaz. Temas hasarı, knockback, takip, hapşırma veya mermi yoktur.
+Unity köküne göre `Assets/Prefabs/Enemies/KozOcagi_Stationary.prefab` sahneye sürüklenebilir. Ayak hizası köktür; `Visual`, `RangeOrigin`, `PullPoint` ve `EffectArea` ayrıdır. Kök Rigidbody2D veya katı gövde taşımaz. 1 Kasım 2026 son kullanıcı talebiyle köke Player'a özel **BoxCollider2D trigger** ve mevcut **EnemyContactKnockback** bağlandı: Size `(1.1, 0.95)`, Offset `(0, 0.475)`. Bu küçük gövde alanına temas, Player'daki Contact Water Loss (10), Force `(6, 5)` ve Flash Duration (2 saniye) ayarlarını kullanır. Geniş EffectArea yalnızca önceki emiş ve sürekli su kaybını yürütür; flash sırasında da bu tüketim sürer. Ek Inspector bağlantısı gerekmez.
 
 `EffectArea` üzerindeki `EmberSuctionEnemy` referansları hazır bağlıdır:
 
@@ -72,6 +80,8 @@ Kapsam: mevcut ayar/GUID'lerin korunması, tam klip süreleri ve döngü, sağ/s
 Yeniden üretme menüleri: **GameUp → Enemies → Rebuild Koz Ocagi Prefab** ve **Rebuild Koz Ocagi Demo**. Yalnızca bu iki asset'i varsayılanlara yazar; hazır prefab/sahneyi kullanmak için çalıştırmak gerekmez.
 
 ## Doğrulama
+
+1 Kasım 2026 gövde teması güncellemesi: güncel Player/Köz Ocağı/Ember prefab'ları ve runtime dosyaları ayrı Unity 6000.5.0f1 projesinde test edildi; **47 kontrol geçti (9 asset, 38 Play Mode)**. Gövdeye sağ/sol temas ve öldüren darbe, tek su kaybı/itiş, flash ve toparlanma, sürekli su kaybının flash sırasında devam etmesi ve geniş etki alanının gövde darbesi üretmemesi doğrulandı. Prefab hash'i test kopyasıyla aynıdır. [Kapsam ve sonuç](player-state-machine.md#doğrulama). Önceki sonuçlar kendi tarihlerindeki temas hasarı olmayan kapsamı gösterir; ana bölümde elle oynanış ve dış build bekler.
 
 Unity 6000.5.0f1 ile açık ana editörden ayrı `C:/Users/yhcan/AppData/Local/Temp/gameup-enemies-324e5073` projesinde **54 kontrol geçti: 9 asset/bağlantı ve 45 Play Mode**. Güncel kod, gerçek Player/Canvas prefabları ve kaynak sprite kullanıldı. Kontroller `Assets/Editor/Enemies/EmberSuctionVerification.cs` içindedir; yalnızca ayrı batch projede `-executeMethod EmberSuctionVerification.Run` ile çalışır. Üretimle birlikte `.GenerateAndRun` kullanılabilir. Sonuç test projesindeki `ember-suction-result.txt`, ayrıntılar `ember-suction-verification.log` dosyasındadır. Kalıcı kopyalar: [sonuç](verification/koz-ocagi-result.txt), [kontrol listesi](verification/koz-ocagi-checks.txt).
 

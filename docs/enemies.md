@@ -25,6 +25,16 @@ HapsirikKoz kökü de ayak seviyesindedir. 31 Ekim 2026 görsel geçişiyle `Hap
 
 Hareketli türlerde **EnemyPatrol → End Offset**, yerleştirilen başlangıca göre dünya birimi cinsinden diğer uçtur; varsayılan `(3, 0)`. **Speed** varsayılan `1.5` birim/saniyedir; devriyede, takipte ve rotaya dönüşte kullanılır. Saw negatif, dikey ve çapraz offset kullanabilir. Yerdeki Slime/HapsirikKoz yalnızca X offset'ini kullanır; Y hareketi yerçekimi/çarpışmadan gelir. Sıfır hız veya sıfır etkili offset motoru ve takibi durdurur, yerçekimini durdurmaz. Seçili prefab'ın iki ucu Scene görünümünde sarı çizilir. Slime hareket yönüne döner; Saw'ın yüzü dik kalırken dişleri sheet animasyonuyla döner.
 
+## Saw hava sesi
+
+1 Kasım 2026 (T52): Kullanıcının seçtiği `Assets/Audio/Sounds/shut_up_ghost-gusty-winter-wind-loop-by-using-crossfades-215541.mp3`, `Saw_Patrol.prefab` ve `Saw_Stationary.prefab` köklerindeki AudioSource'a bağlandı. Kullanıcının son talebiyle **Loop kapalı**, **Play On Awake açık**: yaklaşık **287.61 saniyelik (4 dk 48 sn)** klip sahne açılışında bir kez çalar ve bitince durur. Uzun sesin importu **Streaming** olarak ayarlandı; özgün MP3 korunur.
+
+İki kaynakta **Volume 0.25**, **Spatial Blend 1 (3D)**, **Linear Rolloff**, **Min Distance 5.4 / Max Distance 13**, **Doppler Level 0**. Ana kamera/AudioListener Z = −5, kaynak Z = 0 iken bu aralık kameraya XY düzleminde yaklaşık 2–12 birime karşılık gelir. Devriyede ses kaynağı bıçakla birlikte hareket eder; Doppler kapalı olduğundan hareket ses perdesini değiştirmez. Ses yüksekliği ve menzil prefab kökündeki AudioSource'tan ayarlanabilir; ek script, Animation Event veya sahne bağlantısı gerekmez. Klip dosyası/süresi ve serialized bağlantılar kontrol edildi; uygulandı, editör/build testi ve ana sahnede dinleme bekliyor.
+
+## Diğer ses alanları
+
+1 Kasım 2026 ses hazırlığı (T52): Atıcı hazırlık/atış ve mermi çarpması alanları, HapsirikKoz dumanında isteğe bağlı oluşma sesi ve iki Slime Fire prefab'ında boş 3D ateş ambiyansı kaynağı hazırdır. Mevcut hapşırma event'i ve seçilmiş Saw/Köz Ocağı sesleri korunur. Yeni alanlara yalnızca ses dosyası atanır; [konumlar ve doğrulama](ses-kurulumu.md).
+
 ## Slime Fire ısı alanının HeatAura görseli
 
 31 Ekim 2026 kullanıcı talebi (T42/T43 ek kapsamı): iki SlimeFire prefabında `HeatArea/HeatAura` çocuğu, mevcut `FireSlime/HeatAura/256/Heat_Sheet.png` setini oynatır. 24 kare, 12 FPS, 2 saniyelik döngü; ilk kare sonda yinelenmez. Sheet sabit 256×256 hücrelere, merkez pivot'a ve 256 PPU'ya ayarlanmıştır; Bilinear, mipmap kapalı ve sıkıştırmasızdır. Mevcut sheet GUID'i ve dilimlerin sprite kimlikleri korunur; alternatif 128/1080 dosyaları değiştirilmez.

@@ -310,6 +310,10 @@ MonoBehaviour:
   gravityScale: 3
   maximumFallSpeed: 14
   despawnDelay: 3
+  warningSound: {fileID: 8300000, guid: a3635139830c4a542aed8c05090e617d, type: 3}
+  fallSound: {fileID: 0}
+  soundVolume: 0.6
+  hearingDistance: 12
 --- !u!114 &4340645065060780874
 MonoBehaviour:
   m_ObjectHideFlags: 0

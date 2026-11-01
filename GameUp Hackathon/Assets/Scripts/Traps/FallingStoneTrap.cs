@@ -15,6 +15,14 @@ public sealed class FallingStoneTrap : MonoBehaviour
     [SerializeField, Min(0.01f)] private float maximumFallSpeed = 14f;
     [SerializeField, Min(0.01f)] private float despawnDelay = 3f;
 
+    [Header("Sounds")]
+    [Tooltip("Release or rushing-air sound when the stalactite starts falling.")]
+    [SerializeField] private AudioClip fallSound;
+    [Tooltip("First player contact. The stone passes through terrain, so this is not a ground impact.")]
+    [SerializeField] private AudioClip hitSound;
+    [SerializeField, Range(0f, 1f)] private float soundVolume = 0.6f;
+    [SerializeField, Min(0.5f)] private float hearingDistance = 12f;
+
     private readonly List<Collider2D> candidates = new List<Collider2D>();
     private Rigidbody2D body;
     private PolygonCollider2D hitbox;
@@ -57,6 +65,7 @@ public sealed class FallingStoneTrap : MonoBehaviour
                 body.bodyType = RigidbodyType2D.Dynamic;
                 body.gravityScale = gravityScale;
                 hitbox.enabled = true;
+                Sfx.PlayAt(fallSound, transform.position, soundVolume, hearingDistance);
                 break;
             }
             return;
@@ -95,6 +104,7 @@ public sealed class FallingStoneTrap : MonoBehaviour
         // Latch before a lethal hit can synchronously start the Player's respawn flow.
         hitPlayer = true;
         hitbox.enabled = false;
+        Sfx.PlayAt(hitSound, body.position, soundVolume, hearingDistance);
         knockback.TryKnockback(body.position);
     }
 

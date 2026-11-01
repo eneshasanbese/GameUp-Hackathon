@@ -21,6 +21,7 @@ public class LevelExit : MonoBehaviour
     [SerializeField] private Color fadeColor = Color.black;
     [Tooltip("Optional sound when the level is finished, e.g. sfx_gem.")]
     [SerializeField] private AudioClip exitSound;
+    [SerializeField, Range(0f, 1f)] private float exitSoundVolume = 0.8f;
 
     private bool loading;
     private bool warned;
@@ -59,7 +60,7 @@ public class LevelExit : MonoBehaviour
             return;
 
         loading = true;
-        Sfx.Play(exitSound);
+        Sfx.Play(exitSound, exitSoundVolume);
         Freeze(water, other.attachedRigidbody);
     }
 

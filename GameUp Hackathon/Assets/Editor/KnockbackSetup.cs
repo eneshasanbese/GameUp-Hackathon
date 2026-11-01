@@ -27,7 +27,8 @@ public static class KnockbackSetup
         AnimationClipSettings settings = AnimationUtility.GetAnimationClipSettings(clip);
         settings.startTime = 0f;
         settings.stopTime = 0.1f;
-        settings.loopTime = true;
+        // The last sprite stays visible during flash; a loop would repeat sound events.
+        settings.loopTime = false;
         AnimationUtility.SetAnimationClipSettings(clip, settings);
         EditorUtility.SetDirty(clip);
         ConfigureController("Assets/Animations/Visual.controller", clip);

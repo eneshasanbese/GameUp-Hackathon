@@ -83,6 +83,7 @@ public sealed class WaterMeter : MonoBehaviour
     public event Action<float> WaterChanged;
     public event Action Depleted;
     public event Action RefilledFromSource;
+    public event Action RespawnStarted;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetRespawn()
@@ -316,6 +317,7 @@ public sealed class WaterMeter : MonoBehaviour
         if (IsRespawning || !isActiveAndEnabled)
             return;
         IsRespawning = true;
+        RespawnStarted?.Invoke();
         StartCoroutine(Respawn());
         if (IsEmpty && !depletionNotified)
         {

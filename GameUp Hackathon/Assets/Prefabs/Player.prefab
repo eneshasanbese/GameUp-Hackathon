@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2766696406659660912}
   - component: {fileID: 916759671138770455}
   - component: {fileID: 68561366388920961}
+  - component: {fileID: 1381601347875062642}
   - component: {fileID: 6006046248505467192}
   m_Layer: 8
   m_Name: Visual
@@ -116,6 +117,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1381601347875062642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5619706992262949112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43df6f8fb4a680a4790145bdb22d6fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoundOnAnimationEvent
+  volume: 0.7
+  hearingDistance: 12
 --- !u!114 &6006046248505467192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,6 +163,7 @@ GameObject:
   - component: {fileID: 5969134430943223080}
   - component: {fileID: 8733031624878948677}
   - component: {fileID: 6482228526159012014}
+  - component: {fileID: 114000000000000101}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -559,3 +575,25 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &114000000000000101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6087951766205847242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e033c6397b64344a1fce7a625acdfe, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSounds
+  jump: {fileID: 0}
+  land: {fileID: 0}
+  hurt: {fileID: 0}
+  death: {fileID: 0}
+  refill: {fileID: 0}
+  lowWaterWarning: {fileID: 0}
+  lowWaterThreshold: 0.25
+  volume: 0.8
+  landVolume: 0.4
+  minAirTimeForLand: 0.25

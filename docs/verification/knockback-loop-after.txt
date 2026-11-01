@@ -1,0 +1,42 @@
+PASS original hurt AudioClip still assigned to the animation event
+PASS expected clip loop setting is imported by Unity
+PASS Visual: controller asset is present in the isolated fixture
+PASS Visual: first hit accepted
+PASS Visual: ability enters knockback once
+PASS Visual: ability exits after lock plus recovery
+PASS Visual: flash protection remains after control recovery
+PASS Visual: only one physical hit and damage event
+PASS Visual: one ten-point water loss
+PASS Visual: repeated contact during flash is rejected
+PASS Visual: flash holds the hurt visual independently of the ability
+INPUT immediate: key=True, enabled=True, value=(1.00, 0.00)
+INPUT later: key=True, enabled=True, value=(1.00, 0.00), startX=2,218331, endX=3,043018, velocity=(6.24, -1.67), state=Jump, ability=JumpAbility, constraints=FreezeRotation
+PASS Visual: normal right input moves the player during flash
+MEASURE Visual: physical hits=1, animation sound events=1, physical state=Idle
+PASS Visual: sound event fires once for the whole flash
+PASS Visual: normal animation returns after flash
+PASS Visual: no extra hurt events after recovery
+PASS Visual: a later new hit remains possible
+PASS Visual: second hit adds exactly one sound
+PASS Visual: disable/enable does not resume old knockback
+PASS Player: controller asset is present in the isolated fixture
+PASS Player: first hit accepted
+PASS Player: ability enters knockback once
+PASS Player: ability exits after lock plus recovery
+PASS Player: flash protection remains after control recovery
+PASS Player: only one physical hit and damage event
+PASS Player: one ten-point water loss
+PASS Player: repeated contact during flash is rejected
+PASS Player: flash holds the hurt visual independently of the ability
+INPUT immediate: key=True, enabled=True, value=(1.00, 0.00)
+INPUT later: key=True, enabled=True, value=(1.00, 0.00), startX=2,218331, endX=2,964238, velocity=(6.24, -1.87), state=Jump, ability=JumpAbility, constraints=FreezeRotation
+PASS Player: normal right input moves the player during flash
+MEASURE Player: physical hits=1, animation sound events=1, physical state=Idle
+PASS Player: sound event fires once for the whole flash
+PASS Player: normal animation returns after flash
+PASS Player: no extra hurt events after recovery
+PASS Player: a later new hit remains possible
+PASS Player: second hit adds exactly one sound
+PASS Player: disable/enable does not resume old knockback
+PASS no gameplay exceptions
+RESULT PASS 35

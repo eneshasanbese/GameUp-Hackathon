@@ -1,21 +1,25 @@
 using UnityEngine;
 
 /// <summary>
-/// Player sound effects. Reads the existing state machine, ground check and WaterMeter,
-/// so no player code needs to change. Leave a clip empty to skip that sound.
+/// Player feedback from accepted hits, source refills and the existing death flow.
+/// Leave a clip empty to skip that sound.
 /// </summary>
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Player))]
 public class PlayerSounds : MonoBehaviour
 {
+    [Tooltip("Optional takeoff sound. Leave empty when the Jump clip already plays an Animation Event sound.")]
     [SerializeField] private AudioClip jump;
     [SerializeField] private AudioClip land;
-    [Tooltip("Enemy, trap or projectile hit (knockback).")]
+    [Tooltip("Accepted enemy, trap or projectile damage. Immune contacts stay silent.")]
     [SerializeField] private AudioClip hurt;
     [Tooltip("Any death: water ran out, lava, or falling out of the level.")]
     [SerializeField] private AudioClip death;
     [Tooltip("Entering a water puddle (checkpoint) with less than full water.")]
     [SerializeField] private AudioClip refill;
+    [Tooltip("Played once when water falls below the threshold; rearmed after recovering water.")]
+    [SerializeField] private AudioClip lowWaterWarning;
+    [SerializeField, Range(0.01f, 0.9f)] private float lowWaterThreshold = 0.25f;
     [SerializeField, Range(0f, 1f)] private float volume = 0.8f;
     [SerializeField, Range(0f, 1f)] private float landVolume = 0.4f;
     [Tooltip("Landing is silent after shorter falls, so small steps do not click.")]
@@ -26,49 +30,58 @@ public class PlayerSounds : MonoBehaviour
 
     private Player player;
     private WaterMeter water;
-    private PlayerStates.State lastState;
+    private KnockbackAbility knockback;
     private float airTime;
     private bool airborne;
     private bool jumpPlayed;
-    private bool wasRespawning;
+    private bool lowWaterWarned;
 
     private void Awake()
     {
         player = GetComponent<Player>();
         water = GetComponent<WaterMeter>();
-        lastState = player.stateMachine.currentState;
+        knockback = GetComponent<KnockbackAbility>();
     }
 
     private void OnEnable()
     {
         if (water != null)
+        {
             water.RefilledFromSource += OnRefilled;
+            water.RespawnStarted += OnDeath;
+            water.WaterChanged += OnWaterChanged;
+            lowWaterWarned = water.NormalizedWater <= lowWaterThreshold;
+        }
+        if (knockback != null)
+            knockback.HitAccepted += OnHit;
     }
 
     private void OnDisable()
     {
         if (water != null)
+        {
             water.RefilledFromSource -= OnRefilled;
+            water.RespawnStarted -= OnDeath;
+            water.WaterChanged -= OnWaterChanged;
+        }
+        if (knockback != null)
+            knockback.HitAccepted -= OnHit;
+        airborne = false;
+        airTime = 0f;
+        jumpPlayed = false;
     }
 
     private void Update()
     {
         bool respawning = water != null && water.IsRespawning;
-        if (respawning && !wasRespawning)
-            Sfx.Play(death, volume);
-        wasRespawning = respawning;
-        if (respawning || !player.isActiveAndEnabled)
+        if (respawning || !player.isActiveAndEnabled || SceneFader.IsBusy)
         {
             airborne = false;
             airTime = 0f;
-            lastState = player.stateMachine.currentState;
             return;
         }
 
         PlayerStates.State state = player.stateMachine.currentState;
-        if (state != lastState && state == PlayerStates.State.Knockback)
-            Sfx.Play(hurt, volume);
-        lastState = state;
 
         PhysicsControl physics = player.physicsControl;
         if (physics.grounded)
@@ -92,4 +105,26 @@ public class PlayerSounds : MonoBehaviour
     }
 
     private void OnRefilled() => Sfx.Play(refill, volume);
+
+    private void OnHit()
+    {
+        // A lethal hit uses the death cue instead of stacking hurt and death voices.
+        if (water == null || (!water.IsEmpty && !water.IsRespawning))
+            Sfx.Play(hurt, volume);
+    }
+
+    private void OnDeath() => Sfx.Play(death, volume);
+
+    private void OnWaterChanged(float amount)
+    {
+        float normalized = water.NormalizedWater;
+        if (normalized >= Mathf.Min(1f, lowWaterThreshold + 0.1f))
+            lowWaterWarned = false;
+        if (!lowWaterWarned && normalized > 0f && normalized <= lowWaterThreshold &&
+            player.isActiveAndEnabled && !water.IsRespawning && !SceneFader.IsBusy)
+        {
+            lowWaterWarned = true;
+            Sfx.Play(lowWaterWarning, volume);
+        }
+    }
 }

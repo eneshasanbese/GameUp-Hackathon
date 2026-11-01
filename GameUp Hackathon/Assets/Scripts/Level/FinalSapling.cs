@@ -64,6 +64,13 @@ public class FinalSapling : MonoBehaviour
     [Tooltip("Called once the cutscene ends, e.g. to show the win panel.")]
     [SerializeField] private UnityEvent onFinished;
 
+    [Header("Sound Effects")]
+    [SerializeField] private AudioClip absorbSound;
+    [SerializeField] private AudioClip bloomSound;
+    [SerializeField] private AudioClip victorySound;
+    [SerializeField] private AudioClip restartSound;
+    [SerializeField, Range(0f, 1f)] private float soundVolume = 0.8f;
+
     private bool started;
 
     private void Reset()
@@ -112,6 +119,7 @@ public class FinalSapling : MonoBehaviour
             return;
 
         started = true;
+        Sfx.Play(absorbSound, soundVolume);
         if (endingMusic != null)
             MusicPlayer.SwitchTo(endingMusic, endingMusicVolume, loopEndingMusic, musicFadeOut, musicFadeIn);
         StartCoroutine(Play(player, water, body));
@@ -149,11 +157,17 @@ public class FinalSapling : MonoBehaviour
 
         float sequence = shrinkDuration + bloomDuration;
         float total = Mathf.Max(sequence, zoomDuration, uiFadeDuration);
+        bool bloomSoundPlayed = false;
         for (float time = 0f; ; time += Time.deltaTime)
         {
             bool last = time >= total;
             if (last)
                 time = total;
+            if (!bloomSoundPlayed && time >= shrinkDuration)
+            {
+                bloomSoundPlayed = true;
+                Sfx.Play(bloomSound, soundVolume);
+            }
             float uiFade = Ease(time / uiFadeDuration);
             float zoom = Ease(time / zoomDuration);
             float shrink = Ease(time / shrinkDuration);
@@ -205,13 +219,15 @@ public class FinalSapling : MonoBehaviour
             group.blocksRaycasts = false;
 
         yield return new WaitForSeconds(holdDuration);
+        Sfx.Play(victorySound, soundVolume);
         onFinished?.Invoke();
     }
 
     /// <summary>For the win panel's replay button: starts again from the first level.</summary>
     public void RestartGame()
     {
-        SceneFader.FadeAndLoad(0, 0.5f, Color.black);
+        if (SceneFader.FadeAndLoad(0, 0.5f, Color.black))
+            Sfx.Play(restartSound, soundVolume);
     }
 
     private CinemachineCamera FindCamera(Player player)
