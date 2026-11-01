@@ -10,6 +10,14 @@ public sealed class FallingGroundTrap : MonoBehaviour
     [SerializeField, Min(0.01f)] private float maximumFallSpeed = 14f;
     [SerializeField, Min(0.01f)] private float despawnDelay = 3f;
 
+    [Header("Sounds")]
+    [Tooltip("First step that arms the platform, e.g. a short crack or rumble.")]
+    [SerializeField] private AudioClip warningSound;
+    [Tooltip("Played once when support is released and the platform starts falling.")]
+    [SerializeField] private AudioClip fallSound;
+    [SerializeField, Range(0f, 1f)] private float soundVolume = 0.6f;
+    [SerializeField, Min(0.5f)] private float hearingDistance = 12f;
+
     private Rigidbody2D body;
     private BoxCollider2D groundCollider;
     private bool triggered;
@@ -43,6 +51,7 @@ public sealed class FallingGroundTrap : MonoBehaviour
 
             falling = true;
             remaining = despawnDelay;
+            Sfx.PlayAt(fallSound, transform.position, soundVolume, hearingDistance);
             // Release support so the platform cannot carry or trap the Player.
             groundCollider.enabled = false;
             body.bodyType = RigidbodyType2D.Dynamic;
@@ -87,6 +96,7 @@ public sealed class FallingGroundTrap : MonoBehaviour
 
             triggered = true;
             remaining = fallDelay;
+            Sfx.PlayAt(warningSound, transform.position, soundVolume, hearingDistance);
             return;
         }
     }

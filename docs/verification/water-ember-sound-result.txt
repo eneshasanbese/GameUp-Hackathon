@@ -1,0 +1,37 @@
+PASS WaterSource has no missing scripts
+PASS contact sound component is attached to WaterSource
+PASS WaterSource uses the user's Level_1 clip
+PASS source is configured for a single contact cue
+PASS Ember Fire Sound references sfx_throw.ogg
+PASS WaterSource stays silent before contact
+PASS actual chosen WaterSource clip plays on full-water entry
+PASS shared Sfx player prevents duplicate local playback
+PASS full entry preserves existing refill event rules
+PASS staying in the puddle does not restart the contact sound
+PASS re-entry plays once and still refills the single water meter
+PASS contact still saves the source checkpoint
+PASS muted AudioSource suppresses contact sound
+PASS disabled AudioSource suppresses contact sound
+PASS disabled contact component stays silent
+PASS empty source slot stays silent without errors
+PASS non-player physics contacts do not play the water cue
+PASS contact sound works even when LevelExit already disabled Player in the same step
+PASS no fire cue while preparing the shot
+PASS a real Ember projectile launch plays the assigned sfx_throw recording
+PASS Ember cooldown does not loop the shot sound
+PASS canceled out-of-range shot produces neither projectile nor throw sound
+PASS real LevelExit still loads the next scene and removes the old objects
+PASS contact cue continues after the source scene unloads
+PASS scene transition does not cut off the remainder of the cue
+PASS no gameplay or audio errors during verification
+EDITOR_INDEXER_ISSUE ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+System.Collections.Generic.List`1[T].get_Item (System.Int32 index) (at <816f70bc2a9c4332b0bd119906a8d40e>:0)
+UnityEditor.Search.SearchDatabase+<EnumerateAll>d__75.MoveNext () (at <63b660f4a395488d8fa8f1e1bdf475bd>:0)
+System.Linq.Enumerable.TryGetFirst[TSource] (System.Collections.Generic.IEnumerable`1[T] source, System.Boolean& found) (at <fe644d7ad1cf499ebe4e7ad937bc03bf>:0)
+System.Linq.Enumerable.First[TSource] (System.Collections.Generic.IEnumerable`1[T] source) (at <fe644d7ad1cf499ebe4e7ad937bc03bf>:0)
+UnityEditor.Search.SearchDatabase.GetDefaultSearchDatabase () (at <63b660f4a395488d8fa8f1e1bdf475bd>:0)
+UnityEditor.Search.SearchInit.IndexationOnStartup () (at <63b660f4a395488d8fa8f1e1bdf475bd>:0)
+UnityEditor.EditorApplication.Internal_CallDelayFunctions () (at <cd9a5dfa62e34daeb7c2d29ef5f4929b>:0)
+
+RESULT PASS 26

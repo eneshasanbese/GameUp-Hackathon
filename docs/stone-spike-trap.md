@@ -25,6 +25,10 @@ Tetiklenince gövde Dynamic olur. Yatay konum ve dönüş kilitlidir; oyuncu uza
 
 Tuzak tek kullanımlıktır; sahne yeniden yüklenince geri gelir. Bileşeni kapatmak düşüşü/hasarı durdurur; yeniden açmak kalan süreyle sürdürür. Süre oyun zamanıyladır, dolayısıyla pause sırasında ilerlemez. Değerler deneme ayarıdır; bölümde oynanış dengesiyle doğrulanmalıdır.
 
+## Ses alanları
+
+1 Kasım 2026 ses hazırlığı (T52): `FallingStoneTrap / Sounds` içinde **Fall Sound** bırakılmada, **Hit Sound** ilk oyuncu temasında bir kez çalar. **Sound Volume 0.6 / Hearing Distance 12** hazırdır; yalnızca dosya seçimi kaldı. Hit Sound zemin çarpışması değildir; mevcut zeminden geçiş korunur. [Ses alanları ve kontrol sonucu](ses-kurulumu.md#düşen-platformlar-ve-sarkıt).
+
 ## Doğrulama
 
 Doğrulama kodu `Assets/Editor/Traps/FallingStoneTrapVerification.cs` içindedir. Açık ana projeyi etkilememek için aynı Unity sürümüyle ayrı batch projede `-executeMethod FallingStoneTrapVerification.Run` kullanılır. `ConfigureAndRun` yalnızca ayrı kopyada ilk prefab kurulumunu da yapar.

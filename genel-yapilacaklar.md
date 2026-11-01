@@ -1,5 +1,7 @@
 # Su Damlası Oyunu — Genel Yapılacaklar
 
+1 Kasım 2026 son gövde teması talebi (T09 ve düşman ek kapsamı, QA06–QA09): EmberSpitter ve KozOcagi_Stationary gövdelerine çarpmak mevcut tek su kaybı, knockback ve ortak flash sistemini kullanır. Gövde trigger'ları geniş atış/emiş alanlarından ayrıdır; Köz Ocağı'nın sürekli kaybı flash sırasında sürer. Bu karar aşağıdaki ilk düşman taleplerinin gövde hasarını dışarıda tutan kısmını günceller. [Ayarlar](docs/player-state-machine.md#knockback-ve-temas-hasarı).
+
 1 Kasım 2026 basınca düşen zemin ek kapsamı (T30/T42): kullanıcı talebiyle `FallingGround_Sand.prefab` ve `FallingGround_Rock.prefab`, oyuncu üstlerine bastıktan 0.25 saniye sonra tek kez düşer. Beklemede zemin desteği korunur; yan/alt temas sayacı başlatmaz. [Ayarlar ve doğrulama](docs/falling-ground-traps.md). Genel kabul kutuları asıl bölüm testini bekler.
 
 1 Kasım 2026 ölüm/yeniden doğma güncellemesi (T25–T26, QA07–QA09): açık kullanıcı talebiyle sıfır su/düşme `DeathAbility` durumuna girer; hazır ölüm animasyonu tamamlanınca sahne yeniden yüklenerek harita sıfırlanır ve son checkpoint'te tam suyla doğulur. [Bağlantılar ve doğrulama](docs/water-player.md#kaynak-ve-yeniden-doğuş). Genel kabul kutuları asıl bölüm testini bekler.
@@ -211,6 +213,8 @@ Kenney Pixel Platformer ana paketinin resmî sayfası 18×18 tile ölçüsü ve 
 - [ ] **T50 — Su bilgisini okunabilir yap.** Çubuk yeterli olabilir; düşük su durumunu yalnızca renkle anlatma. Göstergeyi platformları kapatmayacak yere koy.
 - [ ] **T51 — Başlangıç/son arayüzünü tamamla.** Ayrı menü sahnesi zorunlu değil; aynı sahnede başlangıç ve sonuç paneli yeterli. Başla ve yeniden oyna akışları çalışsın.
 - [ ] **T52 — Önce işlevsel sesleri ekle.** Su dolma, kaybetme, kazanma; zaman varsa zıplama/iniş. Müzik zorunlu değil; okunabilirlik ve tamamlanabilirlikten önce gelmesin.
+  - 1 Kasım 2026 kullanıcı talebiyle efekt dosyaları atanacak aşamaya kadar Player hasar/dolum/ölüm/iniş/düşük su, atıcı hazırlık/atış, mermi çarpması, düşen tuzaklar, ortam ve final ses bağlantıları hazırlandı. [Inspector alanları ve doğrulama](docs/ses-kurulumu.md). Ses seçimi ve gerçek kayıtlarla ana bölüm dinleme/build kontrolü bekler.
+  - Sonraki kullanıcı talebiyle Ember atışına `sfx_throw.ogg` bağlandı; WaterSource'un seçili kaydı ortam döngüsü yerine temas anında bir kez çalacak şekilde düzeltildi. Ayrı Unity projesinde 26 kontrol geçti; ana bölümde dinleme/build kontrolü bekler. [Güncel sonuç](docs/ses-kurulumu.md#çalışma-ve-kontrol).
 - [ ] **T53 — Kaynak ve lisans kaydı tut.** Kullanılan her görsel, ses, font, müzik ve kod için kaynak adresi, lisans, indirme tarihi ve gerekli atıf kaydedilsin. Pixabay veya Freesound’da dosya bazında lisansı doğrula; platform adı izin belgesi yerine geçmez.
 - [ ] **T54 — Finali anlaşılır göster.** Fidana ulaşınca yeşerme ve bitiş mesajı yeterli. Üç kademeli fidan, kalan suya göre puan veya farklı son otomatik eklenmesin.
 - [ ] **T55 — Gereksiz efektleri azalt.** Oyuncuyu örten buhar, yoğun ekran titremesi veya aşırı parçacık kullanma. Sıcak bölge eklenmediyse “hot” yüz ifadeleri üretmek gerekmez.

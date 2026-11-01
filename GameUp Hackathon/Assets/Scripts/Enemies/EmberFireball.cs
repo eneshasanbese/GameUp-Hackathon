@@ -13,6 +13,11 @@ public sealed class EmberFireball : MonoBehaviour
     [SerializeField] private Transform visual;
     [SerializeField] private float rotationOffset;
 
+    [Header("Sounds")]
+    [SerializeField] private AudioClip impactSound;
+    [SerializeField, Range(0f, 1f)] private float soundVolume = 0.6f;
+    [SerializeField, Min(0.5f)] private float hearingDistance = 12f;
+
     private Rigidbody2D body;
     private CircleCollider2D core;
     private Player target;
@@ -143,6 +148,7 @@ public sealed class EmberFireball : MonoBehaviour
         spent = true;
         core.enabled = false;
         body.simulated = false;
+        Sfx.PlayAt(impactSound, other.ClosestPoint(body.position), soundVolume, hearingDistance);
         if (!IsObstacle(other) && IsGameplayActive(target, water))
         {
             Player hitPlayer = other.attachedRigidbody.GetComponent<Player>();

@@ -1,0 +1,78 @@
+PASS Player.prefab: no missing components
+PASS Player.prefab: sound component attached
+PASS Player.prefab: all requested audio slots are available and unassigned
+PASS Enemies/EmberSpitter.prefab: no missing components
+PASS Enemies/EmberSpitter.prefab: sound component attached
+PASS Enemies/EmberSpitter.prefab: all requested audio slots are available and unassigned
+PASS Enemies/EmberFireball.prefab: no missing components
+PASS Enemies/EmberFireball.prefab: sound component attached
+PASS Enemies/EmberFireball.prefab: all requested audio slots are available and unassigned
+PASS Traps/FallingGround_Sand.prefab: no missing components
+PASS Traps/FallingGround_Sand.prefab: sound component attached
+PASS Traps/FallingGround_Sand.prefab: all requested audio slots are available and unassigned
+PASS Traps/FallingGround_Rock.prefab: no missing components
+PASS Traps/FallingGround_Rock.prefab: sound component attached
+PASS Traps/FallingGround_Rock.prefab: all requested audio slots are available and unassigned
+PASS Traps/Trap_stoneSpike.prefab: no missing components
+PASS Traps/Trap_stoneSpike.prefab: sound component attached
+PASS Traps/Trap_stoneSpike.prefab: all requested audio slots are available and unassigned
+PASS Enemies/HapsirikKoz_Smoke.prefab: no missing components
+PASS Enemies/HapsirikKoz_Smoke.prefab: sound component attached
+PASS Enemies/HapsirikKoz_Smoke.prefab: all requested audio slots are available and unassigned
+PASS WaterSource.prefab: ambient source ready for only an audio clip
+PASS Enemies/SlimeFire_Stationary.prefab: ambient source ready for only an audio clip
+PASS Enemies/SlimeFire_Patrol.prefab: ambient source ready for only an audio clip
+PASS native one-shot playback works
+PASS unassigned hurt clip safely stays silent
+PASS projectile damage is accepted
+PASS projectile damage plays hurt
+PASS flash rejects another projectile
+PASS immune hit stays silent
+PASS body damage is accepted
+PASS body/trap damage plays hurt
+PASS disabled PlayerSounds unsubscribes safely
+PASS lethal damage suppresses the hurt voice when death is the selected cue
+PASS full-water source entry stays silent
+PASS fall death can play while the water meter is still positive
+PASS entering a real water source plays refill
+PASS source still refills the single water meter
+PASS staying in the source does not repeat refill
+PASS low water threshold plays warning
+PASS continued drain does not repeat low-water warning
+PASS refill rearms the low-water warning
+PASS a 90 percent warning threshold also arms correctly
+PASS full refill rearms the maximum configurable threshold
+PASS depletion starts death sound synchronously
+PASS repeated death request stays silent
+PASS spitter windup has its own cue
+PASS spitter remains in windup
+PASS windup cue does not repeat each physics step
+PASS real shot plays fire cue
+PASS shot still creates one projectile
+PASS projectile wall impact plays before destruction
+PASS a real fall and landing plays the landing cue
+PASS standing on the ground does not repeat landing
+PASS first platform contact plays warning
+PASS platform release plays fall cue
+PASS fall still releases the supporting collider
+PASS falling platform does not repeat the start cue
+PASS stalactite detection plays release cue
+PASS stalactite player contact plays hit cue
+PASS stalactite contact is latched once
+PASS valid final contact plays absorb cue
+PASS bloom phase plays its cue
+PASS cutscene completion plays victory cue
+PASS final still stops gameplay and water drain
+PASS final cues do not repeat after completion
+PASS no gameplay errors during the sound scenarios
+EDITOR_INDEXER_ISSUE ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+System.Collections.Generic.List`1[T].get_Item (System.Int32 index) (at <816f70bc2a9c4332b0bd119906a8d40e>:0)
+UnityEditor.Search.SearchDatabase+<EnumerateAll>d__75.MoveNext () (at <63b660f4a395488d8fa8f1e1bdf475bd>:0)
+System.Linq.Enumerable.TryGetFirst[TSource] (System.Collections.Generic.IEnumerable`1[T] source, System.Boolean& found) (at <fe644d7ad1cf499ebe4e7ad937bc03bf>:0)
+System.Linq.Enumerable.First[TSource] (System.Collections.Generic.IEnumerable`1[T] source) (at <fe644d7ad1cf499ebe4e7ad937bc03bf>:0)
+UnityEditor.Search.SearchDatabase.GetDefaultSearchDatabase () (at <63b660f4a395488d8fa8f1e1bdf475bd>:0)
+UnityEditor.Search.SearchInit.IndexationOnStartup () (at <63b660f4a395488d8fa8f1e1bdf475bd>:0)
+UnityEditor.EditorApplication.Internal_CallDelayFunctions () (at <cd9a5dfa62e34daeb7c2d29ef5f4929b>:0)
+
+RESULT PASS 67

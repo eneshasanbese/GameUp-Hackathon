@@ -15,6 +15,10 @@ Platform başlangıçta yerçekimsiz Kinematic gövdedir ve oyuncuyu destekler. 
 
 Düşüşte destek collider'ı kapanır; platform oyuncuyu taşımaz ve diğer zeminlere takılmaz. Yatay konum ve dönüş kilitlidir. Bu davranış ek temas hasarı üretmez. Sahne yeniden yüklendiğinde platformlar başlangıç hâline döner. Bileşeni kapatmak sayaç ve hareketi durdurur; açmak kaldığı yerden sürdürür. Süreler oyun zamanını izler ve pause sırasında ilerlemez.
 
+## Ses alanları
+
+1 Kasım 2026 ses hazırlığı (T52): İki prefab'ın `FallingGroundTrap / Sounds` alanlarında **Warning Sound** ilk geçerli basışta, **Fall Sound** gerçek düşüş başlangıcında bir kez çalar. **Sound Volume 0.6 / Hearing Distance 12** hazırdır; dosyalar boş bırakıldı. Destek collider'ı kapandığı için zemin çarpması sesi eklenmedi. [Dosya atama ve ses doğrulaması](ses-kurulumu.md#düşen-platformlar-ve-sarkıt).
+
 ## Doğrulama
 
 `Assets/Editor/Traps/FallingGroundTrapVerification.cs` yalnızca ayrı batch Unity projesinde çalışır. `ConfigureAndRun` bu kopyadaki iki prefabı Unity API'siyle bağlayıp test eder; `Run` hazır prefabları değiştirmeden doğrular. Açık ana proje ve sahne kullanılmaz. Gerçek güncel Player prefab'ı, script'ler ve input kullanılır; testte normal su tüketimi sıfırlanır.

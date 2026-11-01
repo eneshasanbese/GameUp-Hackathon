@@ -17,6 +17,12 @@ public sealed class EmberSpitter : MonoBehaviour
     [SerializeField] private LayerMask playerLayerMask;
     [SerializeField] private LayerMask obstacleLayerMask;
 
+    [Header("Sounds")]
+    [SerializeField] private AudioClip windupSound;
+    [SerializeField] private AudioClip fireSound;
+    [SerializeField, Range(0f, 1f)] private float soundVolume = 0.7f;
+    [SerializeField, Min(0.5f)] private float hearingDistance = 12f;
+
     private Player target;
     private WaterMeter water;
     private float timer;
@@ -60,6 +66,7 @@ public sealed class EmberSpitter : MonoBehaviour
             if (!CanFire(out _)) return;
             CurrentState = ShotState.Windup;
             timer = Mathf.Max(0f, windupDuration);
+            Sfx.PlayAt(windupSound, Origin, soundVolume, hearingDistance);
             return;
         }
 
@@ -78,6 +85,7 @@ public sealed class EmberSpitter : MonoBehaviour
             EmberFireball projectile = Instantiate(projectilePrefab, muzzle, Quaternion.identity);
             projectiles.Add(projectile);
             projectile.Launch(Aim, target, transform, playerLayerMask, obstacleLayerMask);
+            Sfx.PlayAt(fireSound, muzzle, soundVolume, hearingDistance);
         }
         ResetVisual();
         CurrentState = ShotState.Cooldown;

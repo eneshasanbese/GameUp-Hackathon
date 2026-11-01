@@ -4,7 +4,7 @@
 
 ## Kullanım ve dosyalar
 
-- `GameUp Hackathon/Assets/Prefabs/Enemies/EmberSpitter.prefab`: sahneye sürükle; zemine veya havaya yerleştirilebilir. Yatay konumu kilitlidir; yerçekimiyle düşüp zemin collider'ına oturur. Yalnızca zemine çarpan `TerrainBody` vardır; devriye, çekim, ısı veya temas hasarı yoktur.
+- `GameUp Hackathon/Assets/Prefabs/Enemies/EmberSpitter.prefab`: sahneye sürükle; zemine veya havaya yerleştirilebilir. Yatay konumu kilitlidir; yerçekimiyle düşüp `TerrainBody` üzerinden zemine oturur. 1 Kasım 2026 son talebiyle kökte ayrı gövde trigger'ı ve `EnemyContactKnockback` de vardır; temas mevcut Player hasar/knockback sistemini kullanır.
 - `GameUp Hackathon/Assets/Prefabs/Enemies/EmberFireball.prefab`: atıcının `Projectile Prefab` alanına bağlıdır; elle sahneye yerleştirilmesi gerekmez.
 - `GameUp Hackathon/Assets/Scenes/EmberSpitterDemo.unity`: gerçek Player prefab'ı, mevcut Canvas/WaterBarUI, düz zemin, görüş duvarı ve 0.05 birim kalınlığında platform içeren ayrı alan. A/D veya oklar hareket, Space zıplama, R veya ekrandaki düğme başlangıca dönüş. Ana sahneler ve build sahne listesi değiştirilmedi.
 - `Assets/Scripts/Enemies/EmberSpitter.cs`, `EmberFireball.cs`: çalışma zamanı davranışı. `EmberSpitterDemoControls.cs` yalnızca test alanının kontrolüdür.
@@ -53,6 +53,10 @@ Oyuncu ölüm, yeniden doğma veya mevcut LevelExit geçişi nedeniyle kapandı�
 
 ## Görseller
 
+1 Kasım 2026 gövde teması: kökteki **BoxCollider2D**, Size `(0.9, 1.2)`, Offset `(0, 0.6)` ve Is Trigger açık olarak yalnızca Player temasını algılar. `EnemyContactKnockback` mevcut `KnockbackAbility.TryKnockback` akışını kullanır; hasar/kuvvet/flash ayarları Player'dadır. Katı `TerrainBody` ve atış algılama/görüş katmanları korunur. Mermi ile gövde aynı flash dokunulmazlığını paylaşır. Ayrı script/event ataması gerekmez. Önceki doğrulamalardaki hasarsız gövdeden geçiş sonucu, o tarihteki kapsamın tarihsel kaydıdır.
+
+1 Kasım 2026 atış sesi (T52): `Assets/Prefabs/Enemies/EmberSpitter.prefab` kökündeki **Ember Spitter → Sounds → Fire Sound** alanına `Assets/platformerPack/Sounds/sfx_throw.ogg` bağlandı. Mermi gerçekten oluşturulup fırlatıldığı anda koddan bir kez çalar; atış animasyonu veya Animation Event gerekmez. Hazırlık ve iptal edilen atış bu sesi üretmez. Sound Volume 0.7, Hearing Distance 12 birimdir. Su kaynağı temas düzeltmesiyle birlikte ayrı Unity projesinde 26 kontrol geçti; [alanlar ve sonuç](ses-kurulumu.md#çalışma-ve-kontrol).
+
 31 Ekim 2026 sonraki kullanıcı talebiyle ilk sürümdeki tek kareli Idle yerine hazır Idle animasyonu bağlandı. İncelemede önceki prefab'da Animator bulunmadığı ve yalnızca `Frames/Idle/Idle_00.png` gösterildiği doğrulandı.
 
 - `EmberPack/EmberSpitter/Unity_128/Idle.png`: 512×384 sheet, 12 adet 128×128 hücre ve mevcut `(0.5,0.16)` ortak pivot. `Idle_00`–`Idle_11` 12 FPS ile bir saniyede döner. Karelerin dış sınırı sabittir; verilen çizimin Idle etkisi gövdedeki hafif ışıma değişimidir. Visual ölçeği 1.75; şeffaf boşluk/pivot nedeniyle yerel Y yaklaşık 0.04758 ile ayak hizası korunur.
@@ -61,6 +65,8 @@ Oyuncu ölüm, yeniden doğma veya mevcut LevelExit geçişi nedeniyle kapandı�
 Kullanılan Idle sheet ve ateş topu 128 PPU, Bilinear, mipmap kapalı ve sıkıştırmasızdır. Sheet'in mevcut hücreleri, spriteID/fileID/GUID ve pivot'ları korunur. Animasyon yalnızca SpriteRenderer.sprite değiştirir; Transform eğrisi/root motion olmadığı için atış uyarısının ölçeğini, ağız noktalarını ve fizik gövdesini etkilemez. Yeni çizim veya paket yoktur; görseller kullanıcı tarafından sağlandı.
 
 ## Doğrulama
+
+1 Kasım 2026 gövde teması güncellemesi: gerçek Player, Ember ve Köz Ocağı prefab'larıyla ayrı Unity 6000.5.0f1 projesinde **47 kontrol geçti (9 asset, 38 Play Mode)**. Sağ/sol gövde darbesi, tek su kaybı ve fizik itişi, ortak mermi/gövde flash koruması, toparlanma, koruma sonrası yeni darbe ve öldüren temas doğrulandı. Ember'ın atış hazırlığı/mermi üretimi çalışır; algılama alanı gövde knockback'i başlatmaz. İki prefab'ın hash'leri test kopyalarıyla eşleşti. [Kapsam ve sonuç](player-state-machine.md#doğrulama). Ana bölümde elle oynanış ve dış build testi bekler.
 
 Aşağıdaki 65 kontrol ilk tek kareli, yerçekimsiz sürümün tarihsel kaydıdır. Idle/yerçekimi güncellemesinin yeni sonuçları bu belgenin sonundadır.
 

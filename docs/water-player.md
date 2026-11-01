@@ -92,6 +92,10 @@ Player prefab'ına DeathAbility, iki controller'a Death klibi bağlandı; mevcut
 
 Eksik suyla kaynağa giriş, dolumdan sonra Heal animasyonunu tetikler. Dolum anlıktır; animasyon su kazanımını geciktirmez veya kontrolü kilitlemez. Kaynakta beklerken OnTriggerStay dolumu sürdürür, Heal tekrarlanmaz. Dolu suyla giriş ve yeniden doğuştaki Refill Heal'ı tetiklemez.
 
+1 Kasım 2026 ses hazırlığı (T52): Player prefab'ının köküne `PlayerSounds` bağlandı. `RefilledFromSource` dolum sesini, yeni `RespawnStarted` olayı tüm ölüm nedenleri için tek ölüm sesini tetikler. `KnockbackAbility.HitAccepted` gövde/tuzağa temas ve mermi darbesini ortak hasar sesine bağlar; reddedilen ve öldüren darbeler ekstra Hurt çalmaz. İniş ve tek seferlik düşük su uyarısı da hazırdır. Yalnızca AudioClip alanlarını doldurmak yeterlidir; [tüm ses alanları ve 67 kontrolün kaydı](ses-kurulumu.md). Su/ölüm/yeniden doğma kuralları korunur.
+
+1 Kasım 2026 temas sesi düzeltmesi (T52): WaterSource kökündeki `WaterSourceSound`, **AudioSource → Audio Resource** alanındaki kaydı oyuncu girişinde bir kez çalar; su tamken de duyulur. Level_1'de seçilmiş `freesound_gamestudio-find-408438.mp3` prefab'ın varsayılanına bağlandı; mevcut sahne seçimi korunur. Play On Awake/Loop kapatıldı. Ses ortak `Sfx` kaynağından çaldığı için bölüm geçişinde tamamlanabilir; LevelExit aynı adımda Player'ı kapatsa da kaybolmaz. Su dolumu, checkpoint ve `RefilledFromSource`/Heal koşulları değişmedi. Player Sounds → Refill isteğe bağlı ek tepkidir; aynı ses iki alana atanmaz. [Güncel alanlar ve doğrulama](ses-kurulumu.md).
+
 ## Su göstergesi (T19)
 
 `Assets/Scripts/UI/WaterBarUI.cs`, sol üstteki portreli yatay su barını yönetir. Kendi su sayacı yoktur: açılışta `NormalizedWater` değerini gösterir, sonra `WaterChanged` olayındaki mutlak miktarı `Capacity` ile 0–1'e çevirir. Mavi `Fill` objesinin anchor'ları bu orana göre ayarlanır, bu yüzden sprite gerekmez. Yeniden doğuştaki dolum da aynı olayla bara yansır.

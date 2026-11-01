@@ -28,6 +28,8 @@
 
 ## Köz Püskürten — sabit atıcı ve tek ateş topu
 
+**1 Kasım 2026 sonraki gövde teması kararı:** Kullanıcı EmberSpitter ve KozOcagi_Stationary prefab'larına çarpmada da hasar ve knockback istedi. İki prefab'ın gövdesi Player'a özel ayrı trigger ve mevcut `EnemyContactKnockback` ile `KnockbackAbility.TryKnockback` akışına bağlanır. Player'daki tek su kaybı, geri itme ve ortak flash ayarları geçerlidir. Emiş/algılama alanları gövde darbesi üretmez; Köz Ocağı'nın bağımsız sürekli tüketimi flash sırasında sürer. Aşağıdaki ilk atıcı talebinin ve önceki Köz Ocağı kararının temas hasarını dışarıda tutan kısmı bu son taleple güncellenmiştir.
+
 **Sonraki açık kullanıcı kararı — 31 Ekim 2026:** Idle'ın hareket etmediğinin kontrolü ve diğer yerdeki düşmanlar gibi yerçekimi istendi. Önceki tek kare/Animator'sız gövde yerine hazır 12 karelik Idle döngüsü bağlanır. Atıcı Dynamic Rigidbody2D ile düşer; X ve dönüş kilitlidir. Ayrı TerrainBody yalnızca zemin/sınırlarla çarpışır, gövde hasarı/oyuncuyu itme eklenmez. Bu karar önceki tamamen yerinde sabit ve fizik gövdesiz uygulamayı bu kapsamda değiştirir.
 
 **Tarih ve dayanak:** 31 Ekim 2026. Kullanıcı EmberPack/EmberSpitter/EmberFireball klasörlerini ve ayrıntılı davranış/kabul metnini verdi; iki prefab ve kontrollü test alanının uygulanmasını istedi. Bu açık talep ilgili dar düşman kapsamını onaylar.

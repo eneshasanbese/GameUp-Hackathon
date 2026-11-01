@@ -121,6 +121,9 @@ MonoBehaviour:
     m_Bits: 1216
   visual: {fileID: 2097486833864234155}
   rotationOffset: 0
+  impactSound: {fileID: 0}
+  soundVolume: 0.6
+  hearingDistance: 12
 --- !u!1 &6896424642128145465
 GameObject:
   m_ObjectHideFlags: 0
