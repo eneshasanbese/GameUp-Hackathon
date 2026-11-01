@@ -1,6 +1,6 @@
 # Su Damlası — Yapılacaklar Takibi
 
-**Son kontrol:** 1 Kasım 2026, 16:05 (diskteki dosyalara ve koda göre; `Level_1`/`Level_2`/`Level_3` sahne dosyaları okunarak incelendi, oynanmadı)
+**Son kontrol:** 1 Kasım 2026, 16:34 (diskteki dosyalara ve koda göre; `Level_1`/`Level_2`/`Level_3` sahne dosyaları okunarak incelendi, oynanmadı)
 **Ana belge:** [genel-yapilacaklar.md](genel-yapilacaklar.md). T numaraları oradaki görevlerle aynıdır.
 **Kural:** Kurulum maddeleri diskteki dosyalarla doğrulanınca işaretlenir. Oynanış maddeleri (T/QA) ancak asıl sahnede (`Level1`) oynanarak denendikten sonra işaretlenir. Kodu yazılmış ama oyunda denenmemiş maddeler **Uygulandı; test bekliyor** olarak not edilir. Kaydedilmemiş değişiklikler sayılmaz.
 
@@ -114,6 +114,8 @@
 - [ ] Karar: `Level2`'ye su dolu mu başlıyor, yoksa `Level1`'den kalan su mu taşınıyor? Şu an `LevelExit` ile dolu başlıyor (öneri buydu); taşınması istenirse ek kod gerekir.
 
 **Level 3 — mağara (`Scenes/Level_3.unity` yapım aşamasında; build listesinde 3. sırada; düşmansız, fidansız)**
+
+- [ ] 1 Kasım 16:34 merge (`47c77f5` E tuşu/outro + arkadaşın `078bcb8` ses efektleri): tek çakışma Level_3'teki lav animasyon hızlarıydı (Unity her kayıtta rastgele yazıyor, önemsiz). Arkadaşın Player başlangıcını düzeltmesi (−7.6, −1.1), flash süresi 1, FinalSapling ses alanları ve Köz Ocağı ayarları korundu; senden SkipHint, Ending (E tuşu, Hold 2, bitince MainMenu) ve EndingCanvas alındı. Ses kodundaki önceki eklemeler (MuteWorld, aynı parçada müziğin sürmesi) yerinde.
 
 - [ ] 1 Kasım 10:59 merge (`6f51ab5` + arkadaşın `20f739e` bariyerleri): Level_3 nesne nesne birleştirildi. Arkadaşın bariyerleri, `FallingGround_Rock`, `Trap_stoneSpike` ve tile düzenlemeleri korundu; `Fidan` ayarları (final müziği `music_finish`, süreler 3/3/2, ışık ×3) kullanıcıdan alındı. Arkadaşın sürümünde Save During Play ile kalmış kamera yakınlaşması (Ortho 3) 5'e döndürüldü. **Kullanıcının commit'inde kalanlar:** Player başlangıcı fidanın yanında (49.2, −2.32; test için olabilir) ve Level 3 müziğinde Loop kapalı. Bilerek değilse geri alınmalı.
 
