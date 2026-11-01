@@ -130,6 +130,8 @@ public class FinalSapling : MonoBehaviour
         // The run is over: no input, no water drain, no death or respawn, no physics.
         player.enabled = false;
         water.enabled = false;
+        // Enemy, trap and projectile sounds stay silent through the cutscene and the ending story.
+        Sfx.MuteWorld();
         body.linearVelocity = Vector2.zero;
         body.angularVelocity = 0f;
         body.simulated = false;
@@ -223,10 +225,10 @@ public class FinalSapling : MonoBehaviour
         onFinished?.Invoke();
     }
 
-    /// <summary>For the win panel's replay button: starts again from the first level.</summary>
+    /// <summary>For the win panel's replay button: starts again from Level_1 (not the main menu).</summary>
     public void RestartGame()
     {
-        if (SceneFader.FadeAndLoad(0, 0.5f, Color.black))
+        if (SceneFader.FadeAndLoad("Level_1", 0.5f, Color.black))
             Sfx.Play(restartSound, soundVolume);
     }
 

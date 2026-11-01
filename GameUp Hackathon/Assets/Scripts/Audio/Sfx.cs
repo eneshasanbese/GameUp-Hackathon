@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// One place to play short sound effects. Uses a single 2D AudioSource that survives
@@ -8,6 +10,47 @@ using UnityEngine;
 public static class Sfx
 {
     private static AudioSource source;
+    private static AudioMixerGroup output;
+
+    /// <summary>Mixer group for all effects (set by VolumeSettings), so the volume slider applies.</summary>
+    public static AudioMixerGroup Output
+    {
+        get => output;
+        set
+        {
+            output = value;
+            if (source != null)
+                source.outputAudioMixerGroup = value;
+        }
+    }
+
+    /// <summary>
+    /// True while world sounds (enemies, traps, projectiles: everything played with PlayAt) are silenced,
+    /// e.g. during the ending. Cleared when the next scene loads.
+    /// </summary>
+    public static bool WorldMuted { get; private set; }
+
+    /// <summary>Stops the sounds already playing and silences PlayAt until the next scene loads.</summary>
+    public static void MuteWorld()
+    {
+        WorldMuted = true;
+        if (source != null)
+            source.Stop();
+    }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatics()
+    {
+        WorldMuted = false;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (mode == LoadSceneMode.Single)
+            WorldMuted = false;
+    }
 
     public static void Play(AudioClip clip, float volume = 1f)
     {
@@ -18,6 +61,8 @@ public static class Sfx
 
     public static void PlayAt(AudioClip clip, Vector2 position, float volume = 1f, float hearingDistance = 12f)
     {
+        if (WorldMuted)
+            return;
         Camera camera = Camera.main;
         if (camera != null)
         {
@@ -37,6 +82,7 @@ public static class Sfx
             source = holder.AddComponent<AudioSource>();
             source.playOnAwake = false;
             source.spatialBlend = 0f;
+            source.outputAudioMixerGroup = output;
         }
         return source;
     }
