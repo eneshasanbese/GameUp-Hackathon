@@ -3953,7 +3953,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.9160924, y: 1, z: -5}
+  m_LocalPosition: {x: -1.123353, y: 1, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5144,6 +5144,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4029359695232543921, guid: c7bb505b494188e4c952d6bbc7f2629c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.12
+      objectReference: {fileID: 0}
     - target: {fileID: 5946591008197146109, guid: c7bb505b494188e4c952d6bbc7f2629c, type: 3}
       propertyPath: m_Name
       value: EmberSpitter
@@ -5968,7 +5972,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4335478299806446448, guid: 61425ccdc6321c545ba9a3a195097750, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.8937154
+      value: -1.004
       objectReference: {fileID: 0}
     - target: {fileID: 4335478299806446448, guid: 61425ccdc6321c545ba9a3a195097750, type: 3}
       propertyPath: m_LocalPosition.z

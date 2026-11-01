@@ -1,6 +1,6 @@
 # Su Damlası — Yapılacaklar Takibi
 
-**Son kontrol:** 1 Kasım 2026, 16:34 (diskteki dosyalara ve koda göre; `Level_1`/`Level_2`/`Level_3` sahne dosyaları okunarak incelendi, oynanmadı)
+**Son kontrol:** 1 Kasım 2026, 17:05 (diskteki dosyalara ve koda göre; `Level_1`/`Level_2`/`Level_3` sahne dosyaları okunarak incelendi, oynanmadı)
 **Ana belge:** [genel-yapilacaklar.md](genel-yapilacaklar.md). T numaraları oradaki görevlerle aynıdır.
 **Kural:** Kurulum maddeleri diskteki dosyalarla doğrulanınca işaretlenir. Oynanış maddeleri (T/QA) ancak asıl sahnede (`Level1`) oynanarak denendikten sonra işaretlenir. Kodu yazılmış ama oyunda denenmemiş maddeler **Uygulandı; test bekliyor** olarak not edilir. Kaydedilmemiş değişiklikler sayılmaz.
 
@@ -192,6 +192,7 @@ Su değerinin tamamı `WaterMeter`'da; ayrıntılar [su belgesinde](docs/water-p
 - [ ] T27 — Final fidanı: kazanma mesajı çıkıyor, tüketim ve kontrol kapanıyor. 1 Kasım 01:58 sahnesine göre `FinalSapling` güncellendi: değince UI kapanır, Cinemachine fidana yakınlaşır (ortho 5→3, confiner güncellenir), damla küçülüp kaybolur, `Shaft` alfası ve fidan ışığı artar, susuz fidan yeşile döner; kontrol/tüketim/ölüm durur; sonunda `On Finished`. Sahnede bileşen ekli; **Green Sprite atanmamış**. Fidan Spot Light 2D'sinin Target Sorting Layers'ı yalnızca `Level`, yani fidanı aydınlatmıyor. Kazanma paneli yok. **Uygulandı; Inspector ayarı ve test bekliyor.**
 - [ ] T28 — Tekrar oyna bölümü baştan başlatıyor. 1 Kasım: `FinalSapling.RestartGame()` hazır (kararmayla `Level_1`'i, yani build index 0'ı yükler); kazanma panelindeki düğmeye bağlanacak. **Panel ve düğme yok; test bekliyor.**
 - [ ] T29 — Baştan sona ilk build alındı ve denendi. **Başlanmadı.**
+  - [ ] Build'de Türkçe karakter sorunu (1 Kasım 17:05): Yazılar `LiberationSans SDF` (Static, 250 karakter: ASCII + ç ö ü) kullanıyor; ş ğ ı İ dinamik `LiberationSans SDF - Fallback`'ten geliyor. Bu font asset'inde ve TMP Settings'te "Clear Dynamic Data On Build" açık; build'de bu karakterler çıkmadı. Çözüm: Ana font asset'i Font Asset Creator ile `20-7E,A0-FF,100-17F,2010-2027` aralığıyla yeniden üretip aynı dosyanın üzerine kaydetmek (GUID korunur, tüm yazılar düzelir), sonra build'i tekrar almak. **Kullanıcı yapacak; build testi bekliyor.**
 
 **Bugünün hedefi:** 4.–7. bölümler bitince oyun çirkin olsa da başlanıp kaybedilip kazanılabiliyor olmalı. En büyük eksik: T27–T28 (oyun henüz kazanılamıyor).
 
