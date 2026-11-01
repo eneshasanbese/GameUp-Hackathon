@@ -19,6 +19,8 @@ public class LevelExit : MonoBehaviour
     [Tooltip("Seconds for the screen to darken, and again to clear in the next level. 0 = instant cut.")]
     [SerializeField, Min(0f)] private float fadeDuration = 0.5f;
     [SerializeField] private Color fadeColor = Color.black;
+    [Tooltip("Optional sound when the level is finished, e.g. sfx_gem.")]
+    [SerializeField] private AudioClip exitSound;
 
     private bool loading;
     private bool warned;
@@ -57,6 +59,7 @@ public class LevelExit : MonoBehaviour
             return;
 
         loading = true;
+        Sfx.Play(exitSound);
         Freeze(water, other.attachedRigidbody);
     }
 

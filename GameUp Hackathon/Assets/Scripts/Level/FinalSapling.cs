@@ -49,6 +49,17 @@ public class FinalSapling : MonoBehaviour
     [Tooltip("Slides the shrinking drop to the sapling's centre, as if it is absorbed.")]
     [SerializeField] private bool pullDropToSapling = true;
 
+    [Header("Music")]
+    [Tooltip("Starts the moment the drop touches the sapling; the level music fades out underneath it. Leave empty to keep the level music.")]
+    [SerializeField] private AudioClip endingMusic;
+    [SerializeField, Range(0f, 1f)] private float endingMusicVolume = 0.4f;
+    [Tooltip("Off for a short jingle, on for a track that should keep playing behind the win panel.")]
+    [SerializeField] private bool loopEndingMusic = true;
+    [Tooltip("Seconds for the level music to fade out under the ending music.")]
+    [SerializeField, Min(0f)] private float musicFadeOut = 1f;
+    [Tooltip("Seconds for the ending music to reach its volume. 0 starts it at full volume.")]
+    [SerializeField, Min(0f)] private float musicFadeIn = 0.2f;
+
     [Header("After the cutscene")]
     [Tooltip("Called once the cutscene ends, e.g. to show the win panel.")]
     [SerializeField] private UnityEvent onFinished;
@@ -101,6 +112,8 @@ public class FinalSapling : MonoBehaviour
             return;
 
         started = true;
+        if (endingMusic != null)
+            MusicPlayer.SwitchTo(endingMusic, endingMusicVolume, loopEndingMusic, musicFadeOut, musicFadeIn);
         StartCoroutine(Play(player, water, body));
     }
 
