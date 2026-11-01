@@ -90,6 +90,8 @@ Isı alanı ve Player prefab bağlantısı korunur. Oyuncunun gerçek Rigidbody2
 
 Kökteki `HapsirikKozSneeze`, `Visual` Animator'ına bağlıdır; prefab'larda bu bağlantı hazırdır.
 
+1 Kasım 2026 ses eki (T52): `Assets/Scripts/Audio/SoundOnAnimationEvent.cs`, Animator ile aynı nesneye eklenen genel bir Animation Event alıcısıdır. İki HapsirikKoz prefab'ının `Visual` nesnesine **Sound On Animation Event** eklenir; ortak `HapsirikKozSneeze.anim` klibinde istenen kareye event konur, **Function → PlaySound**, **Object/AudioClip → freesound_community-sneeze-98347.mp3** seçilir. Klip event üzerinden verilir; **Volume** ve **Hearing Distance** component'ten ayarlanır. Mevcut `Sfx.PlayAt` yolunu kullanır ve yalnızca Play Mode'da, component etkinken ses çalar. Prefab ve event bağlantıları kullanıcıya bırakılmıştır; ses dosyasının başlangıcındaki olası hazırlık/sessizlik için event zamanı dinlenerek ayarlanmalıdır. Component ve `Sfx.cs`, kurulu Unity projesinin referanslarına karşı C# derleme kontrolünden geçti. Uygulandı; editör/build testi bekliyor.
+
 - **Sneeze Delay Range:** Varsayılan `(1, 5)` saniye. Her tur için bu aralıktan yeni rastgele süre seçilir.
 - **Cooldown Range:** Varsayılan `(2, 3)` saniye. Tam hapşırma animasyonu bittikten sonra bu aralıktan yeni rastgele cooldown seçilir. Cooldown bitince yeni 1–5 saniyelik bekleme başlar; süreler birbirine eklenir.
 - **Automatic Sneezing:** Otomatik döngüyü kapatır/açar. `Sneeze()` metodu veya component'in **Sneeze** bağlam menüsü elle tetikleyebilir; animasyon sürerken ve cooldown içinde gelen istekler reddedilir.
