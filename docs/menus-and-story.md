@@ -4,7 +4,7 @@
 
 ## Akış
 
-`MainMenu` → (Oyuna başla) → `Intro` (hikâye paragrafları) → `Level_1` → `Level_2` → `Level_3` → fidan sahnesi → son hikâyesi → **Tekrar oyna** (`Level_1`) / **Oyundan çık**.
+`MainMenu` → (Oyuna başla) → `Intro` (hikâye paragrafları) → `Level_1` → `Level_2` → `Level_3` → fidan sahnesi → son hikâyesi → `MainMenu` (1 Kasım 2026 kullanıcı isteği: son hikâyesi bitince ana menüye dönülür; Level_3'teki `EndButtons` (Tekrar oyna/Çık) artık açılmaz).
 
 Build listesi sırası: 0 `MainMenu`, 1 `Intro`, 2 `Level_1`, 3 `Level_2`, 4 `Level_3`. Sahneler adla yüklenir (`LevelExit` Next Scene Name, `SceneLoader.LoadScene`); `FinalSapling.RestartGame()` artık build index 0 yerine `Level_1`'i yükler.
 
@@ -13,7 +13,7 @@ Build listesi sırası: 0 `MainMenu`, 1 `Intro`, 2 `Level_1`, 3 `Level_2`, 4 `Le
 | Script | Nerede | Ne yapar |
 |---|---|---|
 | `Scripts/UI/SceneLoader.cs` | Menü/hikâye Canvas'ı | `LoadScene(string)` kararmayla sahne yükler (build listesinde değilse uyarı verir); `QuitGame()` oyunu kapatır (Editor'de Play'i durdurur, WebGL'de etkisi yoktur). Düğmelerin On Click'ine bağlanır. |
-| `Scripts/UI/StoryPlayer.cs` | Hikâye metni | Paragrafları tek tek gösterir: fade in (0.8 sn) → bekleme (2.5 sn + harf başına 0.04 sn) → fade out. Tık, herhangi bir tuş, gamepad A ya da dokunma atlatır. Bitince **On Finished** olayı çağrılır. **Play On Start** açıksa (intro) kendiliğinden başlar; kapalıysa (son) `Play()` ile başlatılır. **Background** (CanvasGroup) isteğe bağlıdır, hikâye başlarken koyulaşır. TextMeshPro kullanır. |
+| `Scripts/UI/StoryPlayer.cs` | Hikâye metni | Paragrafları tek tek gösterir: fade in (0.8 sn) → bekleme (2.5 sn + harf başına 0.04 sn) → fade out. **E** tuşu (Inspector'da **Skip Key**) her basışta bir sonraki paragrafa geçirir; paragraf ekrana geldikten sonraki ilk 0.4 sn (**Min Show Time**) basış sayılmaz, böylece tek basış iki paragraf atlatmaz. Son paragrafta basmak hikâyeyi bitirir. Space zıplama olduğu için kullanılmadı (kullanıcı kararı, 1 Kasım 2026). Bitince **On Finished** olayı çağrılır. **Play On Start** açıksa (intro) kendiliğinden başlar; kapalıysa (son) `Play()` ile başlatılır. **Background** (CanvasGroup) isteğe bağlıdır, hikâye başlarken koyulaşır. **Skip Hint** (isteğe bağlı TMP yazı, ör. "Devam etmek için E tuşuna basın") yalnızca hikâye oynarken görünür ve yavaşça yanıp söner; başta ve bitince gizlenir. TextMeshPro kullanır. |
 | `Scripts/UI/VolumeSettings.cs` | Her zaman aktif bir nesne | Müzik/efekt slider'ları (0–1). Değerler PlayerPrefs'te saklanır ve Audio Mixer'daki `MusicVolume` / `SfxVolume` parametrelerine desibel olarak yazılır. `Sfx.Output` olarak efekt grubunu ayarlar. Slider'lar isteğe bağlıdır. |
 | `Scripts/Audio/Sfx.cs` | — | `Output` mixer grubu eklendi; efektler efekt slider'ına uyar. |
 

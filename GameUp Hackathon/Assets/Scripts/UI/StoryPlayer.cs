@@ -6,8 +6,9 @@ using UnityEngine.InputSystem;
 
 /// <summary>
 /// Shows story paragraphs one at a time: each fades in, stays, then fades out.
-/// A click, any key or the gamepad's south button skips ahead. Calls On Finished at the end,
-/// e.g. to load Level_1 (intro) or to show the replay/quit buttons (ending).
+/// Pressing the skip key (E by default) moves on to the next paragraph, one paragraph per press.
+/// After the last paragraph On Finished is called, e.g. to load Level_1 (intro)
+/// or the main menu (ending).
 /// </summary>
 public class StoryPlayer : MonoBehaviour
 {
@@ -24,13 +25,25 @@ public class StoryPlayer : MonoBehaviour
     [SerializeField, Min(0f)] private float holdDuration = 2.5f;
     [Tooltip("Extra time per letter, so long paragraphs stay longer.")]
     [SerializeField, Min(0f)] private float secondsPerCharacter = 0.04f;
+
+    [Header("Skipping")]
     [SerializeField] private bool allowSkip = true;
+    [Tooltip("Key that moves on to the next paragraph.")]
+    [SerializeField] private Key skipKey = Key.E;
+    [Tooltip("A paragraph must be on screen this long before the key works, so one press never skips two paragraphs.")]
+    [SerializeField, Min(0f)] private float minShowTime = 0.4f;
+    [Tooltip("Fade-out time after the key is pressed.")]
+    [SerializeField, Min(0f)] private float skipFadeDuration = 0.25f;
+    [Tooltip("Optional hint at the bottom, e.g. \"Devam etmek için E tuşuna basın\". Shown and gently pulsing only while the story plays.")]
+    [SerializeField] private TMP_Text skipHint;
 
     [Header("After the story")]
     [SerializeField] private UnityEvent onFinished;
 
     private Coroutine running;
     private bool skipRequested;
+    private bool acceptingSkip;
+    private float paragraphStart;
 
     private void Awake()
     {
@@ -40,6 +53,8 @@ public class StoryPlayer : MonoBehaviour
             text.alpha = 0f;
         if (background != null && !playOnStart)
             background.alpha = 0f;
+        if (skipHint != null)
+            skipHint.gameObject.SetActive(false);
     }
 
     private void Start()
@@ -55,20 +70,27 @@ public class StoryPlayer : MonoBehaviour
             gameObject.SetActive(true);
         if (running != null)
             StopCoroutine(running);
+        if (skipHint != null)
+            skipHint.gameObject.SetActive(allowSkip);
         running = StartCoroutine(Run());
     }
 
     private void Update()
     {
-        if (allowSkip && running != null && SkipPressed())
+        if (running == null)
+            return;
+        if (allowSkip && acceptingSkip && Time.unscaledTime - paragraphStart >= minShowTime && SkipPressed())
             skipRequested = true;
+        // Slow pulse between 40% and 90% opacity.
+        if (skipHint != null && skipHint.gameObject.activeSelf)
+            skipHint.alpha = Mathf.Lerp(0.4f, 0.9f, 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 2.5f));
     }
 
     // Unscaled time, so the story also plays if the game is paused.
     private IEnumerator Run()
     {
         if (background != null && background.alpha < 1f)
-            yield return Fade(a => background.alpha = a, background.alpha, 1f, false);
+            yield return Fade(a => background.alpha = a, background.alpha, 1f, fadeDuration);
 
         if (text != null && paragraphs != null)
         {
@@ -77,40 +99,50 @@ public class StoryPlayer : MonoBehaviour
                 if (string.IsNullOrWhiteSpace(paragraph))
                     continue;
                 text.text = paragraph;
+                text.alpha = 0f;
+                paragraphStart = Time.unscaledTime;
                 skipRequested = false;
-                yield return Fade(a => text.alpha = a, 0f, 1f, true);
+                acceptingSkip = true;
 
-                float hold = holdDuration + paragraph.Length * secondsPerCharacter;
-                skipRequested = false;
-                for (float t = 0f; t < hold && !skipRequested; t += Time.unscaledDeltaTime)
+                // Fade in, then hold. The skip key ends both early and moves to the next paragraph.
+                for (float t = 0f; t < fadeDuration && !skipRequested; t += Time.unscaledDeltaTime)
+                {
+                    text.alpha = t / fadeDuration;
                     yield return null;
+                }
+                if (!skipRequested)
+                {
+                    text.alpha = 1f;
+                    float hold = holdDuration + paragraph.Length * secondsPerCharacter;
+                    for (float t = 0f; t < hold && !skipRequested; t += Time.unscaledDeltaTime)
+                        yield return null;
+                }
 
-                skipRequested = false;
-                yield return Fade(a => text.alpha = a, 1f, 0f, true);
+                // Fade out, quicker after a press. Presses now wait for the next paragraph.
+                acceptingSkip = false;
+                float fadeOut = skipRequested ? skipFadeDuration : fadeDuration;
+                yield return Fade(a => text.alpha = a, text.alpha, 0f, fadeOut);
             }
         }
 
         running = null;
+        if (skipHint != null)
+            skipHint.gameObject.SetActive(false);
         onFinished?.Invoke();
     }
 
-    private IEnumerator Fade(System.Action<float> apply, float from, float to, bool skippable)
+    private static IEnumerator Fade(System.Action<float> apply, float from, float to, float duration)
     {
-        for (float t = 0f; t < fadeDuration; t += Time.unscaledDeltaTime)
+        for (float t = 0f; t < duration; t += Time.unscaledDeltaTime)
         {
-            if (skippable && skipRequested)
-                break;
-            apply(Mathf.Lerp(from, to, t / fadeDuration));
+            apply(Mathf.Lerp(from, to, t / duration));
             yield return null;
         }
         apply(to);
     }
 
-    private static bool SkipPressed()
+    private bool SkipPressed()
     {
-        return (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame) ||
-               (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame) ||
-               (Gamepad.current != null && Gamepad.current.buttonSouth.wasPressedThisFrame) ||
-               (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.wasPressedThisFrame);
+        return skipKey != Key.None && Keyboard.current != null && Keyboard.current[skipKey].wasPressedThisFrame;
     }
 }
