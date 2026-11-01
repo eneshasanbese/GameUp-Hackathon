@@ -1,6 +1,6 @@
 # Su Damlası — Yapılacaklar Takibi
 
-**Son kontrol:** 1 Kasım 2026, 03:01 (diskteki dosyalara ve koda göre; `Level_1`/`Level_2`/`Level_3` sahne dosyaları okunarak incelendi, oynanmadı)
+**Son kontrol:** 1 Kasım 2026, 10:59 (diskteki dosyalara ve koda göre; `Level_1`/`Level_2`/`Level_3` sahne dosyaları okunarak incelendi, oynanmadı)
 **Ana belge:** [genel-yapilacaklar.md](genel-yapilacaklar.md). T numaraları oradaki görevlerle aynıdır.
 **Kural:** Kurulum maddeleri diskteki dosyalarla doğrulanınca işaretlenir. Oynanış maddeleri (T/QA) ancak asıl sahnede (`Level1`) oynanarak denendikten sonra işaretlenir. Kodu yazılmış ama oyunda denenmemiş maddeler **Uygulandı; test bekliyor** olarak not edilir. Kaydedilmemiş değişiklikler sayılmaz.
 
@@ -114,6 +114,8 @@
 - [ ] Karar: `Level2`'ye su dolu mu başlıyor, yoksa `Level1`'den kalan su mu taşınıyor? Şu an `LevelExit` ile dolu başlıyor (öneri buydu); taşınması istenirse ek kod gerekir.
 
 **Level 3 — mağara (`Scenes/Level_3.unity` yapım aşamasında; build listesinde 3. sırada; düşmansız, fidansız)**
+
+- [ ] 1 Kasım 10:59 merge (`6f51ab5` + arkadaşın `20f739e` bariyerleri): Level_3 nesne nesne birleştirildi. Arkadaşın bariyerleri, `FallingGround_Rock`, `Trap_stoneSpike` ve tile düzenlemeleri korundu; `Fidan` ayarları (final müziği `music_finish`, süreler 3/3/2, ışık ×3) kullanıcıdan alındı. Arkadaşın sürümünde Save During Play ile kalmış kamera yakınlaşması (Ortho 3) 5'e döndürüldü. **Kullanıcının commit'inde kalanlar:** Player başlangıcı fidanın yanında (49.2, −2.32; test için olabilir) ve Level 3 müziğinde Loop kapalı. Bilerek değilse geri alınmalı.
 
 - [ ] Lav: anında ölüm (kullanıcı kararı, [kararlar](docs/kararlar.md)). Script yazıldı: `Assets/Scripts/Level/KillZone.cs`, değince su sıfırlanır ve mevcut ölüm/yeniden doğma akışı başlar. 1 Kasım 2026 diskte doğrulandı: `Hazard` tilemap (layer Default, Tilemap Collider 2D Is Trigger, Composite yok, `KillZone` açık, `Sprite-Unlit-Default`), sol altta lav havuzu (x −12…7, y −29…−26), yüzeyde `LavaAnimation` Animated Tile (Collider Type Sprite), kaya ile üst üste binme yok. **Kurulum doğru; oynanarak test bekliyor.**
 - [x] **Düşme sınırı:** `Level_3` Player'ında `WaterMeter → Fall Limit` −35 yapıldı (sahne override'ı; prefab −12 kaldı). Diskte doğrulandı; alt mağaraya iniş oynanarak test bekliyor.

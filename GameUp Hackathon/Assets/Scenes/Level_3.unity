@@ -494,6 +494,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1516439574712331235, guid: eda4bd50a56973f499a9375fab0c7091, type: 3}
+      propertyPath: Loop
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1516439574712331235, guid: eda4bd50a56973f499a9375fab0c7091, type: 3}
       propertyPath: m_Resource
       value: 
       objectReference: {fileID: 8300000, guid: b5264a40c22b0e540a0451716e810ede, type: 3}
@@ -8408,7 +8412,7 @@ Transform:
   m_GameObject: {fileID: 1214814958}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.01, y: -1.48, z: -5}
+  m_LocalPosition: {x: 49.2, y: -2.32, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8621,11 +8625,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7987665367603310342, guid: e5cb2d18a11191049bbc4140a8e445b4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11.01
+      value: 49.2
       objectReference: {fileID: 0}
     - target: {fileID: 7987665367603310342, guid: e5cb2d18a11191049bbc4140a8e445b4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.48
+      value: -2.32
       objectReference: {fileID: 0}
     - target: {fileID: 7987665367603310342, guid: e5cb2d18a11191049bbc4140a8e445b4, type: 3}
       propertyPath: m_LocalPosition.z
@@ -9761,22 +9765,22 @@ MonoBehaviour:
   lightShaft: {fileID: 1478729146}
   targetShaftAlpha: 1
   saplingLight: {fileID: 1216613196}
-  lightIntensityMultiplier: 2
+  lightIntensityMultiplier: 3
   playerCamera: {fileID: 0}
   cameraFocus: {fileID: 536794526}
   zoomOrthographicSize: 3
   hideOnTouch: []
   uiFadeDuration: 0.4
   zoomDuration: 2
-  shrinkDuration: 1.5
-  bloomDuration: 2.5
-  holdDuration: 1
+  shrinkDuration: 3
+  bloomDuration: 3
+  holdDuration: 2
   pullDropToSapling: 1
-  endingMusic: {fileID: 0}
+  endingMusic: {fileID: 8300000, guid: 83e68853a05275442a888d0e3d498b4f, type: 3}
   endingMusicVolume: 0.4
-  loopEndingMusic: 1
+  loopEndingMusic: 0
   musicFadeOut: 1
-  musicFadeIn: 0.2
+  musicFadeIn: 1
   onFinished:
     m_PersistentCalls:
       m_Calls: []
