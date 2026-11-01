@@ -208,10 +208,10 @@ public class FinalSapling : MonoBehaviour
         onFinished?.Invoke();
     }
 
-    /// <summary>For the win panel's replay button: starts again from the first level.</summary>
+    /// <summary>For the win panel's replay button: starts again from Level_1 (not the main menu).</summary>
     public void RestartGame()
     {
-        SceneFader.FadeAndLoad(0, 0.5f, Color.black);
+        SceneFader.FadeAndLoad("Level_1", 0.5f, Color.black);
     }
 
     private CinemachineCamera FindCamera(Player player)

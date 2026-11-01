@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 /// <summary>
 /// One place to play short sound effects. Uses a single 2D AudioSource that survives
@@ -8,6 +9,19 @@ using UnityEngine;
 public static class Sfx
 {
     private static AudioSource source;
+    private static AudioMixerGroup output;
+
+    /// <summary>Mixer group for all effects (set by VolumeSettings), so the volume slider applies.</summary>
+    public static AudioMixerGroup Output
+    {
+        get => output;
+        set
+        {
+            output = value;
+            if (source != null)
+                source.outputAudioMixerGroup = value;
+        }
+    }
 
     public static void Play(AudioClip clip, float volume = 1f)
     {
@@ -37,6 +51,7 @@ public static class Sfx
             source = holder.AddComponent<AudioSource>();
             source.playOnAwake = false;
             source.spatialBlend = 0f;
+            source.outputAudioMixerGroup = output;
         }
         return source;
     }
