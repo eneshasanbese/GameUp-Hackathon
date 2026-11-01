@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 /// Bölüm müziğini ölüm sonrası sahne yeniden yüklemesinde kesmeden sürdürür.
 /// Aynı sahne tekrar yüklenince yeni Music kopyası kendini kapatır, çalan müzik devam eder.
 /// Başka bir sahneye geçilince o sahnenin Music nesnesi devralır; yeni sahnede Music yoksa müzik durur.
+/// Yeni sahnenin Music'i aynı parçayı çalıyorsa (ör. ana menü → intro) müzik baştan başlamadan sürer.
 /// <see cref="SwitchTo"/> bölüm müziğini kısıp başka bir parçayı çalar (ör. final sinematiği).
 /// </summary>
 [DisallowMultipleComponent]
@@ -52,6 +53,15 @@ public sealed class MusicPlayer : MonoBehaviour
                 Destroy(gameObject);
                 return;
             }
+            if (current.IsPlayingSameTrack(source))
+            {
+                // The next scene uses the same track (e.g. main menu → intro): keep playing, no restart.
+                current.ownerScenePath = scenePath;
+                source.Stop();
+                source.enabled = false;
+                Destroy(gameObject);
+                return;
+            }
             Destroy(current.gameObject);
         }
 
@@ -60,6 +70,13 @@ public sealed class MusicPlayer : MonoBehaviour
         transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    // Same clip still playing on the main source (not replaced by an ending track via SwitchTo).
+    private bool IsPlayingSameTrack(AudioSource other)
+    {
+        return source != null && source.isPlaying && source.resource != null &&
+               source.resource == other.resource && (overlay == null || !overlay.isPlaying);
     }
 
     private void OnDestroy()

@@ -122,6 +122,8 @@ public class FinalSapling : MonoBehaviour
         // The run is over: no input, no water drain, no death or respawn, no physics.
         player.enabled = false;
         water.enabled = false;
+        // Enemy, trap and projectile sounds stay silent through the cutscene and the ending story.
+        Sfx.MuteWorld();
         body.linearVelocity = Vector2.zero;
         body.angularVelocity = 0f;
         body.simulated = false;

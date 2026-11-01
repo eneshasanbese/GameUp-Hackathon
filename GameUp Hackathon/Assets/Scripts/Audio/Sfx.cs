@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// One place to play short sound effects. Uses a single 2D AudioSource that survives
@@ -23,6 +24,34 @@ public static class Sfx
         }
     }
 
+    /// <summary>
+    /// True while world sounds (enemies, traps, projectiles: everything played with PlayAt) are silenced,
+    /// e.g. during the ending. Cleared when the next scene loads.
+    /// </summary>
+    public static bool WorldMuted { get; private set; }
+
+    /// <summary>Stops the sounds already playing and silences PlayAt until the next scene loads.</summary>
+    public static void MuteWorld()
+    {
+        WorldMuted = true;
+        if (source != null)
+            source.Stop();
+    }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatics()
+    {
+        WorldMuted = false;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (mode == LoadSceneMode.Single)
+            WorldMuted = false;
+    }
+
     public static void Play(AudioClip clip, float volume = 1f)
     {
         if (clip == null || volume <= 0f)
@@ -32,6 +61,8 @@ public static class Sfx
 
     public static void PlayAt(AudioClip clip, Vector2 position, float volume = 1f, float hearingDistance = 12f)
     {
+        if (WorldMuted)
+            return;
         Camera camera = Camera.main;
         if (camera != null)
         {

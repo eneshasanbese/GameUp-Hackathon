@@ -19,6 +19,11 @@ Build listesi sırası: 0 `MainMenu`, 1 `Intro`, 2 `Level_1`, 3 `Level_2`, 4 `Le
 
 Müzik: `Music.prefab`'ın Audio Source **Output**'u mixer'ın Music grubuna bağlanır. `MusicPlayer.SwitchTo` (final müziği) aynı grubu kopyaladığı için o da slider'a uyar. `MusicPlayer` kuralı: Music nesnesi olmayan sahnede müzik durur; menüde/introda müzik istenirse o sahneye de Music örneği konur.
 
+## Açılış müziği ve oyun sonu sessizliği
+
+- `MusicPlayer`: Yeni sahnenin Music nesnesi şu an çalan parçanın aynısını (aynı Audio Resource) çalıyorsa müzik baştan başlamaz, sürer. `MainMenu` ve `Intro`'ya `music_opening` atanmış birer Music örneği konunca menü → intro geçişinde açılış müziği kesintisiz devam eder. `Level_1`'in farklı parçası onu devralır.
+- `Sfx.MuteWorld()`: Çalan efektleri durdurur ve `PlayAt` ile çalan dünya seslerini (yaratıklar, `SoundOnAnimationEvent` hapşırığı, `SoundOnEnable` ateş topu) sonraki sahne yüklenene kadar susturur. `FinalSapling` sahne başlarken çağırır; bu sayede fidan sahnesinde ve son hikâyesinde yaratık sesleri duyulmaz. "Tekrar oyna" yeni sahne yüklediği için sesler geri gelir. Oyuncu ve arayüz sesleri (`Sfx.Play`) etkilenmez.
+
 ## Audio Mixer kurulumu (bir kez)
 
 1. `Assets/Audio` → Create → **Audio Mixer** → `GameMixer`.
